@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <title>{{name}}</title>
+  </head>
+  <body>
+     <p>name: {{ name }}</p>
+     <p>version: {{ version }}</p>
+     <p>description: {{ description }}</p>
+     <p>author: {{ author }}</p>
+     {% include 'components/password.twig' with {'tpl_id': 'tpl-input1-121212121'} %}
+{#     <template id="input1-121212121-tpl"><input type="password"></template>#}
+     {% verbatim %}
+     <div id="app">
+     <input1></input1>
+</div>
+     {% endverbatim %}
+     <script type="module" >
+         import { createApp } from "https://cdn.bootcdn.net/ajax/libs/vue/3.1.2/vue.esm-browser.js"
+         Promise.all(
+           [
+             import("/public/input1.js?id=input1-121212121")
+           ]
+         ).then(jsmodules => {
+           const Counter = {
+             data() {
+               return {
+                 counter: 0
+               }
+             }
+           }
+
+           window.app = createApp(Counter)
+           jsmodules.forEach(jsmodule => {
+             window.app.use(jsmodule.default)
+           })
+           window.app.mount('#app')
+         })
+     </script>
+  </body>
+</html>

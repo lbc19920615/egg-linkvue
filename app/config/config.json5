@@ -1,0 +1,11 @@
+{
+  "id": "1sdsdsdsdsdsdsdsdsdsds",
+  "children": {
+    "input1": {
+      config: "input1.json5"
+    },
+    "input2": {
+      config: "input2.json5"
+    }
+  }
+}

@@ -170,14 +170,16 @@ module.exports = appInfo => {
       match: '/api',
     },
     view: {
-      defaultViewEngine: 'nunjucks',
+      // defaultViewEngine: 'nunjucks',
       mapping: {
         '.tpl': 'nunjucks',
+        '.twig': 'twig',
       },
     },
     robot: {
       ua: [ /Baiduspider/i ],
     },
+    twig: {},
   });
 
   // add your user config here

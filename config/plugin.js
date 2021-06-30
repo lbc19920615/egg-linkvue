@@ -8,6 +8,10 @@ module.exports = {
   //   enable: true,
   //   package: 'egg-mysql',
   // },
+  twig: {
+    enable: true,
+    package: 'egg-view-twig',
+  },
   cors: {
     enable: true,
     package: 'egg-cors',
