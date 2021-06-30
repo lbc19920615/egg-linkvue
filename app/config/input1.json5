@@ -1,4 +1,7 @@
 {
   "id": "sdsdsdddddddddddddd",
-  "type": "input-password"
+  "source": {
+    src: "/public/input1.js",
+    template: "components/password.twig"
+  }
 }

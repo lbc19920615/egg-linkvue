@@ -1,5 +1,9 @@
 {
   "id": "1sdsdsdsdsdsdsdsdsdsds",
+  "source": {
+    src: "/public/container.js",
+    template: "components/container.twig"
+  },
   "children": {
     "input1": {
       config: "input1.json5"
