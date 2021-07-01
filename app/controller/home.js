@@ -1,6 +1,10 @@
 const _ = require('lodash');
 const Controller = require('egg').Controller;
 
+const sass = require('sass');
+const axios = require('axios');
+const urlResolve = require('url-resolve-browser');
+
 function loadDeepConfig(ctx, url, configMap) {
   const config = ctx.loadConfig(url);
   if (config.children) {
@@ -10,6 +14,7 @@ function loadDeepConfig(ctx, url, configMap) {
         loadDeepConfig(ctx, childNode.config, configMap);
       }
     });
+
   }
   // configMap[config.id] = config;
   configMap.set(config.id, config);
@@ -31,6 +36,44 @@ function getObjColunms(obj = new Map(), name = 'source') {
     }
   }
   return ret;
+}
+
+function resolveImportPath(url, content) {
+  // eslint-disable-next-line no-unused-vars
+  const c = content.replace(/@import[\s"]*([^"]*)"/g, function(match) {
+    return match.replace(/"([^"]*)"/, function(p, p1) {
+      const r = urlResolve('http://' + url, p1);
+      // console.log(r, p1, match);
+      const b = r.replace('http://', '');
+      return `"${b}"`;
+    });
+  });
+  return c
+}
+
+function rendeSass(filePath) {
+  return new Promise(resolve => {
+    sass.render({
+      file: filePath,
+      // eslint-disable-next-line no-unused-vars
+      importer(url, prev, done) {
+        if (url.startsWith('localhost')) {
+          axios.get(`http://${url}`).then(res => {
+            const content = resolveImportPath(url, res.data);
+            console.log(content)
+            done({
+              contents: content,
+            });
+          });
+        }
+      },
+    }, function(err, result) {
+      if (err) {
+        console.log(err);
+      }
+      resolve(result.css.toString());
+    });
+  });
 }
 
 class HomeController extends Controller {
@@ -62,6 +105,23 @@ tplId: "#tpl-${ctx.request.query.id}"
 }`);
     ctx.set('Content-Type', 'application/javascript; charset=utf-8');
     ctx.body = content ? content : 'export default {}';
+  }
+  async getstyle() {
+    const { ctx } = this;
+    let filePath = ctx.request.query.src;
+    if (!ctx.helper.isValidHttpUrl(filePath)) {
+      filePath = ctx.getAppFileUrl(ctx.request.query.src);
+    }
+    const css = await rendeSass(filePath);
+    ctx.set('Content-Type', 'text/css; charset=utf-8');
+    ctx.body = css;
+  }
+  async cssstyle() {
+    const { ctx } = this;
+    ctx.set('Content-Type', 'text/css; charset=utf-8');
+    ctx.body = `body {
+      background: red;
+    }`;
   }
 }
 

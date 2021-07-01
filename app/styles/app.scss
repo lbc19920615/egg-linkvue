@@ -1,0 +1,13 @@
+@use "sass:meta";
+//@import "localhost:7002/public/part.scss";
+
+
+@at-root {
+
+  @include meta.load-css("localhost:7002/public/part.scss");
+
+  body {
+    margin: 0;
+  }
+}
+

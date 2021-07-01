@@ -1,0 +1,18 @@
+@import "./func.scss";
+
+$test: 0 !default;
+
+@debug $test;
+//@debug func.test();
+@debug function-exists(func-test);
+
+
+@mixin test-mixin() {
+  background: green;
+}
+
+body {
+  background: green;
+}
+
+

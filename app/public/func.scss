@@ -1,0 +1,8 @@
+@use "sass:math";
+@debug math.$e;
+
+@function func-test() {
+  @return "test";
+}
+
+

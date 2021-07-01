@@ -24,4 +24,12 @@ module.exports = {
     const url = path.join(this.app.baseDir, appFolder, p);
     return fs.readFileSync(url).toString();
   },
+  /**
+   * getAppFileUrl
+   * @param p
+   * @return {string}
+   */
+  getAppFileUrl(p, folder = appFolder) {
+    return path.join(this.app.baseDir, folder, p);
+  },
 };

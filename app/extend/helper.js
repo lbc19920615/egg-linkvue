@@ -22,4 +22,20 @@ module.exports = {
     if (!string) return string;
     return parseInt(string) || 0;
   },
+  /**
+   * isValidHttpUrl
+   * @param string
+   * @returns {boolean}
+   */
+  isValidHttpUrl(string) {
+    let url;
+
+    try {
+      url = new URL(string);
+    } catch (_) {
+      return false;
+    }
+
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  },
 };
