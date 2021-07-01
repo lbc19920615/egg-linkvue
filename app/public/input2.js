@@ -3,16 +3,15 @@ __BEFORE__;
 export default {
   install(app) {
     const { ref } = window.Vue;
-    const instanceInput1 = ENV.id;
-    app.component('input1', {
+    app.component('input2', {
       template: ENV.tplId,
       setup(props, ctx) {
-        const title = ref(props.counter);
+        const username = ref(props.counter);
         function onInput() {
-          ctx.emit('update:title', title);
+          ctx.emit('update:username', username);
         }
         return {
-          title,
+          username,
           onInput,
         };
       },

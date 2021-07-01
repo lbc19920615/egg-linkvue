@@ -10,13 +10,6 @@ function loadDeepConfig(ctx, url, configMap) {
         loadDeepConfig(ctx, childNode.config, configMap);
       }
     });
-
-    // Object.entries(config.children).forEach(([ key, childNode ]) => {
-    //   // console.log('key', key, childNode);
-    //   if (childNode && childNode.config) {
-    //     loadDeepConfig(ctx, childNode.config, configMap);
-    //   }
-    // });
   }
   // configMap[config.id] = config;
   configMap.set(config.id, config);
@@ -46,7 +39,7 @@ class HomeController extends Controller {
     const configMap = new Map();
     const config = loadDeepConfig(ctx, 'config.json5', configMap);
 
-    console.log(config.source);
+    // console.log(config.source);
 
     const sources = getObjColunms(configMap);
 
@@ -59,6 +52,16 @@ class HomeController extends Controller {
       sources,
     };
     await ctx.render('home.twig', pkginfo);
+  }
+  async getscript() {
+    const { ctx } = this;
+    let content = ctx.loadFile(ctx.request.query.src);
+    content = content.replace(/__BEFORE__/, `let ENV = { 
+id: "${ctx.request.query.id}",
+tplId: "#tpl-${ctx.request.query.id}" 
+}`);
+    ctx.set('Content-Type', 'application/javascript; charset=utf-8');
+    ctx.body = content ? content : 'export default {}';
   }
 }
 

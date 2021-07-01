@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="/public/htmlDocx.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/FileSaver.js/2.0.5/FileSaver.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.js"></script>
+<button id="btn">导出</button>
+<div id="content">
+    <style>
+        table {
+            border-collapse: collapse;
+            border: 1px solid black;
+        }
+
+        th, td, tr {
+            border: 1px solid black;
+        }
+
+        td, th {
+            text-align: center;
+            height: 40px;
+            vertical-align: middle;
+        }
+
+        th {
+            vertical-align: middle;
+        }
+
+        /*模拟对角线*/
+        .lineTd {
+            background: #fff url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxsaW5lIHgxPSIwIiB5MT0iMCIgeDI9IjEwMCUiIHkyPSIxMDAlIiBzdHJva2U9ImJsYWNrIiBzdHJva2Utd2lkdGg9IjEiLz48L3N2Zz4=) no-repeat 100% center;
+        }
+    </style>
+    <style>
+        .line {
+            position:relative;
+            width:100px;
+            height:50px;
+            box-sizing:border-box;
+            /*border:1px solid #333;*/
+            background:#fff;
+            line-height:120px;
+            text-indent:5px;
+        }
+
+        .line::before{
+            content:"";
+            position:absolute;
+            left:0;
+            bottom:0;
+            width:0;
+            height:0;
+            border:25px solid transparent;
+            border-left:25px solid deeppink;
+            border-bottom:25px solid deeppink;
+            animation:slash 6s infinite ease;
+        }
+
+        .line::after{
+            content:"";
+            position:absolute;
+            left:0;
+            bottom:0;
+            width:0;
+            height:0;
+            border:24px solid transparent;
+            border-left:24px solid #fff;
+            border-bottom:24px solid #fff;
+        }
+
+        .linehe {
+            position: relative;
+        }
+
+        .linehe img {
+            width: 83px;
+            position: absolute;
+            left: 0;
+            height: 45px;
+        }
+    </style>
+
+
+
+    <div data-v-947b3150="" class="score-table-container"><h2 data-v-947b3150="" style="text-align: center;"><span
+            data-v-947b3150="">2021年6月</span>姑苏区行政执法业务考核评分统计表</h2>
+        <table data-v-947b3150="" class="score-table" style="width: 100%;">
+            <tr data-v-947b3150="">
+
+<th data-v-947b3150="" id="linetd" class="linehe" style="width: 80px; height: 40px;"><span data-v-947b3150=""
+        style="float: left; margin-left: 39px; margin-top: 5px;">项目</span><span
+                                                                     data-v-947b3150=""
+        style="float: right; margin-right: 39px; margin-top: 0px; position: relative; top: -5px;">日期</span>
+<img style="     width: 83px;
+        position: absolute;
+        left: 0;
+        height: 45px;" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxsaW5lIHgxPSIwIiB5MT0iMCIgeDI9IjEwMCUiIHkyPSIxMDAlIiBzdHJva2U9ImJsYWNrIiBzdHJva2Utd2lkdGg9IjEiLz48L3N2Zz4=">
+
+                                                                                                     </th>
+                <th data-v-947b3150="" align="center" style="height: 40px;">应得分</th>
+                <th data-v-947b3150="" align="center" style="height: 40px;">实际得分</th>
+                <th data-v-947b3150="" align="center" style="height: 40px;">扣分事项</th>
+            </tr>
+            <tr data-v-947b3150="">
+                <td data-v-947b3150="" align="center">队伍管理</td>
+                <td data-v-947b3150="" align="center">11.00</td>
+                <td data-v-947b3150="" align="center">11.00</td>
+                <td data-v-947b3150="">
+                    <ul data-v-947b3150="">
+                        <li data-v-947b3150=""></li>
+                        <li data-v-947b3150="">11</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr data-v-947b3150="">
+                <td data-v-947b3150="" align="center">执法时效</td>
+                <td data-v-947b3150="" align="center">15.00</td>
+                <td data-v-947b3150="" align="center">15.00</td>
+                <td data-v-947b3150="">
+                    <ul data-v-947b3150=""></ul>
+                </td>
+            </tr>
+            <tr data-v-947b3150="">
+                <td data-v-947b3150="" align="center">政策法规</td>
+                <td data-v-947b3150="" align="center">5.00</td>
+                <td data-v-947b3150="" align="center">5.00</td>
+                <td data-v-947b3150="">
+                    <ul data-v-947b3150=""></ul>
+                </td>
+            </tr>
+            <tr data-v-947b3150="">
+                <td data-v-947b3150="">总得分</td>
+                <td data-v-947b3150="" align="center" colspan="3">31.00</td>
+            </tr>
+        </table>
+    </div>
+    <div data-v-947b3150="" class="score-table-container"><h2 data-v-947b3150="" style="text-align: center;"><span
+            data-v-947b3150="">2021年6月</span>姑苏区行政执法业务考核评分统计表</h2>
+        <table data-v-947b3150="" class="score-table" style="width: 100%;">
+            <tr data-v-947b3150="">
+                <th data-v-947b3150="" class="lineTd" style="width: 80px; height: 40px;"><span data-v-947b3150=""
+                                                                                               style="float: left; margin-left: 39px; margin-top: 5px;">项目</span><span
+                        data-v-947b3150=""
+                        style="float: right; margin-right: 39px; margin-top: 0px; position: relative; top: -5px;">日期</span>
+                </th>
+                <th data-v-947b3150="" align="center" style="height: 40px;">应得分</th>
+                <th data-v-947b3150="" align="center" style="height: 40px;">实际得分</th>
+                <th data-v-947b3150="" align="center" style="height: 40px;">扣分事项</th>
+            </tr>
+            <tr data-v-947b3150="">
+                <td data-v-947b3150="" align="center">队伍管理</td>
+                <td data-v-947b3150="" align="center">11.00</td>
+                <td data-v-947b3150="" align="center">11.00</td>
+                <td data-v-947b3150="">
+                    <ul data-v-947b3150="">
+                        <li data-v-947b3150=""></li>
+                        <li data-v-947b3150="">11</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr data-v-947b3150="">
+                <td data-v-947b3150="" align="center">执法时效</td>
+                <td data-v-947b3150="" align="center">15.00</td>
+                <td data-v-947b3150="" align="center">15.00</td>
+                <td data-v-947b3150="">
+                    <ul data-v-947b3150=""></ul>
+                </td>
+            </tr>
+            <tr data-v-947b3150="">
+                <td data-v-947b3150="" align="center">政策法规</td>
+                <td data-v-947b3150="" align="center">5.00</td>
+                <td data-v-947b3150="" align="center">5.00</td>
+                <td data-v-947b3150="">
+                    <ul data-v-947b3150=""></ul>
+                </td>
+            </tr>
+            <tr data-v-947b3150="">
+                <td data-v-947b3150="">总得分</td>
+                <td data-v-947b3150="" align="center" colspan="3">31.00</td>
+            </tr>
+        </table>
+    </div>
+</div>
+<script>
+  document.querySelector('#btn').addEventListener('click', function() {
+    let dataUrl = document.getElementById('content').innerHTML
+    var converted = htmlDocx.asBlob(dataUrl, {orientation: "landscape"});
+    saveAs(converted, 'htmlDoc.docx')
+  })
+</script>
+</html>

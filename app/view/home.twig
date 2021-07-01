@@ -4,6 +4,7 @@
       <!-- 引入样式 -->
       <link rel="stylesheet"
             href="https://unpkg.com/element-plus/lib/theme-chalk/index.css">
+
   </head>
   <body>
   {% for config in sources %}
@@ -20,16 +21,19 @@
      {% endverbatim %}
      <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.1.2/vue.global.js"></script>
      <script src="https://unpkg.com/element-plus/lib/index.full.js"></script>
+
+
+{#     <script type="module" src="/getscript?id={{ random() }}"></script>#}
      <script type="module" >
          // import { createApp } from "vue"
          // import ElementPlus from "https://unpkg.com/element-plus/lib/index.esm.js"
          const { createApp } = window.Vue
-         Promise.all(
-           [
-             {% for config in sources %}import("{{ config.src }}?id={{ config.CONFIG_ID }}"){% if loop.last == false %}
-             ,{% endif %}{% endfor %}
-           ]
 
+         Promise.all(
+[
+    {% for config in sources %}import("/getscript?src={{ config.src }}&id={{ config.CONFIG_ID }}"){% if loop.last == false %}
+  ,{% endif %}{% endfor %}
+]
          ).then(jsmodules => {
            const Counter = {
              data() {

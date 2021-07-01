@@ -4,6 +4,7 @@
 module.exports = app => {
   const { router, controller } = app;
   router.get('index', '/', controller.home.index);
+  router.get('index', '/getscript', controller.home.getscript);
   // app.router.redirect('/', '/home/index', 302);
   router.get('/api/v1/wxactivity', controller.v1.wxactivity.show);
   router.post('/api/v1/wxactivity', controller.v1.wxactivity.create);

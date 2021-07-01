@@ -1,15 +1,16 @@
-const searchParams = new URL(import.meta.url).searchParams
+__BEFORE__;
 
 export default {
   install(app) {
-    const { ref } = window.Vue
-    const instanceInput1 = searchParams.get('id');
+    const { ref } = window.Vue;
+    const instanceInput1 = ENV.id;
     app.component('s-container', {
-      template: '#tpl-' + instanceInput1,
+      template: ENV.tplId,
+      // eslint-disable-next-line no-unused-vars
       setup(props, ctx) {
         return {
-        }
-      }
+        };
+      },
     });
   },
 };
