@@ -1,15 +1,15 @@
 {
   "id": "1sdsdsdsdsdsdsdsdsdsds",
   "source": {
-    src: "/public/container.js",
+    src: "/public/container.twig",
     template: "components/container.twig"
   },
   "children": {
     "input1": {
-      config: "input1.json5"
+      config: "./input1.json5"
     },
     "input2": {
-      config: "input2.json5"
+      config: "./input2.json5"
     }
   }
 }

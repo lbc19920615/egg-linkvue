@@ -1,7 +1,7 @@
 {
   "id": "sdsdsdddddddddddddd",
   "source": {
-    src: "/public/input1.js",
+    src: "/public/input1.twig",
     template: "components/password.twig"
   }
 }

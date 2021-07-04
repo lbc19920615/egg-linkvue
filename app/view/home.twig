@@ -36,17 +36,14 @@
   ,{% endif %}{% endfor %}
 ]
          ).then(jsmodules => {
-           const Counter = {
+           const App = {
              data() {
                return {
-                 obj: {
-                   counter: 0
-                 }
                }
              }
            }
 
-           const app = createApp(Counter)
+           const app = createApp(App)
 
            app.config.devtools = true;
            app.use(window.ElementPlus)

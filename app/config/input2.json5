@@ -1,7 +1,7 @@
 {
   "id": "s1212121222sss1212121",
   "source": {
-    src: "/public/input2.js",
+    src: "/public/input2.twig",
     template: "components/username.twig"
   }
 }

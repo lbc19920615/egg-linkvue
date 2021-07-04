@@ -18,6 +18,7 @@
     "lodash": "^4.17.21",
     "require-json5": "^1.1.0",
     "sass": "^1.35.1",
+    "twig": "^1.15.4",
     "url-resolve-browser": "^1.2.0",
     "vue-sfc-parser": "^0.1.2"
   },
