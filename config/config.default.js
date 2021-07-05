@@ -49,6 +49,7 @@ module.exports = appInfo => {
       dialect: 'mysql',
       host: '127.0.0.1',
       port: 3306,
+      password: 'lbc1992a',
       database: 'egg-sequelize-doc-default',
     },
     security: {
