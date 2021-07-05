@@ -6,6 +6,7 @@
 </template>
 <script>
 export default {
+  name: 'Container',
   components: {
     'about-view': window.loadComponent('about.vue')
   },
