@@ -8,6 +8,7 @@ module.exports = app => {
   router.get('index', '/getremote', controller.home.getremote);
   router.get('index', '/getstyle', controller.home.getstyle);
   router.get('index', '/cssstyle', controller.home.cssstyle);
+  router.get('index', '/login', controller.home.login);
   // app.router.redirect('/', '/home/index', 302);
   router.get('/api/v1/wxactivity', controller.v1.wxactivity.show);
   router.post('/api/v1/wxactivity', controller.v1.wxactivity.create);

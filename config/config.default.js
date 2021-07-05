@@ -17,34 +17,6 @@ module.exports = appInfo => {
     // pkg, HOME, root, env
   } = appInfo;
   const config = (exports = {
-    mysql: {
-      // 所有数据库配置的默认值
-      // default: {
-      //   database: null,
-      //   connectionLimit: 5,
-      // },
-      // 是否加载到 app 上，默认开启
-      app: true,
-      // 是否加载到 agent 上，默认关闭
-      agent: false,
-      debug: true,
-      clients: {
-        ms_activity: {
-          host: '120.79.26.168',
-          port: '3306',
-          user: 'tdreamer',
-          password: 'Qcq5rqH$AlNJXGpcf^L8',
-          database: 'ms_activity',
-        },
-        ms_appconfig: {
-          host: '120.79.26.168',
-          port: '3306',
-          user: 'tdreamer',
-          password: 'Qcq5rqH$AlNJXGpcf^L8',
-          database: 'ms_appconfig',
-        },
-      },
-    },
     sequelize: {
       dialect: 'mysql',
       host: '127.0.0.1',
@@ -98,7 +70,7 @@ module.exports = appInfo => {
     },
     cookies: {
       maxAge: 24 * 60 * 60 * 1000, // 浏览器的最长保存时间，是一个从服务器当前时刻开始的毫秒数
-      path: '/', // 设置键值对生效的 URL 路径
+      path: '', // 设置键值对生效的 URL 路径
       domain: '', // 设置键值对生效的域名
       httpOnly: true, // 设置键值对是否可以被 js 访问
       encrypt: true, // 对 Cookie 进行加密

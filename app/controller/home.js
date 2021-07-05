@@ -81,8 +81,31 @@ function rendeSass(filePath) {
 }
 
 class HomeController extends Controller {
+  async login() {
+    const { ctx } = this;
+    const token = ctx.cookies.get('site_token', {
+      httpOnly: true,
+      signed: false,
+    });
+    console.log('token', token);
+    if (!token) {
+      ctx.cookies.set('site_token', Date.now() + '');
+      ctx.body = '';
+    } else {
+      ctx.redirect('/');
+    }
+  }
   async index() {
     const { ctx } = this;
+
+    const token = ctx.cookies.get('site_token', {
+      httpOnly: true,
+      signed: false,
+    });
+    if (!token) {
+      ctx.redirect('/login');
+    }
+
     const configMap = new Map();
     // eslint-disable-next-line no-unused-vars
     const config = loadDeepConfig(ctx, 'config.json5', configMap);
