@@ -13,7 +13,7 @@
   <script src="https://unpkg.com/vue@next"></script>
   <script src="https://unpkg.com/vue-router@next"></script>
 {#  <script src="/public/vue3-sfc-loader.js"></script>#}
-  <script src="https://cdn.jsdelivr.net/npm/vue3-sfc-loader@0.8.3/dist/vue3-sfc-loader.min.js"></script>
+  <script src="https://unpkg.com/vue3-sfc-loader/dist/vue3-sfc-loader.js"></script>
   {# <script src="https://cdn.jsdelivr.net/npm/vant@next/lib/vant.min.js"></script> #}
   <script src="/public/element-plus.js"></script>
         <link rel="stylesheet"
@@ -69,6 +69,38 @@
     //   console.log('loadTwigComponent', res)
     // })
 
+    let ModuleConfig = (function() {
+
+      const configMap = new Map()
+      return {
+        global: {
+          setConfig(data = {}) {
+            if (!data.id) {
+              console.error('need id')
+            }
+            configMap.set(data.id, data)
+          }
+        },
+        createStore() {
+          return {
+            install(app) {
+              console.log(app)
+              app.config.globalProperties.$alConfig = {
+                get(id) {
+                  if (configMap.has(id)) {
+                    return configMap.get(id)
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    })()
+
+
+    const moduleConfig = ModuleConfig.createStore()
+
     const options = {
 
       moduleCache: {
@@ -100,6 +132,16 @@
         style.textContent = styleStr;
         const ref = document.head.getElementsByTagName('style')[0] || null;
         document.head.insertBefore(style, ref);
+      },
+
+      customBlockHandler(block, filename, options) {
+
+        if ( block.type !== 'config' )
+          return
+
+        const messages = JSON.parse(block.content);
+        console.log(messages, filename, options)
+        moduleConfig.global.setConfig(messages)
       },
 
       log(type, ...args) {
@@ -134,6 +176,7 @@
     app.config.devtools = true
     app.use(globalThis.shadow)
     app.use(window.ElementPlus)
+    app.use(moduleConfig)
     app.use(router)
     app.mount('#app');
 

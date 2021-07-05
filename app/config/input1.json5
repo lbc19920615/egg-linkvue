@@ -6,5 +6,6 @@
     testArr: [
       2,3,4
     ]
-  }
+  },
+  "config": '{"id": "sdsdsdddddddddddddd", "a":1}'
 }
