@@ -8,6 +8,10 @@ module.exports = {
   //   enable: true,
   //   package: 'egg-mysql',
   // },
+  sequelize: {
+    enable: true,
+    package: 'egg-sequelize',
+  },
   twig: {
     enable: true,
     package: 'egg-view-twig',
