@@ -11,21 +11,21 @@
 /> #}
   <script src="https://unpkg.com/vue@next"></script>
   <script src="https://unpkg.com/vue-router@next"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vue3-sfc-loader"></script>
+  <script src="/public/vue3-sfc-loader.js"></script>
   {# <script src="https://cdn.jsdelivr.net/npm/vant@next/lib/vant.min.js"></script> #}
-  <script src="https://unpkg.com/element-plus/lib/index.full.js"></script>
+  <script src="/public/element-plus.js"></script>
         <link rel="stylesheet"
             href="https://unpkg.com/element-plus/lib/theme-chalk/index.css">
       <link rel="stylesheet" href="/getstyle?src=styles/app.scss">
 </head>
 <body>
-  <template id="app-tpl">      
+  <template id="app-tpl">
     <nav>
       <router-link class="el-link" to="/">Go to Home</router-link>
       <router-link class="el-link" to="/about">Go to About</router-link>
     </nav>
-      
-      <router-view></router-view>    
+
+      <router-view></router-view>
   </template>
   <div id="app"></div>
   <script type="module">
@@ -40,23 +40,51 @@
     global.ssrComponents = new Map()
   </script>
     <script type="module">
-    import '/getremote?src=container.vue&def=window.ssrComponents'
-    import '/getremote?src=about.vue&def=window.ssrComponents'
+    import '/getremote?src=container.twig&def=window.ssrComponents'
+    import '/getremote?src=about.twig&def=window.ssrComponents'
 
+
+    /**
+     * loadTwigComponent
+     * @param pathWithOutExt {string}
+     * @returns {Promise<unknown>}
+     */
+    window.loadTwigComponent = function(pathWithOutExt = '') {
+      let url = `/getscript?src=${pathWithOutExt}.twig`
+      let key = pathWithOutExt + '.vue'
+      return new Promise(resolve => {
+        import(url).then(res => {
+          let content =  res.default
+          resolve(content)
+        })
+      })
+    }
+
+    // window.loadTwigComponent('formbuild').then((res) => {
+    //   console.log('loadTwigComponent', res)
+    // })
 
     const options = {
 
       moduleCache: {
         vue: Vue,
       },
-      
+
       async getFile(url) {
-        if (window.ssrComponents.has(url)) {
-          return Promise.resolve(window.ssrComponents.get(url))
+        const p = url.split('.').slice(0, -1).join('.')
+        const key = p + '.twig'
+        if (window.ssrComponents.has(key)) {
+          return Promise.resolve(window.ssrComponents.get(key))
         }
-        return fetch(`/getscript?src=${url}`).then(response => {
-          return response.ok ? response.text() : Promise.reject(response)
-        });
+        // if (url.endsWith('twig')) {
+        //   const p = url.split('.').slice(0, -1).join('.')
+        //   return window.loadTwigComponent(p)
+        // }
+        // return window.loadTwigComponent(url)
+        return window.loadTwigComponent(p)
+        // return window.fetch(`/getscript?src=${url}`).then(response => {
+        //   return response.ok ? response.text() : Promise.reject(response)
+        // });
       },
 
       addStyle(styleStr) {
@@ -87,7 +115,7 @@
       history: VueRouter.createWebHashHistory(),
       routes, // short for `routes: routes`
     })
-    
+
 
     const app = Vue.createApp({
       template: document.getElementById('app-tpl')

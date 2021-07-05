@@ -1,0 +1,25 @@
+<template>
+  <div class="example">
+    <span class="test"><el-button type="primary">sdsds</el-button></span>
+    <form-view></form-view>
+  </div>
+</template>
+<script>
+export default {
+  name: 'Container',
+  components: {
+    'form-view': window.loadComponent('formbuild.vue')
+  },
+  data() {
+    return {
+      value: "world!",
+    };
+  },
+};
+</script>
+
+<style scoped>
+.example .test {
+  color: red;
+}
+</style>

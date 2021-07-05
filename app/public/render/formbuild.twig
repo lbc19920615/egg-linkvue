@@ -1,0 +1,22 @@
+<template>
+  <div class="about">about
+<ul>
+  {% for i in 0..10 %}
+    <li>{{ i }}</li>
+{% endfor %}
+</ul>
+  </div>
+</template>
+<script>
+export default {
+  name: 'FormBuild',
+  data() {
+    return {
+      msg: "world!",
+    };
+  },
+};
+</script>
+
+<style>
+</style>

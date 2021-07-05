@@ -5,7 +5,9 @@ const sass = require('sass');
 const axios = require('axios');
 const urlResolve = require('url-resolve-browser');
 
-const { parseComponent } = require('vue-sfc-parser');
+// var replaceExt = require('replace-ext');
+
+// const { parseComponent } = require('vue-sfc-parser');
 const Twig = require('twig');
 function renderTwig(data, params = {}) {
   return Twig.twig({
@@ -31,11 +33,6 @@ function loadDeepConfig(ctx, url, configMap) {
 
 function getObjColunms(obj = new Map(), name = 'source') {
   const ret = [];
-  // obj.forEach( value => {
-  //   if (value[name]) {
-  //     ret.push(value[name]);
-  //   }
-  // });
   // eslint-disable-next-line no-unused-vars
   for (const [ key, value ] of obj) {
     if (value[name]) {
@@ -67,7 +64,7 @@ function rendeSass(filePath) {
         if (url.startsWith('localhost')) {
           axios.get(`http://${url}`).then(res => {
             const content = resolveImportPath(url, res.data);
-            console.log(content);
+            // console.log(content);
             done({
               contents: content,
             });
@@ -104,21 +101,35 @@ class HomeController extends Controller {
     };
     await ctx.render('index.twig', pkginfo);
   }
+  _parseContent(src) {
+    const { ctx } = this;
+    let file = ctx.loadFile(
+      './public/render/' + src
+    );
+    if (src.endsWith('twig')) {
+      file = renderTwig(file, {});
+    }
+    console.log(file);
+    return file;
+  }
   async getscript() {
     const { ctx } = this;
-    const file = ctx.loadFile(
-      './public/render/' + ctx.request.query.src
-    );
+    const src = ctx.request.query.src ? ctx.request.query.src : '';
 
-    ctx.body = file;
+
+    ctx.set('Content-Type', 'application/javascript; charset=utf-8');
+    ctx.body = 'export default `' + this._parseContent(src) + '`';
   }
   async getremote() {
     const { ctx } = this;
     const src = ctx.request.query.src ? ctx.request.query.src : '';
     const def = ctx.request.query.def ? ctx.request.query.def : '';
-    const file = ctx.loadFile(
+    let file = ctx.loadFile(
       './public/render/' + src
     );
+    // if (src.endsWith('twig')) {
+    file = renderTwig(file, {});
+    // }
 
     ctx.set('Content-Type', 'application/javascript; charset=utf-8');
     ctx.body = `

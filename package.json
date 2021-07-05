@@ -16,6 +16,7 @@
     "egg-view-nunjucks": "^2.2.0",
     "egg-view-twig": "0.0.1",
     "lodash": "^4.17.21",
+    "replace-ext": "^2.0.0",
     "require-json5": "^1.1.0",
     "sass": "^1.35.1",
     "twig": "^1.15.4",
