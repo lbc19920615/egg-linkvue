@@ -2,6 +2,9 @@
   "id": "sdsdsdddddddddddddd",
   "source": {
     src: "/public/input1.twig",
-    template: "components/password.twig"
+    template: "components/password.twig",
+    testArr: [
+      2,3,4
+    ]
   }
 }

@@ -81,6 +81,11 @@ function rendeSass(filePath) {
 }
 
 class HomeController extends Controller {
+  constructor(ctx) {
+    super(ctx);
+    this.configMap = new Map();
+    loadDeepConfig(ctx, 'config.json5', this.configMap);
+  }
   async login() {
     const { ctx } = this;
     const token = ctx.cookies.get('site_token', {
@@ -106,13 +111,9 @@ class HomeController extends Controller {
       ctx.redirect('/login');
     }
 
-    const configMap = new Map();
     // eslint-disable-next-line no-unused-vars
-    const config = loadDeepConfig(ctx, 'config.json5', configMap);
 
-    // console.log(config.source);
-
-    const sources = getObjColunms(configMap);
+    // console.log(this.configMap);
 
     const { name, version, description, author } = ctx.app.config.pkg;
     const pkginfo = {
@@ -120,28 +121,35 @@ class HomeController extends Controller {
       version,
       description,
       author,
-      sources,
     };
     await ctx.render('index.twig', pkginfo);
   }
-  _parseContent(src) {
+  _parseContent(src, configId = '') {
+    const configMap = this.configMap;
     const { ctx } = this;
     let file = ctx.loadFile(
       './public/render/' + src
     );
+
+    const params = (configId && configMap.has(configId)) ?
+      configMap.get(configId) : {};
+    console.log(params, configMap);
     if (src.endsWith('twig')) {
-      file = renderTwig(file, {});
+      file = renderTwig(file,
+        params
+      );
     }
-    console.log(file);
+    // console.log(file);
     return file;
   }
   async getscript() {
     const { ctx } = this;
     const src = ctx.request.query.src ? ctx.request.query.src : '';
+    const configId = ctx.request.query.config_id ? ctx.request.query.config_id : '';
 
-
+    console.log('configId', configId);
     ctx.set('Content-Type', 'application/javascript; charset=utf-8');
-    ctx.body = 'export default `' + this._parseContent(src) + '`';
+    ctx.body = 'export default `' + this._parseContent(src, configId) + '`';
   }
   async getremote() {
     const { ctx } = this;
