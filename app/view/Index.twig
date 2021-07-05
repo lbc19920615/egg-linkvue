@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mobile</title>
+  {# <link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/vant@next/lib/index.css"
+/> #}
+  <script src="https://unpkg.com/vue@next"></script>
+  <script src="https://unpkg.com/vue-router@next"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue3-sfc-loader"></script>
+  {# <script src="https://cdn.jsdelivr.net/npm/vant@next/lib/vant.min.js"></script> #}
+  <script src="https://unpkg.com/element-plus/lib/index.full.js"></script>
+        <link rel="stylesheet"
+            href="https://unpkg.com/element-plus/lib/theme-chalk/index.css">
+      <link rel="stylesheet" href="/getstyle?src=styles/app.scss">
+</head>
+<body>
+  <template id="app-tpl">      
+    <nav>
+      <router-link class="el-link" to="/">Go to Home</router-link>
+      <router-link class="el-link" to="/about">Go to About</router-link>
+    </nav>
+      
+      <router-view></router-view>    
+  </template>
+  <div id="app"></div>
+  <script type="module">
+    var getGlobal = function () {
+      if (typeof self !== 'undefined') { return self; }
+      if (typeof window !== 'undefined') { return window; }
+      if (typeof global !== 'undefined') { return global; }
+      throw new Error('unable to locate global object');
+    };
+
+    window.global = getGlobal()
+    global.ssrComponents = new Map()
+  </script>
+    <script type="module">
+    import '/getremote?src=container.vue&def=window.ssrComponents'
+    import '/getremote?src=about.vue&def=window.ssrComponents'
+
+
+    const options = {
+
+      moduleCache: {
+        vue: Vue,
+      },
+      
+      async getFile(url) {
+        if (window.ssrComponents.has(url)) {
+          return Promise.resolve(window.ssrComponents.get(url))
+        }
+        return fetch(`/getscript?src=${url}`).then(response => {
+          return response.ok ? response.text() : Promise.reject(response)
+        });
+      },
+
+      addStyle(styleStr) {
+        const style = document.createElement('style');
+        style.textContent = styleStr;
+        const ref = document.head.getElementsByTagName('style')[0] || null;
+        document.head.insertBefore(style, ref);
+      },
+
+      log(type, ...args) {
+        console.log(type, ...args);
+      }
+    }
+
+    const { loadModule, version } = window["vue3-sfc-loader"];
+
+    window.loadComponent = (path) => {
+       return Vue.defineAsyncComponent(() => loadModule(path, options))
+    }
+
+    const routes = [
+      { path: '/', component: window.loadComponent('container.vue') },
+      { path: '/about', component: window.loadComponent('about.vue') },
+    ]
+
+    const router = VueRouter.createRouter({
+      // 4. Provide the history implementation to use. We are using the hash history for simplicity here.
+      history: VueRouter.createWebHashHistory(),
+      routes, // short for `routes: routes`
+    })
+    
+
+    const app = Vue.createApp({
+      template: document.getElementById('app-tpl')
+    });
+    app.config.devtools = true
+    app.use(globalThis.shadow)
+    app.use(window.ElementPlus)
+    app.use(router)
+    app.mount('#app');
+
+  </script>
+</body>
+</html>

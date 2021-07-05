@@ -32,7 +32,7 @@
 
          Promise.all(
 [
-    {% for config in sources %}import("/getscript?src={{ config.src }}&id={{ config.CONFIG_ID }}"){% if loop.last == false %}
+    {% for config in sources %}import("c?src={{ config.src }}&id={{ config.CONFIG_ID }}"){% if loop.last == false %}
   ,{% endif %}{% endfor %}
 ]
          ).then(jsmodules => {

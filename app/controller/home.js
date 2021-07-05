@@ -102,32 +102,28 @@ class HomeController extends Controller {
       author,
       sources,
     };
-    await ctx.render('home.twig', pkginfo);
+    await ctx.render('index.twig', pkginfo);
   }
   async getscript() {
     const { ctx } = this;
-    const file = ctx.loadFile(ctx.request.query.src);
+    const file = ctx.loadFile(
+      './public/render/' + ctx.request.query.src
+    );
 
-    const res = parseComponent(file);
-
-    const env = `
-    let ENV = { 
-id: "${ctx.request.query.id}",
-tplId: "#tpl-${ctx.request.query.id}" 
-};
-    `;
-
-    const content = renderTwig(res.script.content, {
-      env,
-    });
-
-    //     const content = res.script.content.replace(/__BEFORE__/, `let ENV = {
-    // id: "${ctx.request.query.id}",
-    // tplId: "#tpl-${ctx.request.query.id}"
-    // }`);
+    ctx.body = file;
+  }
+  async getremote() {
+    const { ctx } = this;
+    const src = ctx.request.query.src ? ctx.request.query.src : '';
+    const def = ctx.request.query.def ? ctx.request.query.def : '';
+    const file = ctx.loadFile(
+      './public/render/' + src
+    );
 
     ctx.set('Content-Type', 'application/javascript; charset=utf-8');
-    ctx.body = content ? content : 'export default {}';
+    ctx.body = `
+    ${def}.set('${src}', \`${file}\`)
+    `;
   }
   async getstyle() {
     const { ctx } = this;

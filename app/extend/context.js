@@ -18,15 +18,17 @@ module.exports = {
   /**
    * loadFile
    * @param p {string}
+   * @param folder
    * @return {string}
    */
-  loadFile(p) {
-    const url = path.join(this.app.baseDir, appFolder, p);
+  loadFile(p, folder = appFolder) {
+    const url = path.join(this.app.baseDir, folder, p);
     return fs.readFileSync(url).toString();
   },
   /**
    * getAppFileUrl
    * @param p
+   * @param folder
    * @return {string}
    */
   getAppFileUrl(p, folder = appFolder) {

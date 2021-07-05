@@ -5,6 +5,7 @@ module.exports = app => {
   const { router, controller } = app;
   router.get('index', '/', controller.home.index);
   router.get('index', '/getscript', controller.home.getscript);
+  router.get('index', '/getremote', controller.home.getremote);
   router.get('index', '/getstyle', controller.home.getstyle);
   router.get('index', '/cssstyle', controller.home.cssstyle);
   // app.router.redirect('/', '/home/index', 302);
