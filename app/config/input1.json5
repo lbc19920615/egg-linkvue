@@ -5,7 +5,18 @@
     template: "components/password.twig",
     testArr: [
       2,3,4
-    ]
+    ],
+    formDef: {
+      type: 'object',
+      properties: {
+        firstName: {
+          type: 'string',
+          ui: {
+            attrs: 'a=1'
+          }
+        },
+      },
+    }
   },
   "config": '{"id": "sdsdsdddddddddddddd", "a":1}'
 }

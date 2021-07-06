@@ -1,5 +1,21 @@
+
+{% import "./macros/form.twig" as forms %}
+
 <template>
   <div class="about">
+  <el-form :model="model">
+{% if source.formDef.type == 'object' %}
+  {% for key , formItem in source.formDef.properties %}
+    <el-form-item prop="{{key}}">
+      {% if formItem.type == 'string' %}
+        {% set foo = 'model.' ~  key %}
+        {{forms.input1(foo)}}
+      {% endif %}
+    </el-form-item>
+  {% endfor %}
+{% endif %}
+  </el-form>
+
   {% verbatim %}
     <h3>{{msg}}</h3>
   {% endverbatim %}
@@ -14,12 +30,10 @@
 export default {
   name: 'FormBuild',
   setup(props, ctx) {
-    const { onMounted, ref, getCurrentInstance } = global.Vue
+    const { onMounted, ref, getCurrentInstance,  reactive} = global.Vue
     const internalInstance = getCurrentInstance()
     let msg = ref('')
     let h1Dom = ref(null);
-
-    console.log(internalInstance)
 
     onMounted(() => {
       msg.value = 'about'
@@ -28,9 +42,12 @@ export default {
       )
     })
 
+    const model = reactive({})
+
     return {
       msg,
-      h1Dom
+      h1Dom,
+      model
     }
   },
 };

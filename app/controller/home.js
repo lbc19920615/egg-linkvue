@@ -9,10 +9,15 @@ const urlResolve = require('url-resolve-browser');
 
 // const { parseComponent } = require('vue-sfc-parser');
 const Twig = require('twig');
-function renderTwig(data, params = {}) {
-  return Twig.twig({
-    data,
-  }).render(params);
+async function renderTwig(path, params = {}) {
+  return new Promise((resolve, reject) => {
+    Twig.renderFile(path, params, (err, html) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(html);
+    });
+  });
 }
 
 function loadDeepConfig(ctx, url, configMap) {
@@ -111,10 +116,6 @@ class HomeController extends Controller {
       ctx.redirect('/login');
     }
 
-    // eslint-disable-next-line no-unused-vars
-
-    // console.log(this.configMap);
-
     const { name, version, description, author } = ctx.app.config.pkg;
     const pkginfo = {
       name,
@@ -124,22 +125,23 @@ class HomeController extends Controller {
     };
     await ctx.render('index.twig', pkginfo);
   }
-  _parseContent(src, configId = '') {
+  async _parseContent(src, configId = '') {
     const configMap = this.configMap;
     const { ctx } = this;
-    let file = ctx.loadFile(
+    const fileurl = ctx.getAppFileUrl(
       './public/render/' + src
     );
+    let file = '';
 
     const params = (configId && configMap.has(configId)) ?
       configMap.get(configId) : {};
     // console.log(params, configMap);
     if (src.endsWith('twig')) {
-      file = renderTwig(file,
+      file = await renderTwig(fileurl,
         params
       );
     }
-    // console.log(file);
+    console.log(fileurl);
     return file;
   }
   async getscript() {
@@ -147,21 +149,22 @@ class HomeController extends Controller {
     const src = ctx.request.query.src ? ctx.request.query.src : '';
     const configId = ctx.request.query.config_id ? ctx.request.query.config_id : '';
 
+    const content = await this._parseContent(src, configId);
     // console.log('configId', configId);
     ctx.set('Content-Type', 'application/javascript; charset=utf-8');
-    ctx.body = 'export default `' + this._parseContent(src, configId) + '`';
+    ctx.body = 'export default `' + content + '`';
   }
   async getremote() {
     const { ctx } = this;
     const src = ctx.request.query.src ? ctx.request.query.src : '';
     const def = ctx.request.query.def ? ctx.request.query.def : '';
-    let file = ctx.loadFile(
+    const fileUrl = ctx.getAppFileUrl(
       './public/render/' + src
     );
     // if (src.endsWith('twig')) {
-    file = renderTwig(file, {});
+    const file = await renderTwig(fileUrl, {});
     // }
-
+    console.log(fileUrl, file);
     ctx.set('Content-Type', 'application/javascript; charset=utf-8');
     ctx.body = `
     ${def}.set('${src}', \`${file}\`)

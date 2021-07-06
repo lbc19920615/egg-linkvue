@@ -108,7 +108,7 @@
       },
 
       async getFile(url) {
-        let { urlAppend = ''} = options.customConfig
+        let { urlAppend = ''} = options.customConfig ? options.customConfig : {}
         delete options.customConfig
         const urlObj = new URL('http://' + url)
         const p = urlObj.hostname.split('.').slice(0, -1).join('.')
