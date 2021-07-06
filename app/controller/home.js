@@ -133,7 +133,7 @@ class HomeController extends Controller {
 
     const params = (configId && configMap.has(configId)) ?
       configMap.get(configId) : {};
-    console.log(params, configMap);
+    // console.log(params, configMap);
     if (src.endsWith('twig')) {
       file = renderTwig(file,
         params
@@ -147,7 +147,7 @@ class HomeController extends Controller {
     const src = ctx.request.query.src ? ctx.request.query.src : '';
     const configId = ctx.request.query.config_id ? ctx.request.query.config_id : '';
 
-    console.log('configId', configId);
+    // console.log('configId', configId);
     ctx.set('Content-Type', 'application/javascript; charset=utf-8');
     ctx.body = 'export default `' + this._parseContent(src, configId) + '`';
   }

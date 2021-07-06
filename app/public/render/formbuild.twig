@@ -1,6 +1,9 @@
 <template>
-  <div class="about">about
-<ul>
+  <div class="about">
+  {% verbatim %}
+    <h3>{{msg}}</h3>
+  {% endverbatim %}
+<ul ref="h1Dom">
   {% for i in source.testArr %}
     <li>{{ i }}</li>
 {% endfor %}
@@ -10,13 +13,25 @@
 <script>
 export default {
   name: 'FormBuild',
-  data() {
-    return {
-      msg: "world!",
-    };
-  },
   setup(props, ctx) {
+    const { onMounted, ref, getCurrentInstance } = global.Vue
+    const internalInstance = getCurrentInstance()
+    let msg = ref('')
+    let h1Dom = ref(null);
 
+    console.log(internalInstance)
+
+    onMounted(() => {
+      msg.value = 'about'
+      console.log(
+      internalInstance.appContext.config.globalProperties.$alConfig.get('sdsdsdddddddddddddd')
+      )
+    })
+
+    return {
+      msg,
+      h1Dom
+    }
   },
 };
 </script>
