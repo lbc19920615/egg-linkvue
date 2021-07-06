@@ -15,6 +15,12 @@
             attrs: 'a=1'
           }
         },
+        age: {
+          type: 'integer',
+          ui: {
+            attrs: 'a=1'
+          }
+        }
       },
     }
   },

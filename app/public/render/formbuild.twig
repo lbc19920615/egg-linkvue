@@ -1,19 +1,10 @@
 
-{% import "./macros/form.twig" as forms %}
+{% import "./macros/formGroup.twig" as formGroup %}
 
 <template>
   <div class="about">
-  <el-form :model="model">
-{% if source.formDef.type == 'object' %}
-  {% for key , formItem in source.formDef.properties %}
-    <el-form-item prop="{{key}}">
-      {% if formItem.type == 'string' %}
-        {% set foo = 'model.' ~  key %}
-        {{forms.input1(foo)}}
-      {% endif %}
-    </el-form-item>
-  {% endfor %}
-{% endif %}
+  <el-form :model="model" label-width="100px">
+    {{ formGroup.fieldset(source.formDef) }}
   </el-form>
 
   {% verbatim %}

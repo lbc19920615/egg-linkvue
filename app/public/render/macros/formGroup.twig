@@ -1,0 +1,24 @@
+
+{% import "./form.twig" as forms %}
+
+{% macro fieldset(formDef) %}
+    {% if formDef.type == 'object' %}
+        {% for key , formItem in formDef.properties %}
+            <el-form-item prop="{{key}}" label="{{ key }}">
+                {% set scopeModelKey = 'model.' ~  key %}
+                {% if formItem.type == 'string' %}
+                    {{forms.input(scopeModelKey)}}
+                {% endif %}
+                {% if formItem.type == 'number' %}
+                    {{forms.inputNumber(scopeModelKey)}}
+                {% endif %}
+                {% if formItem.type == 'integer' %}
+                    {{forms.inputNumber(scopeModelKey)}}
+                {% endif %}
+                {% if formItem.type == 'boolean' %}
+                    {{forms.radioBoolean(scopeModelKey)}}
+                {% endif %}
+            </el-form-item>
+        {% endfor %}
+    {% endif %}
+{% endmacro %}
