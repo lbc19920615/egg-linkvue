@@ -18,5 +18,5 @@
       },
     }
   },
-  "config": '{"id": "sdsdsdddddddddddddd", "a":1}'
+  "needConfig": 'config'
 }

@@ -135,6 +135,9 @@ class HomeController extends Controller {
 
     const params = (configId && configMap.has(configId)) ?
       configMap.get(configId) : {};
+    if (params.needConfig) {
+      params[params.needConfig] = JSON.stringify(params);
+    }
     // console.log(params, configMap);
     if (src.endsWith('twig')) {
       file = await renderTwig(fileurl,
