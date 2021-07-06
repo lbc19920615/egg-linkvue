@@ -141,7 +141,7 @@
 
         const messages = JSON.parse(block.content);
         console.log(messages, filename, options)
-        moduleConfig.global.setConfig(messages)
+        ModuleConfig.global.setConfig(messages)
       },
 
       log(type, ...args) {
