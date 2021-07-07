@@ -32,131 +32,13 @@
       <router-view></router-view>
   </template>
   <div id="app"></div>
-  <script type="module">
-    var getGlobal = function () {
-      if (typeof self !== 'undefined') { return self; }
-      if (typeof window !== 'undefined') { return window; }
-      if (typeof global !== 'undefined') { return global; }
-      throw new Error('unable to locate global object');
-    };
-
-    window.global = getGlobal()
-    global.ssrComponents = new Map()
-  </script>
+    <script type="module">
+      import { moduleConfig } from '/public/vue-bs-loader.js'
+      globalThis.moduleConfig = moduleConfig
+    </script>
     <script type="module">
     import '/getremote?src=container.twig&def=window.ssrComponents'
     import '/getremote?src=about.twig&def=window.ssrComponents'
-
-
-    /**
-     * loadTwigComponent
-     * @param pathWithOutExt {string}
-     * @param urlAppend {string}
-     * @returns {Promise<unknown>}
-     */
-    window.loadTwigComponent = function(pathWithOutExt = '', urlAppend = '') {
-      let url = `/getscript?src=${pathWithOutExt}.twig${urlAppend}`
-      let key = pathWithOutExt + '.vue'
-      return new Promise(resolve => {
-        import(url).then(res => {
-          let content =  res.default
-          resolve(content)
-        })
-      })
-    }
-
-    // window.loadTwigComponent('formbuild', '&config_id=').then((res) => {
-    //   console.log('loadTwigComponent', res)
-    // })
-
-    let ModuleConfig = (function() {
-
-      const configMap = new Map()
-      return {
-        global: {
-          setConfig(data = {}) {
-            if (!data.id) {
-              console.error('need id')
-            }
-            configMap.set(data.id, data)
-          }
-        },
-        createStore() {
-          return {
-            install(app) {
-              console.log(app)
-              app.config.globalProperties.$alConfig = {
-                get(id) {
-                  if (configMap.has(id)) {
-                    return configMap.get(id)
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    })()
-
-
-    const moduleConfig = ModuleConfig.createStore()
-
-    const options = {
-
-      moduleCache: {
-        vue: Vue,
-      },
-
-      async getFile(url) {
-        let { urlAppend = ''} = options.customConfig ? options.customConfig : {}
-        delete options.customConfig
-        const urlObj = new URL('http://' + url)
-        const p = urlObj.hostname.split('.').slice(0, -1).join('.')
-        const key = p + '.twig'
-        if (window.ssrComponents.has(key)) {
-          return Promise.resolve(window.ssrComponents.get(key))
-        }
-        // if (url.endsWith('twig')) {
-        //   const p = url.split('.').slice(0, -1).join('.')
-        //   return window.loadTwigComponent(p)
-        // }
-        // return window.loadTwigComponent(url)
-        return window.loadTwigComponent(p, urlAppend)
-        // return window.fetch(`/getscript?src=${url}`).then(response => {
-        //   return response.ok ? response.text() : Promise.reject(response)
-        // });
-      },
-
-      addStyle(styleStr) {
-        const style = document.createElement('style');
-        style.textContent = styleStr;
-        const ref = document.head.getElementsByTagName('style')[0] || null;
-        document.head.insertBefore(style, ref);
-      },
-
-      customBlockHandler(block, filename, options) {
-
-        if ( block.type !== 'config' )
-          return
-
-        const messages = JSON.parse(block.content);
-        // console.log(messages, filename, options)
-        ModuleConfig.global.setConfig(messages)
-      },
-
-      log(type, ...args) {
-        console.log(type, ...args);
-      }
-    }
-
-    const { loadModule, version } = window["vue3-sfc-loader"];
-
-    window.loadComponent = (path, urlAppend) => {
-       options.customConfig = {
-         urlAppend
-       }
-       return Vue.defineAsyncComponent(() => loadModule(path, options))
-    }
 
     const routes = [
       { path: '/', component: window.loadComponent('container.vue') },
@@ -176,10 +58,10 @@
     app.config.devtools = true
     app.use(globalThis.shadow)
     app.use(window.ElementPlus)
-    app.use(moduleConfig)
+    app.use(globalThis.moduleConfig)
     app.use(router)
     app.mount('#app');
-    global.app = app
+    globalThis.app = app
 
   </script>
 {#  <script src="https://unpkg.com/es-module-shims@0.12.1/dist/es-module-shims.js"></script>#}
