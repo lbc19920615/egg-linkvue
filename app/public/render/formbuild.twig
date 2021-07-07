@@ -6,8 +6,22 @@
     {% verbatim %}{{ model }}{% endverbatim %}
   <el-form :model="{{ source.modelName }}" label-width="100px">
 {#    {{ formGroup.fieldset(source.formDef, source.modelName ~ '.') }}#}
+    {% set path = source.modelName ~  key %}
 {#    <el-input v-model="{{model}}" ></el-input>#}
-    <cm-field v-model="model.firstName" label="firstName" prop="firstName" type="string" ></cm-field>
+    {% if source.formDef.type == 'object' %}
+      {% for key , formItem in source.formDef.properties %}
+        {% set scopeModelKey = path ~ '.' ~ key %}
+        {% if formItem.type != 'array' %}
+        <cm-field v-model="{{ scopeModelKey }}"
+                  label="{{ key }}" prop="{{ key  }}"
+                  form-path="{{ scopeModelKey }}"
+                  type="{{ formItem.type }}" ></cm-field>
+        {% endif %}
+        {% if formItem.type == 'array'  %}
+        array
+        {% endif %}
+      {% endfor %}
+    {% endif %}
   </el-form>
 
   {% verbatim %}

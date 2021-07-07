@@ -2,7 +2,7 @@
 {% import "./macros/formGroup.twig" as formGroup %}
 
 <template>
-<el-form-item :prop="prop"  :label="label">
+<el-form-item :prop="prop" :x-path="formPath" :label="label">
   {{ formGroup.formItem("modelValue") }}
 </el-form-item>
 </template>
@@ -13,15 +13,16 @@
       prop: String,
       label: String,
       type: String,
+      formPath: String,
       modelValue: null
     },
     setup(props, {emit}) {
       function onInput(e) {
-        // console.log('onInput', e)
-        emit('update:modelValue', e)
+        // console.log('onInput', props.modelValue, e)
+        emit('update:modelValue', props.modelValue)
       }
       function onChange(e) {
-        emit('update:modelValue', e)
+        emit('update:modelValue', props.modelValue)
       }
       return {
         onInput,
