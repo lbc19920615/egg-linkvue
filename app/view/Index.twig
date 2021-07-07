@@ -33,12 +33,14 @@
   </template>
   <div id="app"></div>
     <script type="module">
-      import { moduleConfig } from '/public/vue-bs-loader.js'
+      import { moduleConfig, initBsLoader } from '/public/vue-bs-loader.js'
       globalThis.moduleConfig = moduleConfig
+      initBsLoader(globalThis.Vue)
     </script>
     <script type="module">
     import '/getremote?src=container.twig&def=window.ssrComponents'
     import '/getremote?src=about.twig&def=window.ssrComponents'
+
 
     const routes = [
       { path: '/', component: window.loadComponent('container.vue') },

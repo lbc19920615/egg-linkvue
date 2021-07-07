@@ -62,59 +62,61 @@ let ModuleConfig = (function() {
 
 export const moduleConfig = ModuleConfig.createStore()
 
-const options = {
+export function initBsLoader(Vue) {
+  const options = {
 
-  moduleCache: {
-    vue: Vue,
-  },
+    moduleCache: {
+      vue: Vue,
+    },
 
-  async getFile(url) {
-    let { urlAppend = ''} = options.customConfig ? options.customConfig : {}
-    delete options.customConfig
-    const urlObj = new URL('http://' + url)
-    const p = urlObj.hostname.split('.').slice(0, -1).join('.')
-    const key = p + '.twig'
-    if (global.ssrComponents.has(key)) {
-      return Promise.resolve(global.ssrComponents.get(key))
+    async getFile(url) {
+      let { urlAppend = ''} = options.customConfig ? options.customConfig : {}
+      delete options.customConfig
+      const urlObj = new URL('http://' + url)
+      const p = urlObj.hostname.split('.').slice(0, -1).join('.')
+      const key = p + '.twig'
+      if (global.ssrComponents.has(key)) {
+        return Promise.resolve(global.ssrComponents.get(key))
+      }
+      // if (url.endsWith('twig')) {
+      //   const p = url.split('.').slice(0, -1).join('.')
+      //   return window.loadTwigComponent(p)
+      // }
+      // return window.loadTwigComponent(url)
+      return global.loadTwigComponent(p, urlAppend)
+      // return window.fetch(`/getscript?src=${url}`).then(response => {
+      //   return response.ok ? response.text() : Promise.reject(response)
+      // });
+    },
+
+    addStyle(styleStr) {
+      const style = document.createElement('style');
+      style.textContent = styleStr;
+      const ref = document.head.getElementsByTagName('style')[0] || null;
+      document.head.insertBefore(style, ref);
+    },
+
+    customBlockHandler(block, filename, options) {
+
+      if ( block.type !== 'config' )
+        return
+
+      const messages = JSON.parse(block.content);
+      // console.log(messages, filename, options)
+      ModuleConfig.global.setConfig(messages)
+    },
+
+    log(type, ...args) {
+      console.log(type, ...args);
     }
-    // if (url.endsWith('twig')) {
-    //   const p = url.split('.').slice(0, -1).join('.')
-    //   return window.loadTwigComponent(p)
-    // }
-    // return window.loadTwigComponent(url)
-    return global.loadTwigComponent(p, urlAppend)
-    // return window.fetch(`/getscript?src=${url}`).then(response => {
-    //   return response.ok ? response.text() : Promise.reject(response)
-    // });
-  },
-
-  addStyle(styleStr) {
-    const style = document.createElement('style');
-    style.textContent = styleStr;
-    const ref = document.head.getElementsByTagName('style')[0] || null;
-    document.head.insertBefore(style, ref);
-  },
-
-  customBlockHandler(block, filename, options) {
-
-    if ( block.type !== 'config' )
-      return
-
-    const messages = JSON.parse(block.content);
-    // console.log(messages, filename, options)
-    ModuleConfig.global.setConfig(messages)
-  },
-
-  log(type, ...args) {
-    console.log(type, ...args);
   }
-}
 
-const { loadModule, version } = global["vue3-sfc-loader"];
+  const { loadModule, version } = global["vue3-sfc-loader"];
 
-global.loadComponent = (path, urlAppend) => {
-  options.customConfig = {
-    urlAppend
+  global.loadComponent = (path, urlAppend) => {
+    options.customConfig = {
+      urlAppend
+    }
+    return Vue.defineAsyncComponent(() => loadModule(path, options))
   }
-  return Vue.defineAsyncComponent(() => loadModule(path, options))
 }
