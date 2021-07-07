@@ -167,7 +167,7 @@ class HomeController extends Controller {
     // if (src.endsWith('twig')) {
     const file = await renderTwig(fileUrl, {});
     // }
-    console.log(fileUrl, file);
+    // console.log(fileUrl, file);
     ctx.set('Content-Type', 'application/javascript; charset=utf-8');
     ctx.body = `
     ${def}.set('${src}', \`${file}\`)

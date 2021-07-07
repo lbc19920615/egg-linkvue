@@ -1,14 +1,14 @@
 {% macro input(model, type = "text") %}
-  <el-input v-model="{{model}}" ></el-input>
+  <el-input v-model="{{model}}"  @input="onInput"></el-input>
 {% endmacro %}
 
 {% macro inputNumber(model, type = "number") %}
-  <el-input v-model.number="{{model}}" type="{{ type }}" ></el-input>
+  <el-input v-model.number="{{model}}" type="{{ type }}" @input="onInput" ></el-input>
 {% endmacro %}
 
 
 {% macro radioGroup(model) %}
-  <el-radio-group v-model="{{ model }}">
+  <el-radio-group v-model="{{ model }}" @change="onChange">
     <el-radio :label="3">备选项</el-radio>
     <el-radio :label="6">备选项</el-radio>
     <el-radio :label="9">备选项</el-radio>
@@ -16,7 +16,7 @@
 {% endmacro %}
 
 {% macro radioBoolean(model) %}
-  <el-radio-group v-model="{{ model }}">
+  <el-radio-group v-model="{{ model }}" @change="onChange">
     <el-radio :label="yes">是</el-radio>
     <el-radio :label="no">否</el-radio>
   </el-radio-group>

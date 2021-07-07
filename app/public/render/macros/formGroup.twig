@@ -1,34 +1,41 @@
 
 {% import "./form.twig" as forms %}
 
+{% macro formItem(modelPath) %}
+    <template v-if="type === 'string'">
+        {{forms.input(modelPath)}}
+    </template>
+    <template v-if="type === 'number'">
+        {{forms.inputNumber(modelPath)}}
+    </template>
+    <template v-if="type === 'integer'">
+        {{forms.inputNumber(modelPath)}}
+    </template>
+{% endmacro %}
+
 {% macro fieldset(formDef, path) %}
     {% if formDef.type == 'object' %}
         {% for key , formItem in formDef.properties %}
                 {% set scopeModelKey = path ~  key %}
                 {% if formItem.type == 'string' %}
-<el-form-item prop="{{key}}" label="{{ key }}">
+<el-form-item prop="{{key}}" model-path="{{ scopeModelKey }}" label="{{ key }}">
 {{forms.input(scopeModelKey)}}
 </el-form-item>
                 {% endif %}
                 {% if formItem.type == 'number' %}
-<el-form-item prop="{{key}}" label="{{ key }}">
+<el-form-item prop="{{key}}" model-path="{{ scopeModelKey }}"  label="{{ key }}">
 {{forms.inputNumber(scopeModelKey)}}
 </el-form-item>
                 {% endif %}
                 {% if formItem.type == 'integer' %}
-<el-form-item prop="{{key}}" label="{{ key }}">
+<el-form-item prop="{{key}}" model-path="{{ scopeModelKey }}"  label="{{ key }}">
                     {{forms.inputNumber(scopeModelKey)}}
 </el-form-item>
                 {% endif %}
                 {% if formItem.type == 'boolean' %}
-<el-form-item prop="{{key}}" label="{{ key }}">
+<el-form-item prop="{{key}}" model-path="{{ scopeModelKey }}"  label="{{ key }}">
                     {{forms.radioBoolean(scopeModelKey)}}
 </el-form-item>
-                {% endif %}
-                {% if formItem.type == 'array' %}
-                    {% set scopeModelPath = scopeModelKey ~  '[0].' %}
-{#                    {{ scopeModelPath }}#}
-                    {{ _self.fieldset(formItem.items, scopeModelPath) }}
                 {% endif %}
         {% endfor %}
     {% endif %}

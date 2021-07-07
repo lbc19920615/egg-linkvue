@@ -3,8 +3,11 @@
 
 <template>
   <div class="about">
+    {% verbatim %}{{ model }}{% endverbatim %}
   <el-form :model="{{ source.modelName }}" label-width="100px">
-    {{ formGroup.fieldset(source.formDef, source.modelName ~ '.') }}
+{#    {{ formGroup.fieldset(source.formDef, source.modelName ~ '.') }}#}
+{#    <el-input v-model="{{model}}" ></el-input>#}
+    <cm-field v-model="model.firstName" label="firstName" prop="firstName" type="string" ></cm-field>
   </el-form>
 
   {% verbatim %}
@@ -60,6 +63,9 @@ function createFormModel(formDef) {
 
 export default {
   name: 'FormBuild',
+  components: {
+    'CmField': window.loadComponent('fieldset.vue', '&config_id=sdsdsdddddddddddddd')
+  },
   setup(props, ctx) {
     const { onMounted, ref, getCurrentInstance,  reactive} = global.Vue
 

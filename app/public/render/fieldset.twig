@@ -1,0 +1,35 @@
+
+{% import "./macros/formGroup.twig" as formGroup %}
+
+<template>
+<el-form-item :prop="prop"  :label="label">
+  {{ formGroup.formItem("modelValue") }}
+</el-form-item>
+</template>
+<script>
+  export default {
+    name: 'CmField',
+    props: {
+      prop: String,
+      label: String,
+      type: String,
+      modelValue: null
+    },
+    setup(props, {emit}) {
+      function onInput(e) {
+        // console.log('onInput', e)
+        emit('update:modelValue', e)
+      }
+      function onChange(e) {
+        emit('update:modelValue', e)
+      }
+      return {
+        onInput,
+        onChange,
+      }
+    },
+  };
+</script>
+
+<style>
+</style>
