@@ -5,23 +5,35 @@
   <div class="about">
     {% verbatim %}{{ model }}{% endverbatim %}
   <el-form :model="{{ source.modelName }}" label-width="100px">
-{#    {{ formGroup.fieldset(source.formDef, source.modelName ~ '.') }}#}
-    {% set path = source.modelName ~  key %}
-{#    <el-input v-model="{{model}}" ></el-input>#}
-    {% if source.formDef.type == 'object' %}
-      {% for key , formItem in source.formDef.properties %}
-        {% set scopeModelKey = path ~ '.' ~ key %}
-        {% if formItem.type != 'array' %}
-        <cm-field v-model="{{ scopeModelKey }}"
-                  label="{{ key }}" prop="{{ key  }}"
-                  form-path="{{ scopeModelKey }}"
-                  type="{{ formItem.type }}" ></cm-field>
-        {% endif %}
-        {% if formItem.type == 'array'  %}
-        array
-        {% endif %}
-      {% endfor %}
-    {% endif %}
+{#    {% set path = source.modelName ~  key %}#}
+{#    {% if source.formDef.type == 'object' %}#}
+{#      {% for key , formItem in source.formDef.properties %}#}
+{#        {% set scopeModelKey = path ~ '.' ~ key %}#}
+{#        {% if formItem.type != 'array' %}#}
+{#        <cm-field v-model="{{ scopeModelKey }}"#}
+{#                  label="{{ key }}" prop="{{ key  }}"#}
+{#                  form-path="{{ scopeModelKey }}"#}
+{#                  type="{{ formItem.type }}" ></cm-field>#}
+{#        {% endif %}#}
+{#        {% if formItem.type == 'array'  %}#}
+{#        array#}
+{#        {% endif %}#}
+{#      {% endfor %}#}
+{#    {% endif %}#}
+{#    <template v-for="(formItem, key) in formDef.properties">#}
+{#       <template v-if="formItem.type !== 'array' ">#}
+{#         <cm-field v-model="model[key]"#}
+{#                   :label="key" :prop="key"#}
+{#                   :form-path="getFormPath(key)"#}
+{#                   :type="formItem.type" ></cm-field>#}
+{#       </template>#}
+{#      <template v-if="formItem.type === 'array' ">#}
+{#         <template v-for="(subItem, subIndex) in formItem.items">#}
+
+{#         </template>#}
+{#      </template>#}
+{#    </template>#}
+    {{ formGroup.renderSet("formDef.properties", "model", "true", 1) }}
   </el-form>
 
   {% verbatim %}
@@ -90,18 +102,30 @@ export default {
     let msg = ref('')
     let h1Dom = ref(null);
 
-
     onMounted(() => {
       msg.value = 'about'
     })
 
     let obj = createFormModel(config.source.formDef)
-    const {{ source.modelName }} = reactive(obj)
+    const model = reactive(obj)
+
+    let formDef = config?.source?.formDef
+
+    function getFormPath(key) {
+      return 'model.' + key
+    }
+
+    function getModelRef(key) {
+      return model[key]
+    }
 
     return {
       msg,
+      {{ source.modelName }},
       h1Dom,
-      {{ source.modelName }}
+      getFormPath,
+      getModelRef,
+      formDef
     }
   },
 };

@@ -154,6 +154,7 @@ class HomeController extends Controller {
 
     const content = await this._parseContent(src, configId);
     // console.log('configId', configId);
+    console.log('content', content);
     ctx.set('Content-Type', 'application/javascript; charset=utf-8');
     ctx.body = 'export default `' + content + '`';
   }

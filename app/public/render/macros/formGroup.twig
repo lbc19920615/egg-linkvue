@@ -1,6 +1,44 @@
 
 {% import "./form.twig" as forms %}
 
+
+{% macro renderSet(obj, path, flag, index) %}
+    {{ index }}
+    {% set formItemKey = 'formItem' ~ index %}
+    {% if flag == 'true' %}
+    <template v-for="({{ formItemKey }}, key) in {{ obj }}">
+        {% set defPath =   obj ~ '[key]'   %}
+        <template v-if="{{ formItemKey }}.type !== 'array' ">
+            <cm-field v-model="{{ path }}[key]"
+                      :label="key" :prop="key"
+                      :form-path="'{{ path }}.' + key"
+                      :type="{{ formItemKey }}.type" ></cm-field>
+        </template>
+        <template v-if="{{ formItemKey }}.type === 'array' ">
+            <template v-for="(subItem, subIndex) in {{ path }}[key]">
+                {% set scopePath = path ~ '[key][subIndex]'  %}
+                {% set objPath = defPath ~ '.items.properties' %}
+{#                {{ objPath }} {% verbatim %}{{ {% endverbatim %} {{ objPath }} {% verbatim %} }} {% endverbatim %}#}
+                {{ _self.renderSet(objPath, scopePath, "false", index + 1) }}
+            </template>
+        </template>
+    </template>
+    {% else %}
+{#        {{ obj }} {{ path }}#}
+
+{#        {% verbatim %} {{ {% endverbatim %} {{ obj }} {% verbatim %} }} {% endverbatim %}#}
+        <template v-for="(subFormItem, subKey) in {{ obj }}">
+            {% verbatim %}{{ key }}{% endverbatim %}
+
+{#            {% verbatim %} {{ {% endverbatim %} {{ path[] }} {% verbatim %} }} {% endverbatim %}#}
+            <cm-field v-model="{{ path }}[subKey]"
+                      :label="subKey" :prop="subKey"
+                      :form-path="'{{ path }}.' + subKey"
+                      :type="subFormItem.type" ></cm-field>
+        </template>
+    {% endif %}
+{% endmacro %}
+
 {% macro formItem(modelPath) %}
     <template v-if="type === 'string'">
         {{forms.input(modelPath)}}
