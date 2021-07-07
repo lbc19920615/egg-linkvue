@@ -1,24 +1,35 @@
 
 {% import "./form.twig" as forms %}
 
-{% macro fieldset(formDef) %}
+{% macro fieldset(formDef, path) %}
     {% if formDef.type == 'object' %}
         {% for key , formItem in formDef.properties %}
-            <el-form-item prop="{{key}}" label="{{ key }}">
-                {% set scopeModelKey = 'model.' ~  key %}
+                {% set scopeModelKey = path ~  key %}
                 {% if formItem.type == 'string' %}
-                    {{forms.input(scopeModelKey)}}
+<el-form-item prop="{{key}}" label="{{ key }}">
+{{forms.input(scopeModelKey)}}
+</el-form-item>
                 {% endif %}
                 {% if formItem.type == 'number' %}
-                    {{forms.inputNumber(scopeModelKey)}}
+<el-form-item prop="{{key}}" label="{{ key }}">
+{{forms.inputNumber(scopeModelKey)}}
+</el-form-item>
                 {% endif %}
                 {% if formItem.type == 'integer' %}
+<el-form-item prop="{{key}}" label="{{ key }}">
                     {{forms.inputNumber(scopeModelKey)}}
+</el-form-item>
                 {% endif %}
                 {% if formItem.type == 'boolean' %}
+<el-form-item prop="{{key}}" label="{{ key }}">
                     {{forms.radioBoolean(scopeModelKey)}}
+</el-form-item>
                 {% endif %}
-            </el-form-item>
+                {% if formItem.type == 'array' %}
+                    {% set scopeModelPath = scopeModelKey ~  '[0].' %}
+{#                    {{ scopeModelPath }}#}
+                    {{ _self.fieldset(formItem.items, scopeModelPath) }}
+                {% endif %}
         {% endfor %}
     {% endif %}
 {% endmacro %}

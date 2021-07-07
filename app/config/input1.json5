@@ -6,6 +6,7 @@
     testArr: [
       2,3,4
     ],
+    modelName: 'model',
     formDef: {
       type: 'object',
       properties: {
@@ -18,7 +19,19 @@
         age: {
           type: 'integer',
           ui: {
-            attrs: 'a=1'
+          }
+        },
+        cases:{
+          "type": "array",
+          "items": {
+            type: 'object',
+            properties: {
+              name: {
+                type: 'string',
+                ui: {
+                }
+              }
+            }
           }
         }
       },

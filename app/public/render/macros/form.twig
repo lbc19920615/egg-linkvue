@@ -3,7 +3,7 @@
 {% endmacro %}
 
 {% macro inputNumber(model, type = "number") %}
-  <el-input v-model="{{model}}" type="{{ type }}" ></el-input>
+  <el-input v-model.number="{{model}}" type="{{ type }}" ></el-input>
 {% endmacro %}
 
 

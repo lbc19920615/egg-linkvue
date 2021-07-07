@@ -3,8 +3,8 @@
 
 <template>
   <div class="about">
-  <el-form :model="model" label-width="100px">
-    {{ formGroup.fieldset(source.formDef) }}
+  <el-form :model="{{ source.modelName }}" label-width="100px">
+    {{ formGroup.fieldset(source.formDef, source.modelName ~ '.') }}
   </el-form>
 
   {% verbatim %}
@@ -18,27 +18,70 @@
   </div>
 </template>
 <script>
+/**
+ * initFormBase
+ * @param def {{ type: '' }}
+ */
+function initFormBase(def = { type: '' }) {
+  if (def.type === 'object') {
+    return {}
+  }
+  if (def.type === 'array') {
+    return []
+  }
+  return null
+}
+
+function formSchemaToObject(formDef, obj) {
+  // console.log('formDef', formDef)
+  if (formDef.type === 'object') {
+    Object.entries(formDef.properties).forEach(([key, formDefProp]) => {
+      if (formDefProp.type !== 'array') {
+        obj[key] = null
+      } else {
+        obj[key] = [undefined]
+        // if (formDefProp.items.type === 'object') {
+        //   obj[key][0] = {}
+        // }
+        obj[key][0] = initFormBase(formDefProp.items)
+
+        formSchemaToObject(formDefProp.items, obj[key][0])
+      }
+    })
+  }
+}
+
+function createFormModel(formDef) {
+  let obj = undefined
+  obj = initFormBase(formDef)
+  formSchemaToObject(formDef, obj)
+  return obj
+}
+
 export default {
   name: 'FormBuild',
   setup(props, ctx) {
     const { onMounted, ref, getCurrentInstance,  reactive} = global.Vue
+
     const internalInstance = getCurrentInstance()
+
+    const configID = '{{ id }}'
+    const config = internalInstance.appContext.config.globalProperties.$alConfig.get(configID)
     let msg = ref('')
     let h1Dom = ref(null);
 
+
     onMounted(() => {
       msg.value = 'about'
-      console.log(
-      internalInstance.appContext.config.globalProperties.$alConfig.get('sdsdsdddddddddddddd')
-      )
     })
 
-    const model = reactive({})
+    let obj = createFormModel(config.source.formDef)
+    const {{ source.modelName }} = reactive(obj)
 
     return {
       msg,
       h1Dom,
-      model
+      {{ source.modelName }}
     }
   },
 };
