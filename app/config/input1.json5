@@ -26,10 +26,49 @@
           "items": {
             type: 'object',
             properties: {
-              name: {
+              casesname: {
                 type: 'string',
                 ui: {
                 }
+              }
+            }
+          }
+        },
+        level1:{
+          "type": "array",
+          "items": {
+            type: 'object',
+            properties: {
+              level1name: {
+                type: 'string',
+                ui: {
+                }
+              },
+              level2: {
+                "type": "array",
+                "items": {
+                  type: 'object',
+                  properties: {
+                    level2name: {
+                      type: 'string',
+                      ui: {
+                      }
+                    },
+                    level3: {
+                      "type": "array",
+                      "items": {
+                        type: 'object',
+                        properties: {
+                          level3name: {
+                            type: 'string',
+                            ui: {
+                            }
+                          },
+                        }
+                      },
+                    }
+                }
+                },
               }
             }
           }

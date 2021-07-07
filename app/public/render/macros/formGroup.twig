@@ -2,33 +2,39 @@
 {% import "./form.twig" as forms %}
 
 
-{% macro renderSet(obj, path, flag, index) %}
-    {{ index }}
+{% macro renderSet(obj, path, index, max) %}
+    {% set prefix = 'bs-' %}
     {% set formItemKey = 'formItem' ~ index %}
-    {% if flag == 'true' %}
-    <template v-for="({{ formItemKey }}, key) in {{ obj }}">
-        {% set defPath =   obj ~ '[key]'   %}
+    {% set formItemLabel = 'key' ~ index %}
+    {{ formItemLabel }}
+    {% if index < max %}
+    <div class="{{ prefix }}{{ formItemLabel }}"
+         v-for="({{ formItemKey }}, {{ formItemLabel }}) in {{ obj }}">
+        {% set defPath =   obj ~ '[' ~ formItemLabel ~ ']'   %}
         <template v-if="{{ formItemKey }}.type !== 'array' ">
-            <cm-field v-model="{{ path }}[key]"
-                      :label="key" :prop="key"
-                      :form-path="'{{ path }}.' + key"
+            <cm-field v-model="{{ path }}[{{ formItemLabel }}]"
+                      :label="{{ formItemLabel }}" :prop="{{ formItemLabel }}"
+                      :form-path="'{{ path }}.' + '{{ formItemLabel }}'"
                       :type="{{ formItemKey }}.type" ></cm-field>
         </template>
         <template v-if="{{ formItemKey }}.type === 'array' ">
-            <template v-for="(subItem, subIndex) in {{ path }}[key]">
-                {% set scopePath = path ~ '[key][subIndex]'  %}
+            {% set subItemKey = 'subItem' ~ index %}
+            {% set subItemLabel = 'subIndex' ~ index %}
+            <div class="{{ prefix }}{{ formItemLabel }}__{{ subItemLabel }}" v-for="({{ subItemKey }}, {{ subItemLabel }}) in {{ path }}[{{ formItemLabel }}]">
+                {% set scopePath = path ~ '[' ~ formItemLabel ~ '][' ~ subItemLabel ~ ']'  %}
                 {% set objPath = defPath ~ '.items.properties' %}
 {#                {{ objPath }} {% verbatim %}{{ {% endverbatim %} {{ objPath }} {% verbatim %} }} {% endverbatim %}#}
-                {{ _self.renderSet(objPath, scopePath, "false", index + 1) }}
-            </template>
+                {{ _self.renderSet(objPath, scopePath, index + 1, max) }}
+            </div>
         </template>
-    </template>
+    </div>
     {% else %}
 {#        {{ obj }} {{ path }}#}
 
 {#        {% verbatim %} {{ {% endverbatim %} {{ obj }} {% verbatim %} }} {% endverbatim %}#}
-        <template v-for="(subFormItem, subKey) in {{ obj }}">
-            {% verbatim %}{{ key }}{% endverbatim %}
+        <template
+             v-for="(subFormItem, subKey) in {{ obj }}">
+{#            {% verbatim %}{{ formItemLabel }}{% endverbatim %}#}
 
 {#            {% verbatim %} {{ {% endverbatim %} {{ path[] }} {% verbatim %} }} {% endverbatim %}#}
             <cm-field v-model="{{ path }}[subKey]"
