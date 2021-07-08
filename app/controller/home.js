@@ -147,6 +147,18 @@ class HomeController extends Controller {
     console.log(fileurl);
     return file;
   }
+  async getContent() {
+    const { ctx } = this;
+    const src = ctx.request.query.src ? ctx.request.query.src : '';
+    const configId = ctx.request.query.config_id ? ctx.request.query.config_id : '';
+
+    const content = await this._parseContent(src, configId);
+    // console.log('configId', configId);
+    console.log('content', content);
+    ctx.body = content;
+    // ctx.set('Content-Type', 'application/javascript; charset=utf-8');
+    // ctx.body = 'export default `' + content + '`';
+  }
   async getscript() {
     const { ctx } = this;
     const src = ctx.request.query.src ? ctx.request.query.src : '';

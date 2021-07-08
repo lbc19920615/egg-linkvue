@@ -1,14 +1,15 @@
 
 {% import "./macros/formGroup.twig" as formGroup %}
 
-<template>
-<el-form-item :prop="prop" :x-path="formPath" :label="label">
-  {{ formGroup.formItem("modelValue") }}
-</el-form-item>
-</template>
+{#<template>#}
+{#<el-form-item :prop="prop" :x-path="formPath" :label="label">#}
+{#  {{ formGroup.formItem("modelValue") }}#}
+{#</el-form-item>#}
+{#</template>#}
 <script>
   export default {
     name: 'CmField',
+    template: '#cm-field-tpl',
     props: {
       prop: String,
       label: String,
@@ -17,15 +18,18 @@
       modelValue: null
     },
     setup(props, {emit}) {
+      const { ref } = global.Vue
+      const value = ref(null)
       function onInput(e) {
         // console.log('onInput', props.modelValue, e)
-        emit('update:modelValue', props.modelValue)
+        emit('update:modelValue', value.value)
       }
       function onChange(e) {
-        emit('update:modelValue', props.modelValue)
+        emit('update:modelValue', value.value)
       }
       return {
         onInput,
+        value,
         onChange,
       }
     },
