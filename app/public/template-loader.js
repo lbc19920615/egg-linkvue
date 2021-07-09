@@ -25,3 +25,18 @@ export async function loadTemplate(id, global, { urlAppend = '', path = '' } = {
   }
 }
 
+export async function initTemplate(id, global, { html = '' } = {}) {
+  const document = global.document;
+  if (!document.getElementById(id)) {
+    try {
+      const template = document.createElement('template');
+      template.innerHTML = html;
+      template.id = id;
+      document.body.appendChild(template);
+    } catch (e) {
+      console.error(new Error('loadTwigComponent failed'));
+    }
+  } else {
+  //
+  }
+}
