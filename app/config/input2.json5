@@ -13,6 +13,7 @@
         label: '姓名', prop: 'name' },
       { label: '邮编', prop: 'zip' }
     ],
+    modelName: 'model',
     formDef: {
       type: 'object',
       properties: {
