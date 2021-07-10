@@ -1,5 +1,13 @@
+
+{% import "./macros/formGroup.twig" as formGroup %}
+
 <template>
     <div>
+       <div>
+           <el-form :model="{{ source.modelName }}" :inline="true" >
+             {{ formGroup.renderSet("formDef.properties", "model", 1,2, 'template') }}
+           </el-form>
+       </div>
         <el-table :data="tableData">
             {% for def in source.tableDef %}
                 <el-table-column
@@ -7,6 +15,7 @@
                         label="{{ def.label }}"
                         {% if def.width %}width="{{ def.width }}"{% endif %}
                 >
+                  <template slot-scope="scope">{{ def.slotDefault }}</template>
                 </el-table-column>
             {% endfor %}
         </el-table>
@@ -14,16 +23,74 @@
 </template>
 
 <script>
-    export default {
+  /**
+   * initFormBase
+   * @param def {{ type: '' }}
+   */
+  function initFormBase(def = { type: '' }) {
+    if (def.type === 'object') {
+      return {}
+    }
+    if (def.type === 'array') {
+      return []
+    }
+    return null
+  }
+
+  function formSchemaToObject(formDef, obj) {
+    // console.log('formDef', formDef)
+    if (formDef.type === 'object') {
+      Object.entries(formDef.properties).forEach(([key, formDefProp]) => {
+        if (formDefProp.type !== 'array') {
+          obj[key] = null
+        } else {
+          obj[key] = [undefined]
+          // if (formDefProp.items.type === 'object') {
+          //   obj[key][0] = {}
+          // }
+          obj[key][0] = initFormBase(formDefProp.items)
+
+          formSchemaToObject(formDefProp.items, obj[key][0])
+        }
+      })
+    }
+  }
+
+  function createFormModel(formDef) {
+    let obj = undefined
+    obj = initFormBase(formDef)
+    formSchemaToObject(formDef, obj)
+    return obj
+  }
+
+
+  export default {
       name: 'TableDef',
       setup() {
         const { onMounted, ref, getCurrentInstance,  reactive} = global.Vue
 
+        const internalInstance = getCurrentInstance()
+
         const tableData = ref([])
 
+        const configID = '{{ id }}'
+        const config = internalInstance.appContext.config.globalProperties.$alConfig.get(configID)
+
+        console.log(config)
+
+        let obj = createFormModel(config.source.formDef)
+        const model = reactive(obj)
+        let formDef = config?.source?.formDef
+
         return {
+          formDef,
+          model,
           tableData
         }
       }
     }
 </script>
+
+{% if config %}
+<config>{{ config }}</config>
+{% endif %}

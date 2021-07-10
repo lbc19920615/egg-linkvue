@@ -12,7 +12,23 @@
       {
         label: '姓名', prop: 'name' },
       { label: '邮编', prop: 'zip' }
-    ]
+    ],
+    formDef: {
+      type: 'object',
+      properties: {
+        firstName: {
+          type: 'string',
+          ui: {
+            attrs: 'a=1'
+          }
+        },
+        age: {
+          type: 'integer',
+          ui: {
+          }
+        },
+      },
+    }
   },
   "needConfig": 'config'
 }

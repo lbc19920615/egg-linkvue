@@ -2,13 +2,13 @@
 {% import "./form.twig" as forms %}
 
 
-{% macro renderSet(obj, path, index, max) %}
+{% macro renderSet(obj, path, index, max, tag = 'div') %}
     {% set prefix = 'bs-' %}
     {% set formItemKey = 'formItem' ~ index %}
     {% set formItemLabel = 'key' ~ index %}
-    {{ formItemLabel }}
+{#    {{ formItemLabel }}#}
     {% if index < max %}
-    <div class="{{ prefix }}{{ formItemLabel }}"
+    <{{ tag }} class="{{ prefix }}{{ formItemLabel }}"
          v-for="({{ formItemKey }}, {{ formItemLabel }}) in {{ obj }}">
         {% set defPath =   obj ~ '[' ~ formItemLabel ~ ']'   %}
         <template v-if="{{ formItemKey }}.type !== 'array' ">
@@ -20,14 +20,14 @@
         <template v-if="{{ formItemKey }}.type === 'array' ">
             {% set subItemKey = 'subItem' ~ index %}
             {% set subItemLabel = 'subIndex' ~ index %}
-            <div class="{{ prefix }}{{ formItemLabel }}__{{ subItemLabel }}" v-for="({{ subItemKey }}, {{ subItemLabel }}) in {{ path }}[{{ formItemLabel }}]">
+            <{{ tag}} class="{{ prefix }}{{ formItemLabel }}__{{ subItemLabel }}" v-for="({{ subItemKey }}, {{ subItemLabel }}) in {{ path }}[{{ formItemLabel }}]">
                 {% set scopePath = path ~ '[' ~ formItemLabel ~ '][' ~ subItemLabel ~ ']'  %}
                 {% set objPath = defPath ~ '.items.properties' %}
 {#                {{ objPath }} {% verbatim %}{{ {% endverbatim %} {{ objPath }} {% verbatim %} }} {% endverbatim %}#}
-                {{ _self.renderSet(objPath, scopePath, index + 1, max) }}
-            </div>
+                {{ _self.renderSet(objPath, scopePath, index + 1, max, tag) }}
+            </{{ tag }}>
         </template>
-    </div>
+    </{{ tag }}>
     {% else %}
 {#        {{ obj }} {{ path }}#}
 
