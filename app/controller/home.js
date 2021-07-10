@@ -9,6 +9,7 @@ const urlResolve = require('url-resolve-browser');
 
 // const { parseComponent } = require('vue-sfc-parser');
 const Twig = require('twig');
+Twig.cache(false);
 async function renderTwig(path, params = {}) {
   return new Promise((resolve, reject) => {
     Twig.renderFile(path, params, (err, html) => {
@@ -97,7 +98,7 @@ class HomeController extends Controller {
       httpOnly: true,
       signed: false,
     });
-    console.log('token', token);
+    // console.log('token', token);
     if (!token) {
       ctx.cookies.set('site_token', Date.now() + '');
       ctx.body = '';
@@ -135,6 +136,7 @@ class HomeController extends Controller {
 
     const params = (configId && configMap.has(configId)) ?
       configMap.get(configId) : {};
+
     if (params.needConfig) {
       params[params.needConfig] = JSON.stringify(params);
     }
@@ -144,7 +146,9 @@ class HomeController extends Controller {
         params
       );
     }
-    console.log(fileurl);
+
+    console.log('configId', params, file)
+    // console.log(fileurl);
     return file;
   }
   async getContent() {
@@ -154,7 +158,7 @@ class HomeController extends Controller {
 
     const content = await this._parseContent(src, configId);
     // console.log('configId', configId);
-    console.log('content', content);
+    // console.log('content', content);
     ctx.body = content;
     // ctx.set('Content-Type', 'application/javascript; charset=utf-8');
     // ctx.body = 'export default `' + content + '`';

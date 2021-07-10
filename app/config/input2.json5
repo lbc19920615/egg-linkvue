@@ -2,6 +2,17 @@
   "id": "s1212121222sss1212121",
   "source": {
     src: "/public/input2.twig",
-    template: "components/username.twig"
-  }
+    template: "components/username.twig",
+    tableDef: [
+      {
+        label: '日期',
+        prop: 'date',
+        width: 100
+      },
+      {
+        label: '姓名', prop: 'name' },
+      { label: '邮编', prop: 'zip' }
+    ]
+  },
+  "needConfig": 'config'
 }

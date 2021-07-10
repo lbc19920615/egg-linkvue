@@ -1,0 +1,29 @@
+<template>
+    <div>
+        <el-table :data="tableData">
+            {% for def in source.tableDef %}
+                <el-table-column
+                        prop="{{ def.prop }}"
+                        label="{{ def.label }}"
+                        {% if def.width %}width="{{ def.width }}"{% endif %}
+                >
+                </el-table-column>
+            {% endfor %}
+        </el-table>
+    </div>
+</template>
+
+<script>
+    export default {
+      name: 'TableDef',
+      setup() {
+        const { onMounted, ref, getCurrentInstance,  reactive} = global.Vue
+
+        const tableData = ref([])
+
+        return {
+          tableData
+        }
+      }
+    }
+</script>
