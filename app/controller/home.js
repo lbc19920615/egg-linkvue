@@ -141,11 +141,11 @@ class HomeController extends Controller {
       params[params.needConfig] = JSON.stringify(params);
     }
     // console.log(params, configMap);
-    if (src.endsWith('twig')) {
+    // if (src.endsWith('twig')) {
       file = await renderTwig(fileurl,
         params
       );
-    }
+    // }
 
     console.log('configId', params, file)
     // console.log(fileurl);
@@ -172,7 +172,8 @@ class HomeController extends Controller {
     // console.log('configId', configId);
     console.log('content', content);
     ctx.set('Content-Type', 'application/javascript; charset=utf-8');
-    ctx.body = 'export default `' + content + '`';
+    // ctx.body = 'export default `' + content + '`';
+    ctx.body = content;
   }
   async getremote() {
     const { ctx } = this;
