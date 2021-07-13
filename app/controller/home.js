@@ -195,6 +195,7 @@ class HomeController extends Controller {
       const tpl = await this._parseContentV2(tplPath, {
         append: {
           config: configObj,
+          source: JSON.stringify(configObj.source),
         },
       });
       const script = await this._parseContentV2(scriptPath, {
