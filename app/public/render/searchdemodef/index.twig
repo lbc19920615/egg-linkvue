@@ -1,0 +1,4 @@
+{% import "../macros/formGroup.twig" as formGroup %}
+<el-form :model="{{ source.modelName }}" :inline="true" >
+    {{ formGroup.renderSet("formDef.properties", "model", 1,2, 'template') }}
+</el-form>

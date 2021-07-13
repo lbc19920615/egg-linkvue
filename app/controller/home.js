@@ -5,9 +5,9 @@ const sass = require('sass');
 const axios = require('axios');
 const urlResolve = require('url-resolve-browser');
 
-// var replaceExt = require('replace-ext');
+const replaceExt = require('replace-ext');
 
-// const { parseComponent } = require('vue-sfc-parser');
+const { parseComponent } = require('vue-sfc-parser');
 const Twig = require('twig');
 Twig.cache(false);
 async function renderTwig(path, params = {}) {
@@ -126,7 +126,20 @@ class HomeController extends Controller {
     };
     await ctx.render('index.twig', pkginfo);
   }
-  async _parseContent(src, configId = '') {
+  async _parseContentV2(src, { append = {} } = {}) {
+    const { ctx } = this;
+    const fileurl = ctx.getAppFileUrl(
+      './public/render/' + src
+    );
+    let file = '';
+
+    file = await renderTwig(fileurl,
+      Object.assign({}, append)
+    );
+
+    return file;
+  }
+  async _parseContent(src, configId = '', { append = {} } = {}) {
     const configMap = this.configMap;
     const { ctx } = this;
     const fileurl = ctx.getAppFileUrl(
@@ -134,20 +147,19 @@ class HomeController extends Controller {
     );
     let file = '';
 
+
     const params = (configId && configMap.has(configId)) ?
       configMap.get(configId) : {};
 
     if (params.needConfig) {
       params[params.needConfig] = JSON.stringify(params);
     }
-    // console.log(params, configMap);
-    // if (src.endsWith('twig')) {
-      file = await renderTwig(fileurl,
-        params
-      );
-    // }
 
-    console.log('configId', params, file)
+    file = await renderTwig(fileurl,
+      Object.assign({}, params, append)
+    );
+
+    // console.log('configId', params, file)
     // console.log(fileurl);
     return file;
   }
@@ -156,10 +168,9 @@ class HomeController extends Controller {
     const src = ctx.request.query.src ? ctx.request.query.src : '';
     const configId = ctx.request.query.config_id ? ctx.request.query.config_id : '';
 
-    const content = await this._parseContent(src, configId);
-    // console.log('configId', configId);
-    // console.log('content', content);
-    ctx.body = content;
+
+    ctx.body = await this._parseContent(src, configId);
+
     // ctx.set('Content-Type', 'application/javascript; charset=utf-8');
     // ctx.body = 'export default `' + content + '`';
   }
@@ -168,9 +179,38 @@ class HomeController extends Controller {
     const src = ctx.request.query.src ? ctx.request.query.src : '';
     const configId = ctx.request.query.config_id ? ctx.request.query.config_id : '';
 
-    const content = await this._parseContent(src, configId);
-    // console.log('configId', configId);
-    console.log('content', content);
+    let content = '';
+    if (src.endsWith('twigvue')) {
+      const scriptPath = replaceExt(src, '.js');
+      const tplPath = replaceExt(src, '.twig');
+      let configObj = {
+        html: '',
+        source: {},
+      };
+
+      if (configId) {
+        const configMap = new Map();
+        configObj = loadDeepConfig(ctx, configId, configMap);
+      }
+      console.log(configObj)
+      const tpl = await this._parseContentV2(tplPath, {
+        append: {
+          config: configObj,
+        }
+      });
+      const script = await this._parseContentV2(scriptPath, {
+        append: {
+          config: configObj,
+          source: JSON.stringify(configObj.source),
+          html: tpl,
+        },
+      });
+      // console.log('tpl', tpl);
+      content = script;
+    } else {
+
+      content = await this._parseContent(src, configId);
+    }
     ctx.set('Content-Type', 'application/javascript; charset=utf-8');
     // ctx.body = 'export default `' + content + '`';
     ctx.body = content;
