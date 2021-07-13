@@ -173,6 +173,17 @@ class HomeController extends Controller {
     // ctx.set('Content-Type', 'application/javascript; charset=utf-8');
     // ctx.body = 'export default `' + content + '`';
   }
+  async getConfig() {
+    const { ctx } = this;
+    const configId = ctx.request.query.config_id ? ctx.request.query.config_id : '';
+    let configObj = {};
+    if (configId) {
+      const configMap = new Map();
+      configObj = loadDeepConfig(ctx, configId, configMap);
+    }
+    ctx.set('Content-Type', 'application/javascript; charset=utf-8');
+    ctx.body = `export default ${JSON.stringify(configObj)}`;
+  }
   async getscript() {
     const { ctx } = this;
     const src = ctx.request.query.src ? ctx.request.query.src : '';
