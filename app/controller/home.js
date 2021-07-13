@@ -7,7 +7,6 @@ const urlResolve = require('url-resolve-browser');
 
 const replaceExt = require('replace-ext');
 
-const { parseComponent } = require('vue-sfc-parser');
 const Twig = require('twig');
 Twig.cache(false);
 async function renderTwig(path, params = {}) {
@@ -37,17 +36,17 @@ function loadDeepConfig(ctx, url, configMap) {
   return config;
 }
 
-function getObjColunms(obj = new Map(), name = 'source') {
-  const ret = [];
-  // eslint-disable-next-line no-unused-vars
-  for (const [ key, value ] of obj) {
-    if (value[name]) {
-      value[name].CONFIG_ID = key;
-      ret.push(value[name]);
-    }
-  }
-  return ret;
-}
+// function getObjColunms(obj = new Map(), name = 'source') {
+//   const ret = [];
+//   // eslint-disable-next-line no-unused-vars
+//   for (const [ key, value ] of obj) {
+//     if (value[name]) {
+//       value[name].CONFIG_ID = key;
+//       ret.push(value[name]);
+//     }
+//   }
+//   return ret;
+// }
 
 function resolveImportPath(url, content) {
   // eslint-disable-next-line no-unused-vars
@@ -192,11 +191,11 @@ class HomeController extends Controller {
         const configMap = new Map();
         configObj = loadDeepConfig(ctx, configId, configMap);
       }
-      console.log(configObj)
+      console.log(configObj);
       const tpl = await this._parseContentV2(tplPath, {
         append: {
           config: configObj,
-        }
+        },
       });
       const script = await this._parseContentV2(scriptPath, {
         append: {
