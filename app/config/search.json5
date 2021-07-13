@@ -20,7 +20,7 @@
         firstName: {
           type: 'string',
           ui: {
-            attrs: 'a=1'
+            label: '姓名'
           }
         },
         age: {

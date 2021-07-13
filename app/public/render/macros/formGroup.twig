@@ -1,6 +1,9 @@
 
 {% import "./form.twig" as forms %}
 
+{% macro fieldAttr(def) %}
+{% for key, value in def %}{{ key }}='{{ value }}'{% endfor %}
+{% endmacro %}
 
 {% macro renderSet(obj, path, index, max, tag = 'div') %}
     {% set prefix = 'bs-' %}
@@ -15,7 +18,7 @@
             <cm-field v-model="{{ path }}[{{ formItemLabel }}]"
                       :label="{{ formItemLabel }}" :prop="{{ formItemLabel }}"
                       :form-path="'{{ path }}.' + '{{ formItemLabel }}'"
-                      :type="{{ formItemKey }}.type" ></cm-field>
+                      :type="{{ formItemKey }}.type" :ui="{{ formItemKey }}.ui"></cm-field>
         </template>
         <template v-if="{{ formItemKey }}.type === 'array' ">
             {% set subItemKey = 'subItem' ~ index %}
@@ -40,7 +43,7 @@
             <cm-field v-model="{{ path }}[subKey]"
                       :label="subKey" :prop="subKey"
                       :form-path="'{{ path }}.' + subKey"
-                      :type="subFormItem.type" ></cm-field>
+                      :type="subFormItem.type" :ui="subFormItem.ui"></cm-field>
         </template>
     {% endif %}
 {% endmacro %}

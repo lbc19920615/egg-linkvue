@@ -2,4 +2,6 @@
 {{ source.modelName }}
 <el-form :model="{{ config.source.modelName }}" :inline="true" >
     {{ formGroup.renderSet("formDef.properties", "model", 1,2, 'template') }}
+    <el-button type="primary"  @click="runAction('search')">搜索</el-button>
+    <el-button type="primary"  @click="runAction('export')">导出</el-button>
 </el-form>

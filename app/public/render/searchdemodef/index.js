@@ -22,12 +22,18 @@ export default {
     const model = reactive(obj);
     const formDef = config.formDef;
 
-    console.log(config);
+
+    function runAction(name) {
+      if (name === 'search') {
+        console.log('model', model);
+      }
+    }
 
     return {
       formDef,
       model,
       tableData,
+      runAction,
     };
   },
 };
