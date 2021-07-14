@@ -10,7 +10,7 @@ export const formModel = _formModel;
 
 /**
  * camel
- * @param camel
+ * @param camel { string } 驼峰格式转为dash格式
  * @returns {*}
  */
 export function camel2hyphen(camel) {
@@ -19,7 +19,7 @@ export function camel2hyphen(camel) {
 
 /**
  * camelNameToCls
- * @param camel
+ * @param camel { string } 驼峰格式的字符串
  * @returns {*}
  */
 export function camelNameToCls(camel) {
