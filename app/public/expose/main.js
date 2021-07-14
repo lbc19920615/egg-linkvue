@@ -580,6 +580,18 @@ var import_each = __toModule(require_each());
 function gets() {
   console.log("sdsds", import_each.default);
 }
+function camel2hyphen(camel) {
+  return camel.replace(/[A-Z]/g, (m) => "-" + m.toLowerCase());
+}
+function camelNameToCls(camel) {
+  const v = camel2hyphen(camel);
+  if (v.startsWith("-")) {
+    return v.slice(1);
+  }
+  return v;
+}
 export {
+  camel2hyphen,
+  camelNameToCls,
   gets
 };

@@ -1,0 +1,40 @@
+<template>
+    <div class="al-datetime-range">
+        <el-date-picker
+                v-model="innerVal"
+                value-format="yyyy-MM-dd hh:mm:ss"
+                type="datetimerange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                @change="onChange"
+        >
+        </el-date-picker>
+    </div>
+</template>
+
+<script>
+  export default {
+    name: 'AlDatetimeRange',
+    props: {
+      modelStart: '',
+      modelEnd: ''
+    },
+    data() {
+      return {
+        innerVal: [
+          this.modelStart ? this.modelStart : '',
+          this.modelEnd ? this.modelEnd : '',
+        ]
+      }
+    },
+    methods: {
+      onChange(v) {
+        // console.log('onChange', v)
+        // this.$emit('change', v)
+        this.$emit('update:modelStart', v[0])
+        this.$emit('update:modelEnd', v[1])
+      }
+    }
+  }
+</script>

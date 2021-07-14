@@ -1,4 +1,4 @@
 {% import "./macros/formGroup.twig" as formGroup %}
-<el-form-item :prop="prop" :x-path="formPath" :label="ui.label ? ui.label : label">
+<el-form-item :prop="prop" :x-path="formPath" :label="ui && ui.label ? ui.label : label">
     {{ formGroup.formItem("value") }}
 </el-form-item>
