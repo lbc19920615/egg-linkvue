@@ -242,6 +242,9 @@ class HomeController extends Controller {
     ${def}.set('${src}', \`${file}\`)
     `;
   }
+  async getExpose() {
+
+  }
   async getstyle() {
     const { ctx } = this;
     let filePath = ctx.request.query.src;
