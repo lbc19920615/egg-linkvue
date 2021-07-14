@@ -25,6 +25,13 @@ export async function loadTemplate(id, global, { urlAppend = '', path = '' } = {
   }
 }
 
+/**
+ * initTemplate
+ * @param id
+ * @param global
+ * @param html
+ * @returns {Promise<void>}
+ */
 export async function initTemplate(id, global, { html = '' } = {}) {
   const document = global.document;
   if (!document.getElementById(id)) {
