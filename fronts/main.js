@@ -3,8 +3,6 @@
  * @module main
  */
 
-import testDef from './components/test.vue';
-console.log(testDef)
 // import each from 'lodash/each';
 
 import * as _formModel from './formmodel';
