@@ -37,8 +37,8 @@ export interface IHeader {
 
 /**
  * $req
- * @param url
- * @param config
+ * @param url { string }
+ * @param config { IReqConfig }
  */
 const $req = async (url: string, config: IReqConfig = {baseUrl: ""}) => {
     let promise: Response

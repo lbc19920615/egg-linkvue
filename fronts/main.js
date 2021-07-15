@@ -14,7 +14,6 @@ export const Time = _time;
 
 /**
  * formModel
- * @type {{createFormModel?: function(*=): *}}
  */
 export const formModel = _formModel;
 
