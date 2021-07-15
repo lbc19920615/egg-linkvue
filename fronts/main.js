@@ -6,6 +6,8 @@
 // import each from 'lodash/each';
 
 import * as _formModel from './formmodel';
+import * as _time from './time';
+export const Time = _time;
 
 /**
  * formModel

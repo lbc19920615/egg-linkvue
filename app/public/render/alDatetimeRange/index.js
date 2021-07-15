@@ -1,4 +1,4 @@
-import { camelNameToCls } from './public/expose/main.js';
+import { camelNameToCls, Time } from './public/expose/main.js';
 
 export default function(name) {
   const templateId = name + '-tpl';
@@ -14,6 +14,10 @@ export default function(name) {
       start: '',
       end: '',
     },
+    emits: [
+      'update:start',
+      'update:end',
+    ],
     data() {
       return {
         customClass: camelNameToCls(name),
@@ -27,8 +31,23 @@ export default function(name) {
       onChange(v) {
         // console.log('onChange', v)
         // this.$emit('change', v)
-        this.$emit('update:start', v[0]);
-        this.$emit('update:end', v[1]);
+        // this.innerVal = [
+        //   v[0] ? v[0] : '',
+        //   v[1] ? v[1] : '',
+        // ]
+        console.dir(Time.formatDateTime);
+        // this.$emit('update:start',
+        //   Time.formatDateTime(v[0])
+        // );
+        // this.$emit('update:end',
+        //   Time.formatDateTime(v[1])
+        // );
+        this.$emit('update:start',
+          v[0]
+        );
+        this.$emit('update:end',
+          v[1]
+        );
       },
     },
   };
