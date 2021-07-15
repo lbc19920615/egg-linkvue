@@ -5,6 +5,9 @@
 
 // import each from 'lodash/each';
 
+import _req from './ts/fetchio.ts';
+export const fetchreq = _req;
+
 import * as _formModel from './formmodel';
 import * as _time from './time';
 export const Time = _time;

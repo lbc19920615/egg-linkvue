@@ -1,11 +1,14 @@
 const _ = require('lodash');
 const Controller = require('egg').Controller;
 
+const qs = require('qs');
+
 const sass = require('sass');
 const axios = require('axios');
 const urlResolve = require('url-resolve-browser');
 
 const replaceExt = require('replace-ext');
+
 
 const Twig = require('twig');
 Twig.cache(false);
@@ -164,14 +167,24 @@ class HomeController extends Controller {
   }
   async getContent() {
     const { ctx } = this;
-    const src = ctx.request.query.src ? ctx.request.query.src : '';
-    const configId = ctx.request.query.config_id ? ctx.request.query.config_id : '';
+    // const src = ctx.request.query.src ? ctx.request.query.src : '';
+    // const configId = ctx.request.query.config_id ? ctx.request.query.config_id : '';
+    // const config = ctx.request.query.config ? ctx.request.query.config : '';
 
-
-    ctx.body = await this._parseContent(src, configId);
-
-    // ctx.set('Content-Type', 'application/javascript; charset=utf-8');
-    // ctx.body = 'export default `' + content + '`';
+    const arr = ctx.request.url.split('?');
+    try {
+      const query = qs.parse(arr[1]);
+      const src = query.src ? query.src : '';
+      const configId = query.config_id ? query.config_id : '';
+      ctx.body = await this._parseContent(src, configId, {
+        append: {
+          source: query,
+        },
+      });
+    } catch (e) {
+      console.error(e);
+    }
+    // ctx.body = await this._parseContent(src, configId);
   }
   async getConfig() {
     const { ctx } = this;
@@ -241,9 +254,6 @@ class HomeController extends Controller {
     ctx.body = `
     ${def}.set('${src}', \`${file}\`)
     `;
-  }
-  async getExpose() {
-
   }
   async getstyle() {
     const { ctx } = this;

@@ -1,0 +1,14 @@
+<template>
+    <el-table :data="tableData">
+        {% for def in source.tableDef %}
+            <el-table-column
+                    prop="{{ def.prop }}"
+                    label="{{ def.label }}"
+                    {% if def.width %}width="{{ def.width }}"{% endif %}
+            >
+                <template slot-scope="scope">{{ def.slotDefault }}</template>
+            </el-table-column>
+        {% endfor %}
+    </el-table>
+</template>
+
