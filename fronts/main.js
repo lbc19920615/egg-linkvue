@@ -6,12 +6,25 @@
 // import each from 'lodash/each';
 
 import * as _formModel from './formmodel';
+
+/**
+ * formModel
+ * @type {{createFormModel?: function(*=): *}}
+ */
 export const formModel = _formModel;
+
+import getGlobalThisPolyfill from 'globalthis/polyfill';
+
+/**
+ * global
+ * @type {NodeJS.Global}
+ */
+export const global = getGlobalThisPolyfill();
 
 /**
  * camel
  * @param camel { string } 驼峰格式转为dash格式
- * @returns {*}
+ * @return {*}
  */
 export function camel2hyphen(camel) {
   return camel.replace(/[A-Z]/g, m => '-' + m.toLowerCase());
@@ -20,7 +33,7 @@ export function camel2hyphen(camel) {
 /**
  * camelNameToCls
  * @param camel { string } 驼峰格式的字符串
- * @returns {*}
+ * @return {*}
  */
 export function camelNameToCls(camel) {
   const v = camel2hyphen(camel);
