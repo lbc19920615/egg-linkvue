@@ -166,9 +166,10 @@ class HomeController extends Controller {
     return file;
   }
   async getContent() {
+    const { ctx } = this;
     const src = ctx.request.query.src ? ctx.request.query.src : '';
     const configId = ctx.request.query.config_id ? ctx.request.query.config_id : '';
-    const config = ctx.request.query.config ? ctx.request.query.config : '';
+    // const config = ctx.request.query.config ? ctx.request.query.config : '';
     ctx.body = await this._parseContent(src, configId);
   }
   async getContentv2() {
