@@ -3,11 +3,11 @@ export function install(Vue) {
     template: '<div></div>',
     setup() {
       function getArr() {
-        console.log('value.value = props.modelValue', Vue)
+        console.log('value.value = props.modelValue', Vue);
       }
       return {
-        getArr
-      }
-    }
-  }
+        getArr,
+      };
+    },
+  };
 }
