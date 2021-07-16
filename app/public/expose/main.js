@@ -1963,7 +1963,7 @@ var HttpMethod;
   HttpMethod2["patch"] = "PATCH";
   HttpMethod2["delete"] = "DELETE";
 })(HttpMethod || (HttpMethod = {}));
-var $req = async (url, config = { baseUrl: "" }) => {
+var $req = async (url2, config = { baseUrl: "" }) => {
   let promise;
   let contentType;
   if (config["Content-Type"] !== void 0) {
@@ -1973,9 +1973,9 @@ var $req = async (url, config = { baseUrl: "" }) => {
   } else {
     contentType = ContentType.json;
   }
-  let reqUrl = url.replace("//", "/");
+  let reqUrl = url2.replace("//", "/");
   if (config.baseUrl) {
-    reqUrl = config.baseUrl + url;
+    reqUrl = config.baseUrl + url2;
   }
   const headers = new Headers({
     token: config.token === void 0 ? sessionStorage.token : config.token,
@@ -2079,6 +2079,15 @@ var fetchreq = fetchio_default;
 var Time = time_exports;
 var formModel = formmodel_exports;
 var global2 = (0, import_polyfill.default)();
+var url = new URL(import.meta.url);
+var REMOTE_ORIGIN = url.origin;
+function fetchContentV2(queryObj = {}, params = {}) {
+  let query = qs.stringify(queryObj);
+  return fetchreq("/getcontentv2?" + query, {
+    baseUrl: REMOTE_ORIGIN,
+    ...params
+  });
+}
 function camel2hyphen(camel) {
   return camel.replace(/[A-Z]/g, (m) => "-" + m.toLowerCase());
 }
@@ -2090,9 +2099,11 @@ function camelNameToCls(camel) {
   return v;
 }
 export {
+  REMOTE_ORIGIN,
   Time,
   camel2hyphen,
   camelNameToCls,
+  fetchContentV2,
   fetchreq,
   formModel,
   global2 as global,

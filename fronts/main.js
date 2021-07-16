@@ -6,9 +6,19 @@
 // import each from 'lodash/each';
 
 import _qs from 'qs';
+
+/**
+ * qs
+ * @type {QueryString}
+ */
 export const qs = _qs;
 
 import _req from './ts/fetchio.ts';
+
+/**
+ * fetchreq
+ * @type {(url: string, config?: IReqConfig) => Promise<any>}
+ */
 export const fetchreq = _req;
 
 import * as _formModel from './formmodel';
@@ -27,6 +37,28 @@ import getGlobalThisPolyfill from 'globalthis/polyfill';
  * @type {NodeJS.Global}
  */
 export const global = getGlobalThisPolyfill();
+
+// console.log(import.meta)
+let url = new URL(import.meta.url)
+/**
+ * REMOTE_ORIGIN
+ * @type {string}
+ */
+export const REMOTE_ORIGIN = url.origin
+
+/**
+ * fetchContentV2
+ * @param queryObj
+ * @param params
+ * @returns {Promise<any>}
+ */
+export function fetchContentV2 (queryObj = {}, params = {}) {
+  let query = qs.stringify(queryObj)
+  return fetchreq('/getcontentv2?' + query, {
+    baseUrl: REMOTE_ORIGIN,
+    ...params
+  })
+}
 
 /**
  * camel
