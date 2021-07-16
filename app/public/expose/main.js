@@ -1945,7 +1945,10 @@ var require_polyfill = __commonJS({
   }
 });
 
-// fronts/fetchio.ts
+// fronts/main.js
+var import_qs2 = __toModule(require_lib());
+
+// fronts/ts/fetchio.ts
 var import_qs = __toModule(require_lib());
 var ContentType;
 (function(ContentType2) {
@@ -2071,6 +2074,7 @@ function formatDateTime(date, format = "YYYY-MM-DD HH:mm:ss") {
 
 // fronts/main.js
 var import_polyfill = __toModule(require_polyfill());
+var qs = import_qs2.default;
 var fetchreq = fetchio_default;
 var Time = time_exports;
 var formModel = formmodel_exports;
@@ -2091,5 +2095,6 @@ export {
   camelNameToCls,
   fetchreq,
   formModel,
-  global2 as global
+  global2 as global,
+  qs
 };

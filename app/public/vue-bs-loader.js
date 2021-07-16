@@ -77,7 +77,12 @@ const ModuleConfig = (function() {
 
 export const moduleConfig = ModuleConfig.createStore();
 
-export function initBsLoader(Vue) {
+/**
+ * initBsLoader
+ * @param Vue
+ * @returns {Promise<V>|Promise<unknown>}
+ */
+export function initBrowserVueSFCLoader(Vue) {
   const options = {
 
     moduleCache: {

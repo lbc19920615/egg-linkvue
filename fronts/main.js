@@ -5,6 +5,9 @@
 
 // import each from 'lodash/each';
 
+import _qs from 'qs';
+export const qs = _qs;
+
 import _req from './ts/fetchio.ts';
 export const fetchreq = _req;
 
