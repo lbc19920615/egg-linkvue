@@ -183,6 +183,9 @@ class HomeController extends Controller {
       const query = qs.parse(arr[1]);
       const src = query.src ? query.src : '';
       const configId = query.config_id ? query.config_id : '';
+      // console.dir(
+      //   JSON.stringify(query)
+      // );
       ctx.body = await this._parseContent(src, configId, {
         append: {
           source: query,
@@ -222,7 +225,7 @@ class HomeController extends Controller {
         const configMap = new Map();
         configObj = loadDeepConfig(ctx, configId, configMap);
       }
-      console.log(configObj);
+      // console.log(configObj);
       const tpl = await this._parseContentV2(tplPath, {
         append: {
           config: configObj,
