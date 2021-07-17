@@ -1,5 +1,11 @@
 /**
+ * formmodel
+ * @module formmodel
+ */
+
+/**
  * initFormBase
+ * @description 初始化form base
  * @param def {{ type: '' }}
  */
 function initFormBase(def = { type: '' }) {
@@ -12,6 +18,11 @@ function initFormBase(def = { type: '' }) {
   return null;
 }
 
+/**
+ * 通过formschema递归生成object
+ * @param formDef {{}}
+ * @param obj {{}}
+ */
 function formSchemaToObject(formDef, obj) {
   // console.log('formDef', formDef)
   if (formDef.type === 'object') {
@@ -31,6 +42,12 @@ function formSchemaToObject(formDef, obj) {
   }
 }
 
+/**
+ * 通过formDef生成model
+ * @link https://ncform.github.io/ncform/ncform-show/playground/index.html#tpl=basic-verification-rule
+ * @param formDef {{}}
+ * @returns {any}
+ */
 export function createFormModel(formDef) {
   let obj;
   // eslint-disable-next-line prefer-const
