@@ -1,3 +1,3 @@
-import com from './components/test.vue'
+import com from './components/test.vue';
 
-console.log(com)
+console.log(com);
