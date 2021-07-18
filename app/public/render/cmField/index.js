@@ -1,4 +1,4 @@
-import { global } from './public/expose/main.js';
+import { global, lodash } from './public/expose/main.js';
 import { useCommonComponent } from './public/hooks.js';
 
 export default function(name) {
@@ -33,8 +33,14 @@ export default function(name) {
       if (props.type === 'checkbox') {
         value = ref([]);
       }
+      if (props.type === 'time') {
+        value = ref(new Date());
+      }
       onMounted(() => {
-        value.value = props.modelValue;
+        // value.value = props.modelValue;
+        if (props.type === 'time') {
+          console.log(value.value)
+        }
         // console.log('sdsds', props.modelValue);
       });
 
@@ -45,6 +51,7 @@ export default function(name) {
       }
 
       function onChange(e) {
+        console.log(e)
         emit('update:modelValue', value.value);
       }
 
@@ -52,9 +59,15 @@ export default function(name) {
         return Array.isArray(v);
       }
 
+      function getOpt(path, defaultVal) {
+        // console.log('props.ui', path, lodash.get(props.ui, path, defaultVal))
+        return lodash.get(props.ui, path, defaultVal);
+      }
+
       return {
         onInput,
         ...commonCom,
+        getOpt,
         isArray,
         value,
         onChange,

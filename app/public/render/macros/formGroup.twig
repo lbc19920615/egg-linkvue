@@ -70,6 +70,9 @@
     <template v-if="type === 'select'">
         {{forms.select(modelPath)}}
     </template>
+    <template v-if="type === 'time'">
+        {{forms.time(modelPath)}}
+    </template>
 {% endmacro %}
 
 {% macro fieldset(formDef, path) %}

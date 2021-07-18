@@ -18,6 +18,16 @@ function initFormBase(def = { type: '' }) {
   return null;
 }
 
+const ARRAY_TYPES = [ 'checkbox' ];
+
+export function defDefault(type) {
+  // console.log('formDefProp.type', formDefProp.type)
+  if (ARRAY_TYPES.includes(type)) {
+    return [];
+  }
+  return undefined;
+}
+
 /**
  * 通过formschema递归生成object
  * @param formDef {{}}
@@ -29,11 +39,7 @@ function formSchemaToObject(formDef, obj) {
     Object.entries(formDef.properties).forEach(([ key, formDefProp ]) => {
       // console.log('formDefProp', formDefProp)
       if (formDefProp.type !== 'array') {
-        obj[key] = null;
-        // console.log('formDefProp.type', formDefProp.type)
-        if (formDefProp.type === 'checkbox') {
-          obj[key] = [];
-        }
+        obj[key] = defDefault(formDefProp.type);
       } else {
         obj[key] = [ undefined ];
         // if (formDefProp.items.type === 'object') {

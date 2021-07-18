@@ -49,16 +49,24 @@
   </el-checkbox-group>
 {% endmacro %}
 
-
 {% macro select(model) %}
-  <el-select v-model="{{ model }}" @change="onChange">
-    {% verbatim %}
+<el-select v-model="{{ model }}" @change="onChange">
+  {% verbatim %}
     <template v-if="ui && ui.widget && ui.widget.enums">
       <el-option v-for="(item, enumIndex) in ui.widget.enums"
               :label="item[1]" :value="item[0]"></el-option>
     </template>
 {% endverbatim %}
-  </el-select>
+</el-select>
+{% endmacro %}
+
+
+{% macro time(model) %}
+  <el-time-picker
+          arrow-control
+          v-model="{{ model }}" @change="onChange"
+          :placeholder="getOpt('placeholder')">
+  </el-time-picker>
 {% endmacro %}
 
 

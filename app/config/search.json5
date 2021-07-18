@@ -71,6 +71,12 @@
               ]
             }
           },
+        },
+        time: {
+          type: 'time',
+          ui: {
+            placeholder: '请选择'
+          },
         }
       },
     }

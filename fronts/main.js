@@ -3,7 +3,10 @@
  * @module main
  */
 
-// import each from 'lodash/each';
+import get from 'lodash/get';
+export let lodash = {
+  get
+}
 
 import _qs from 'qs';
 
