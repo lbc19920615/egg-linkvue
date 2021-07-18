@@ -5,7 +5,7 @@ export default function(name) {
   const templateId = name + '-tpl';
   // eslint-disable-next-line no-undef
   globalThis.initTemplate(templateId, globalThis, {
-    html: `{{html}}`
+    html: `{{html}}`,
   });
 
   return {
@@ -29,12 +29,16 @@ export default function(name) {
 
       const commonCom = useCommonComponent({ name });
 
+      let value = ref(null);
+      if (props.type === 'checkbox') {
+        value = ref([]);
+      }
       onMounted(() => {
         value.value = props.modelValue;
+        // console.log('sdsds', props.modelValue);
       });
 
-      const value = ref(null);
-      function onInput(e) {
+      function onInput() {
         // console.log('onInput', props.modelValue, e)
         // console.log('value.value', value.value)
         emit('update:modelValue', value.value);

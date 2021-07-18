@@ -38,6 +38,28 @@
               ]
             }
           },
+        },
+        radio: {
+          type: 'radio',
+          ui: {
+            widget:{
+              enums: [
+                ['sdsds12121', 'radio1'],
+                ['s232323211', 'radio2']
+              ]
+            }
+          },
+        },
+        check: {
+          type: 'checkbox',
+          ui: {
+            widget:{
+              enums: [
+                ['sdsds12121', 'checkbox1'],
+                ['s232323211', 'checkbox2']
+              ]
+            }
+          },
         }
       },
     }

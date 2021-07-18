@@ -2047,6 +2047,9 @@ function formSchemaToObject(formDef, obj) {
     Object.entries(formDef.properties).forEach(([key, formDefProp]) => {
       if (formDefProp.type !== "array") {
         obj[key] = null;
+        if (formDefProp.type === "checkbox") {
+          obj[key] = [];
+        }
       } else {
         obj[key] = [void 0];
         obj[key][0] = initFormBase(formDefProp.items);

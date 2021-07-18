@@ -15,7 +15,7 @@
   </el-radio-group>
 {% endmacro %}
 
-{% macro radios(model) %}
+{% macro radio(model) %}
   <el-radio-group v-model="{{ model }}" @change="onChange">
 {% verbatim %}
     <template v-if="ui && ui.widget && ui.widget.enums">
@@ -35,6 +35,19 @@
     </template>
 {% endverbatim %}
   </el-radio-group>
+{% endmacro %}
+
+
+{% macro checkbox(model) %}
+  <el-checkbox-group v-model="{{ model }}" @change="onChange">
+    {{ model }}
+{% verbatim %}
+    <template v-if="ui && ui.widget && ui.widget.enums">
+      <el-checkbox v-for="(item, enumIndex) in ui.widget.enums"
+              :label="item[0]">{{item[1]}} {{item[0]}}</el-checkbox>
+    </template>
+{% endverbatim %}
+  </el-checkbox-group>
 {% endmacro %}
 
 

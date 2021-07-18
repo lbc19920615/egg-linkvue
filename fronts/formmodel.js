@@ -27,8 +27,13 @@ function formSchemaToObject(formDef, obj) {
   // console.log('formDef', formDef)
   if (formDef.type === 'object') {
     Object.entries(formDef.properties).forEach(([ key, formDefProp ]) => {
+      // console.log('formDefProp', formDefProp)
       if (formDefProp.type !== 'array') {
         obj[key] = null;
+        // console.log('formDefProp.type', formDefProp.type)
+        if (formDefProp.type === 'checkbox') {
+          obj[key] = [];
+        }
       } else {
         obj[key] = [ undefined ];
         // if (formDefProp.items.type === 'object') {
