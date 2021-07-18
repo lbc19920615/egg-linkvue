@@ -15,10 +15,25 @@
   </el-radio-group>
 {% endmacro %}
 
+{% macro radios(model) %}
+  <el-radio-group v-model="{{ model }}" @change="onChange">
+{% verbatim %}
+    <template v-if="ui && ui.widget && ui.widget.enums">
+      <el-radio v-for="(item, enumIndex) in ui.widget.enums"
+              :label="item[0]">{{item[1]}}</el-radio>
+    </template>
+{% endverbatim %}
+  </el-radio-group>
+{% endmacro %}
+
 {% macro radioBoolean(model) %}
   <el-radio-group v-model="{{ model }}" @change="onChange">
-    <el-radio :label="yes">是</el-radio>
-    <el-radio :label="no">否</el-radio>
+    {% verbatim %}
+    <template v-if="ui && ui.widget && ui.widget.enums">
+     <el-radio :label="ui.widget.enums[0][0]">{{ui.widget.enums[0][1] ? ui.widget.enums[0][1] : '是'}}</el-radio>
+     <el-radio :label="ui.widget.enums[1][0]">{{ui.widget.enums[1][1] ? ui.widget.enums[1][1] : '否'}}</el-radio>
+    </template>
+{% endverbatim %}
   </el-radio-group>
 {% endmacro %}
 

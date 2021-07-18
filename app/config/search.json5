@@ -28,6 +28,17 @@
           ui: {
           }
         },
+        boolean: {
+          type: 'radioBoolean',
+          ui: {
+            widget:{
+              enums: [
+                ['0'],
+                ['1']
+              ]
+            }
+          },
+        }
       },
     }
   },

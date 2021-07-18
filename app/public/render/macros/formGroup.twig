@@ -48,7 +48,7 @@
     {% endif %}
 {% endmacro %}
 
-{% macro formItem(modelPath) %}
+{% macro formItem(modelPath, config) %}
     <template v-if="type === 'string'">
         {{forms.input(modelPath)}}
     </template>
@@ -57,6 +57,12 @@
     </template>
     <template v-if="type === 'integer'">
         {{forms.inputNumber(modelPath)}}
+    </template>
+    <template v-if="type === 'radio'">
+        {{forms.radios(modelPath)}}
+    </template>
+    <template v-if="type === 'radioBoolean'">
+        {{forms.radioBoolean(modelPath)}}
     </template>
 {% endmacro %}
 
