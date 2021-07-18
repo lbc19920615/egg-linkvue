@@ -67,6 +67,9 @@
     <template v-if="type === 'checkbox'">
         {{forms.checkbox(modelPath)}}
     </template>
+    <template v-if="type === 'select'">
+        {{forms.select(modelPath)}}
+    </template>
 {% endmacro %}
 
 {% macro fieldset(formDef, path) %}

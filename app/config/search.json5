@@ -60,6 +60,17 @@
               ]
             }
           },
+        },
+        select: {
+          type: 'select',
+          ui: {
+            widget:{
+              enums: [
+                ['sdsds12121', 'checkbox1'],
+                ['s232323211', 'checkbox2']
+              ]
+            }
+          },
         }
       },
     }
