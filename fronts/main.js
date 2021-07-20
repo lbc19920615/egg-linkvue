@@ -17,7 +17,6 @@ import _req from './ts/fetchio.ts';
 
 /**
  * fetchreq
- * @type {(url: string, config?: IReqConfig) => Promise<any>}
  */
 export const fetchreq = _req;
 
