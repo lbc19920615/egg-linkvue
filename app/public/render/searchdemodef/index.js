@@ -1,4 +1,4 @@
-import { createFormModel } from './public/formmodel.js';
+import { formModel } from './public/expose/main.js';
 
 const templateId = 'search-demo1-tpl';
 // eslint-disable-next-line no-undef
@@ -18,7 +18,8 @@ export default {
     // const configID = '{{ id }}';
     const config = JSON.parse(`{{source}}`);
 
-    const obj = createFormModel(config.formDef);
+    const obj = formModel.createFormModel(config.formDef);
+    // console.log(obj)
     const model = reactive(obj);
     const formDef = config.formDef;
 

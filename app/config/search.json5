@@ -28,6 +28,56 @@
           ui: {
           }
         },
+        boolean: {
+          type: 'radioBoolean',
+          ui: {
+            widget:{
+              enums: [
+                ['0'],
+                ['1']
+              ]
+            }
+          },
+        },
+        radio: {
+          type: 'radio',
+          ui: {
+            widget:{
+              enums: [
+                ['sdsds12121', 'radio1'],
+                ['s232323211', 'radio2']
+              ]
+            }
+          },
+        },
+        check: {
+          type: 'checkbox',
+          ui: {
+            widget:{
+              enums: [
+                ['sdsds12121', 'checkbox1'],
+                ['s232323211', 'checkbox2']
+              ]
+            }
+          },
+        },
+        select: {
+          type: 'select',
+          ui: {
+            widget:{
+              enums: [
+                ['sdsds12121', 'checkbox1'],
+                ['s232323211', 'checkbox2']
+              ]
+            }
+          },
+        },
+        time: {
+          type: 'time',
+          ui: {
+            placeholder: '请选择'
+          },
+        }
       },
     }
   },

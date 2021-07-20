@@ -15,11 +15,58 @@
   </el-radio-group>
 {% endmacro %}
 
+{% macro radio(model) %}
+  <el-radio-group v-model="{{ model }}" @change="onChange">
+{% verbatim %}
+    <template v-if="ui && ui.widget && ui.widget.enums">
+      <el-radio v-for="(item, enumIndex) in ui.widget.enums"
+              :label="item[0]">{{item[1]}}</el-radio>
+    </template>
+{% endverbatim %}
+  </el-radio-group>
+{% endmacro %}
+
 {% macro radioBoolean(model) %}
   <el-radio-group v-model="{{ model }}" @change="onChange">
-    <el-radio :label="yes">是</el-radio>
-    <el-radio :label="no">否</el-radio>
+    {% verbatim %}
+    <template v-if="ui && ui.widget && ui.widget.enums">
+     <el-radio :label="ui.widget.enums[0][0]">{{ui.widget.enums[0][1] ? ui.widget.enums[0][1] : '是'}}</el-radio>
+     <el-radio :label="ui.widget.enums[1][0]">{{ui.widget.enums[1][1] ? ui.widget.enums[1][1] : '否'}}</el-radio>
+    </template>
+{% endverbatim %}
   </el-radio-group>
+{% endmacro %}
+
+
+{% macro checkbox(model) %}
+  <el-checkbox-group v-model="{{ model }}" @change="onChange">
+{% verbatim %}
+    <template v-if="ui && ui.widget && ui.widget.enums">
+      <el-checkbox v-for="(item, enumIndex) in ui.widget.enums"
+              :label="item[0]">{{item[1]}}</el-checkbox>
+    </template>
+{% endverbatim %}
+  </el-checkbox-group>
+{% endmacro %}
+
+{% macro select(model) %}
+<el-select v-model="{{ model }}" @change="onChange">
+  {% verbatim %}
+    <template v-if="ui && ui.widget && ui.widget.enums">
+      <el-option v-for="(item, enumIndex) in ui.widget.enums"
+              :label="item[1]" :value="item[0]"></el-option>
+    </template>
+{% endverbatim %}
+</el-select>
+{% endmacro %}
+
+
+{% macro time(model) %}
+  <el-time-picker
+          arrow-control
+          v-model="{{ model }}" @change="onChange"
+          :placeholder="getOpt('placeholder')">
+  </el-time-picker>
 {% endmacro %}
 
 

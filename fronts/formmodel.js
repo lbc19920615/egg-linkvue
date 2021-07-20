@@ -1,5 +1,11 @@
 /**
+ * formmodel
+ * @module formmodel
+ */
+
+/**
  * initFormBase
+ * @description 初始化form base
  * @param def {{ type: '' }}
  */
 function initFormBase(def = { type: '' }) {
@@ -12,12 +18,28 @@ function initFormBase(def = { type: '' }) {
   return null;
 }
 
+const ARRAY_TYPES = [ 'checkbox' ];
+
+export function defDefault(type) {
+  // console.log('formDefProp.type', formDefProp.type)
+  if (ARRAY_TYPES.includes(type)) {
+    return [];
+  }
+  return undefined;
+}
+
+/**
+ * 通过formschema递归生成object
+ * @param formDef {{}}
+ * @param obj {{}}
+ */
 function formSchemaToObject(formDef, obj) {
   // console.log('formDef', formDef)
   if (formDef.type === 'object') {
     Object.entries(formDef.properties).forEach(([ key, formDefProp ]) => {
+      // console.log('formDefProp', formDefProp)
       if (formDefProp.type !== 'array') {
-        obj[key] = null;
+        obj[key] = defDefault(formDefProp.type);
       } else {
         obj[key] = [ undefined ];
         // if (formDefProp.items.type === 'object') {
@@ -31,6 +53,12 @@ function formSchemaToObject(formDef, obj) {
   }
 }
 
+/**
+ * 通过formDef生成model
+ * @link https://ncform.github.io/ncform/ncform-show/playground/index.html#tpl=basic-verification-rule
+ * @param formDef {{}}
+ * @returns {any}
+ */
 export function createFormModel(formDef) {
   let obj;
   // eslint-disable-next-line prefer-const
