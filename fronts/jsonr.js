@@ -1,6 +1,6 @@
 /**
  * @module jsonr
- * @description 基于JSON5的加强json解析器
+ * @description 基于[JSON5](https://json5.org/)的加强json解析器
  * <p>可以解析function</p>
  */
 
