@@ -16,6 +16,7 @@
     "recurse": true                  // same as -r
   },
   "plugins": [
+    "plugins/markdown",
     "node_modules/better-docs/typescript"
   ],
   "typescript": {
