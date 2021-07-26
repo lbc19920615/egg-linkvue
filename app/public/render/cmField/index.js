@@ -25,11 +25,11 @@ export default function(name) {
       },
     },
     setup(props, { emit }) {
-      const { ref, onMounted } = global.Vue;
+      const { ref, onMounted, watch } = global.Vue;
 
       const commonCom = useCommonComponent({ name });
 
-      let value = ref(null);
+      let value = ref('');
       if (props.type === 'checkbox') {
         value = ref([]);
       }
@@ -38,11 +38,19 @@ export default function(name) {
       }
       onMounted(() => {
         // value.value = props.modelValue;
-        if (props.type === 'time') {
-          console.log(value.value)
-        }
-        // console.log('sdsds', props.modelValue);
+        // if (props.type === 'time') {
+        //   console.log(value.value)
+        // }
+        // setTimeout(() => {
+        //   console.log('sdsds', props, props.modelValue);
+        //   value.value = props.modelValue;
+        // }, 30);
       });
+
+      watch(() => props.modelValue, function(newVal) {
+        console.log('newVal', newVal)
+        value.value = props.modelValue;
+      }, {immediate:true});
 
       function onInput() {
         // console.log('onInput', props.modelValue, e)
