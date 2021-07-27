@@ -18,7 +18,8 @@
             <cm-field v-model="{{ path }}[{{ formItemLabel }}]"
                       :label="{{ formItemLabel }}" :prop="{{ formItemLabel }}"
                       :form-path="'{{ path }}.' + '{{ formItemLabel }}'"
-                      :type="{{ formItemKey }}.type" :ui="{{ formItemKey }}.ui"></cm-field>
+                      :type="{{ formItemKey }}.type"
+                      :ui="{{ formItemKey }}.ui"></cm-field>
         </template>
         <template v-if="{{ formItemKey }}.type === 'array' ">
             {% set subItemKey = 'subItem' ~ index %}
@@ -72,6 +73,9 @@
     </template>
     <template v-if="type === 'time'">
         {{forms.time(modelPath)}}
+    </template>
+    <template v-if="type === 'custom'">
+        {{forms.custom(modelPath)}}
     </template>
 {% endmacro %}
 

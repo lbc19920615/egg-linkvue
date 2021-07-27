@@ -77,6 +77,16 @@
           ui: {
             placeholder: '请选择'
           },
+        },
+        cus1: {
+          type: 'custom',
+          ui: {
+            widget: 'unit-input',
+            widgetConfig: {
+              a: 1
+            },
+            placeholder: '请选择'
+          },
         }
       },
     }

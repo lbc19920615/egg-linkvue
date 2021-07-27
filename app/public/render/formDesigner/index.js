@@ -1,6 +1,6 @@
 import { formModel } from './public/expose/main.js';
 
-const templateId = 'search-demo1-tpl';
+const templateId = 'form-designer-tpl';
 // eslint-disable-next-line no-undef
 globalThis.initTemplate(templateId, globalThis, {
   html: `{{html}}`,

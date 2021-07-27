@@ -69,4 +69,11 @@
   </el-time-picker>
 {% endmacro %}
 
+{% macro custom(model) %}
+  <custom-form-render
+          :ui="ui"
+          v-model="{{ model }}" @change="onChange"
+          :placeholder="getOpt('placeholder')" />
+{% endmacro %}
+
 
