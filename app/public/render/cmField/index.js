@@ -48,9 +48,9 @@ export default function(name) {
       });
 
       watch(() => props.modelValue, function(newVal) {
-        console.log('newVal', newVal)
-        value.value = props.modelValue;
-      }, {immediate:true});
+        // console.log('newVal', newVal)
+        value.value = newVal;
+      }, { immediate:true });
 
       function onInput() {
         // console.log('onInput', props.modelValue, e)
