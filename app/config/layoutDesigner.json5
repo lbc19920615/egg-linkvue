@@ -27,7 +27,15 @@
                 }
               },
               h: {
-                type: 'string',
+//                type: 'string',
+                type: 'custom',
+                ui: {
+                  widget: 'unit-input',
+                  widgetConfig: {
+                    a: 1
+                  },
+                  placeholder: '请选择'
+                }
               }
             }
           }
