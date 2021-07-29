@@ -10,7 +10,7 @@ var require_vue = __commonJS({
   }
 });
 
-// vue-iii-transform:D:\projects\egg-projects\eggjs-starter\fronts\components\test.vue
+// vue-iii-transform:D:\projects\egg-linkvue\fronts\components\test.vue
 var import_vue = __toModule(require_vue());
 var _sfc_main = {
   setup() {

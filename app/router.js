@@ -7,6 +7,7 @@ module.exports = app => {
   router.get('index', '/getscript', controller.home.getscript);
   router.get('index', '/getcontent', controller.home.getContent);
   router.get('index', '/getcontentv2', controller.home.getContentv2);
+  router.post('index', '/getcontentv3', controller.home.getContentV3);
   router.get('index', '/getremote', controller.home.getremote);
   router.get('index', '/getconfig', controller.home.getConfig);
   router.get('index', '/getstyle', controller.home.getstyle);

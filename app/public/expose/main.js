@@ -2834,7 +2834,8 @@ var fetchio_default = $req;
 // fronts/formmodel.js
 var formmodel_exports = {};
 __export(formmodel_exports, {
-  createFormModel: () => createFormModel
+  createFormModel: () => createFormModel,
+  defDefault: () => defDefault
 });
 function initFormBase(def = { type: "" }) {
   if (def.type === "object") {
@@ -2845,14 +2846,18 @@ function initFormBase(def = { type: "" }) {
   }
   return null;
 }
+var ARRAY_TYPES = ["checkbox"];
+function defDefault(type) {
+  if (ARRAY_TYPES.includes(type)) {
+    return [];
+  }
+  return void 0;
+}
 function formSchemaToObject(formDef, obj) {
   if (formDef.type === "object") {
     Object.entries(formDef.properties).forEach(([key, formDefProp]) => {
       if (formDefProp.type !== "array") {
-        obj[key] = null;
-        if (formDefProp.type === "checkbox") {
-          obj[key] = [];
-        }
+        obj[key] = defDefault(formDefProp.type);
       } else {
         obj[key] = [void 0];
         obj[key][0] = initFormBase(formDefProp.items);
@@ -2897,6 +2902,17 @@ function fetchContentV2(queryObj = {}, params = {}) {
     ...params
   });
 }
+function fetchContentV3(data = {}, query = {}) {
+  let url2 = "/getcontentv3";
+  if (Object.keys(query).length > 0) {
+    url2 = url2 + "?" + qs.stringify(query);
+  }
+  return fetchreq(url2, {
+    baseUrl: REMOTE_ORIGIN,
+    method: "POST",
+    body: data
+  });
+}
 function camel2hyphen(camel) {
   return camel.replace(/[A-Z]/g, (m) => "-" + m.toLowerCase());
 }
@@ -2913,6 +2929,7 @@ export {
   camel2hyphen,
   camelNameToCls,
   fetchContentV2,
+  fetchContentV3,
   fetchreq,
   formModel,
   global2 as global,

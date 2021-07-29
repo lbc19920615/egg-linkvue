@@ -50,8 +50,8 @@ export const REMOTE_ORIGIN = url.origin
 
 /**
  * fetchContentV2
- * @param queryObj
- * @param params
+ * @param queryObj {{}}
+ * @param params {{}}
  * @returns {Promise<any>}
  */
 export function fetchContentV2 (queryObj = {}, params = {}) {
@@ -61,6 +61,25 @@ export function fetchContentV2 (queryObj = {}, params = {}) {
     ...params
   })
 }
+
+/**
+ * fetchContentV3
+ * @param data {{}}
+ * @param query {{}}
+ * @returns {Promise<any>}
+ */
+export function fetchContentV3 (data = {}, query = {}) {
+  let url = '/getcontentv3'
+  if (Object.keys(query).length > 0) {
+    url = url + '?' + qs.stringify(query)
+  }
+  return fetchreq(url, {
+    baseUrl: REMOTE_ORIGIN,
+    method: 'POST',
+    body: data
+  })
+}
+
 
 /**
  * camel
