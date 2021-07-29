@@ -1,0 +1,25 @@
+{
+  "id": "s1212121222sss1212121",
+  "source": {
+    "modelName": "model",
+    row: {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'string',
+          ui: {
+          }
+        },
+        content: {
+          type: 'custom',
+          ui: {
+            widget: 'json-code-editor',
+            widgetConfig: {
+            },
+            placeholder: '请选择'
+          }
+        }
+      },
+    },
+  }
+}
