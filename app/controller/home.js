@@ -174,7 +174,7 @@ class HomeController extends Controller {
     console.log('source', source)
     ctx.body = await this._parseContent(src, configId, {
       append: {
-        source: source,
+        source: JSON.stringify(source),
       },
     });
   }
@@ -219,6 +219,30 @@ class HomeController extends Controller {
     }
     ctx.set('Content-Type', 'application/javascript; charset=utf-8');
     ctx.body = `export default ${JSON.stringify(configObj)}`;
+  }
+  async getscriptv2() {
+    const { ctx } = this;
+    const src = ctx.request.query.src ? ctx.request.query.src : '';
+
+    let content = '';
+    const scriptPath = replaceExt(src, '.js');
+    const tplPath = replaceExt(src, '.twig');
+    const source = ctx.request.body ? ctx.request.body : {};
+    const tpl = await this._parseContentV2(tplPath, {
+      append: {
+        source: JSON.stringify(source),
+      },
+    });
+    const script = await this._parseContentV2(scriptPath, {
+      append: {
+        source: JSON.stringify(source),
+        html: tpl,
+      },
+    });
+    // console.log('tpl', tpl);
+    content = script;
+    ctx.set('Content-Type', 'application/javascript; charset=utf-8');
+    ctx.body = content;
   }
   async getscript() {
     const { ctx } = this;

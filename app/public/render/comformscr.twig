@@ -1,0 +1,53 @@
+{% import "./macros/formGroup.twig" as formGroup %}
+
+<template>
+<el-form :model="model" >
+  {{ formGroup.renderSet("config.row.properties", "model", 1,2, 'div') }}
+</el-form>
+</template>
+
+<script type="module">
+import { formModel } from 'http://localhost:7002/public/expose/main.js';
+
+export default {
+  props: {
+    modelValue: null,
+  },
+  emits: [
+    'model:update',
+  ],
+  mounted() {
+    this.$emit('init', this);
+  },
+  setup(props, { emit }) {
+    const { ref, reactive, watch } = global.Vue;
+    const tableData = ref([]);
+
+    const config = JSON.parse(`{{source}}`);
+
+    const obj = formModel.createFormModel(config.row);
+    // console.log(obj)
+    const model = reactive(obj);
+
+    function setModel(newVal) {
+      console.log('formDesigner setModel', newVal);
+      for (const key in newVal) {
+        model[key] = newVal[key];
+        // console.log(key, model[key], newVal[key])
+      }
+    }
+
+    watch(model, newVal => {
+      // console.log('model.content', newVal)
+      emit('model:update', newVal);
+    });
+
+    return {
+      config,
+      model,
+      tableData,
+      setModel,
+    };
+  },
+};
+</script>

@@ -10,6 +10,11 @@
           ui: {
           }
         },
+        template: {
+          type: 'string',
+          ui: {
+          }
+        },
         content: {
           type: 'custom',
           ui: {
