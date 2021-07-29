@@ -34,7 +34,7 @@
 {#                {{ objPath }} {% verbatim %}{{ {% endverbatim %} {{ objPath }} {% verbatim %} }} {% endverbatim %}#}
                 {{ _self.renderSet(objPath, scopePath, index + 1, max, tag) }}
             </{{ tag }}>
-            <slot name="{{ formItemLabel }}__array__after" v-bind="{{ formItemKey }}"></slot>
+            <slot name="{{ formItemLabel }}__array__after"></slot>
         </template>
     </{{ tag }}>
     {% else %}
