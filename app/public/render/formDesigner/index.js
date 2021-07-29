@@ -11,10 +11,13 @@ export default {
   props: {
     modelValue: null,
   },
+  emits: [
+    'model:update',
+  ],
   mounted() {
     this.$emit('init', this);
   },
-  setup(props) {
+  setup(props, {emit}) {
     const { ref, reactive, onMounted, watch } = global.Vue;
 
     // const internalInstance = getCurrentInstance();
@@ -28,14 +31,22 @@ export default {
     // console.log(obj)
     const model = reactive(obj);
 
-
     function setModel(newVal) {
-      console.log('formDesigner change')
+      console.log('formDesigner setModel', newVal)
       for (const key in newVal) {
         model[key] = newVal[key];
         // console.log(key, model[key], newVal[key])
       }
     }
+
+    watch(() => model.id, (newVal) => {
+      // console.log('model.id', newVal)
+    });
+
+    watch(model, (newVal) => {
+      // console.log('model.content', newVal)
+      emit('model:update', newVal)
+    });
 
     return {
       config,
