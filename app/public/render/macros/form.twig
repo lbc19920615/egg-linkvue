@@ -1,14 +1,29 @@
+{% macro fieldAttr(def) %}
+  {% for key in def %} :{{ key }}="getUIOpt('{{ key }}')" {% endfor %}
+{% endmacro %}
+
+{% set commonInputAttrs = ['readonly', 'placeholder'] %}
+
 {% macro input(model, type = "text") %}
-  <el-input v-model="{{model}}"  @input="onInput"></el-input>
+  <el-input v-model="{{model}}"
+            @input="onInput"
+          {{ _self.fieldAttr(commonInputAttrs) }}
+  ></el-input>
 {% endmacro %}
 
 {% macro inputNumber(model, type = "number") %}
-  <el-input v-model.number="{{model}}" type="{{ type }}" @input="onInput" ></el-input>
+  <el-input v-model.number="{{model}}" type="{{ type }}"
+            @input="onInput"
+          {{ _self.fieldAttr(commonInputAttrs) }}
+  ></el-input>
 {% endmacro %}
 
 
 {% macro radioGroup(model) %}
-  <el-radio-group v-model="{{ model }}" @change="onChange">
+  <el-radio-group v-model="{{ model }}"
+                  @change="onChange"
+          {{ _self.fieldAttr(commonInputAttrs) }}
+  >
     <el-radio :label="3">备选项</el-radio>
     <el-radio :label="6">备选项</el-radio>
     <el-radio :label="9">备选项</el-radio>
@@ -16,7 +31,9 @@
 {% endmacro %}
 
 {% macro radio(model) %}
-  <el-radio-group v-model="{{ model }}" @change="onChange">
+  <el-radio-group v-model="{{ model }}" @change="onChange"
+          {{ _self.fieldAttr(commonInputAttrs) }}
+  >
 {% verbatim %}
     <template v-if="ui && ui.widgetConfig && ui.widgetConfig.enums">
       <el-radio v-for="(item, enumIndex) in ui.widgetConfig.enums"
@@ -27,7 +44,9 @@
 {% endmacro %}
 
 {% macro radioBoolean(model) %}
-  <el-radio-group v-model="{{ model }}" @change="onChange">
+  <el-radio-group v-model="{{ model }}" @change="onChange"
+          {{ _self.fieldAttr(commonInputAttrs) }}
+  >
     {% verbatim %}
     <template v-if="ui && ui.widgetConfig && ui.widgetConfig.enums">
      <el-radio :label="ui.widgetConfig.enums[0][0]">{{ui.widgetConfig.enums[0][1] ? ui.widgetConfig.enums[0][1] : '是'}}</el-radio>
@@ -39,7 +58,9 @@
 
 
 {% macro checkbox(model) %}
-  <el-checkbox-group v-model="{{ model }}" @change="onChange">
+  <el-checkbox-group v-model="{{ model }}" @change="onChange"
+          {{ _self.fieldAttr(commonInputAttrs) }}
+  >
 {% verbatim %}
     <template v-if="ui && ui.widgetConfig && ui.widgetConfig.enums">
       <el-checkbox v-for="(item, enumIndex) in ui.widgetConfig.enums"
@@ -50,7 +71,9 @@
 {% endmacro %}
 
 {% macro select(model) %}
-<el-select v-model="{{ model }}" @change="onChange">
+<el-select v-model="{{ model }}" @change="onChange"
+        {{ _self.fieldAttr(commonInputAttrs) }}
+>
   {% verbatim %}
     <template v-if="ui && ui.widgetConfig && ui.widgetConfig.enums">
       <el-option v-for="(item, enumIndex) in ui.widgetConfig.enums"
@@ -65,7 +88,8 @@
   <el-time-picker
           arrow-control
           v-model="{{ model }}" @change="onChange"
-          :placeholder="getOpt('placeholder')">
+          {{ _self.fieldAttr(commonInputAttrs) }}
+  >
   </el-time-picker>
 {% endmacro %}
 
@@ -73,7 +97,7 @@
   <custom-form-render
           :ui="ui"
           v-model="{{ model }}" @change="onChange"
-          :placeholder="getOpt('placeholder')" />
+          {{ _self.fieldAttr(commonInputAttrs) }}/>
 {% endmacro %}
 
 

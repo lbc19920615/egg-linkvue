@@ -1,10 +1,6 @@
 
 {% import "./form.twig" as forms %}
 
-{% macro fieldAttr(def) %}
-{% for key, value in def %}{{ key }}='{{ value }}'{% endfor %}
-{% endmacro %}
-
 {% macro renderSet(obj, path, index, max, tag = 'div') %}
     {% set prefix = 'bs-' %}
     {% set formItemKey = 'formItem' ~ index %}

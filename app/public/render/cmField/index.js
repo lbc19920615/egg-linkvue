@@ -72,10 +72,16 @@ export default function(name) {
         return lodash.get(props.ui, path, defaultVal);
       }
 
+      function getUIOpt(path, defaultVal) {
+        // console.log('props.ui', path, lodash.get(props.ui, path, defaultVal))
+        return lodash.get(props.ui, path, defaultVal);
+      }
+
       return {
         onInput,
         ...commonCom,
         getOpt,
+        getUIOpt,
         isArray,
         value,
         onChange,
