@@ -1,8 +1,8 @@
 {% macro fieldAttr(def) %}
-  {% for key in def %} :{{ key }}="getUIOpt('{{ key }}')" {% endfor %}
+  {% for key in def %} :{{ key }}="getUIOpt  && getUIOpt('{{ key }}')" {% endfor %}
 {% endmacro %}
 
-{% set commonInputAttrs = ['readonly', 'placeholder'] %}
+{% set commonInputAttrs = [] %}
 
 {% macro input(model, type = "text") %}
   <el-input v-model="{{model}}"

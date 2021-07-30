@@ -1,44 +1,54 @@
 
 {% import "./form.twig" as forms %}
 
-{% macro renderSet(obj, path, index, max, tag = 'div') %}
+{% macro renderSet(obj, path, index, max, tag = 'div', array_tag = 'template') %}
     {% set prefix = 'bs-' %}
     {% set formItemKey = 'formItem' ~ index %}
     {% set formItemLabel = 'key' ~ index %}
 {#    {{ formItemLabel }}#}
     {% if index < max %}
-    <{{ tag }} class="{{ prefix }}{{ formItemLabel }}"
-         v-for="({{ formItemKey }}, {{ formItemLabel }}) in {{ obj }}"
-         slot-before="{{ formItemLabel }}"
+    <el-row type="flex">
+        <{{ tag }} class="{{ prefix }}{{ formItemLabel }}"
+        v-for="({{ formItemKey }}, {{ formItemLabel }}) in {{ obj }}"
+        slot-before="{{ formItemLabel }}"
+        :span="{{ formItemKey }}.ui ? {{ formItemKey }}.ui.column : undefined"
         >
-        {% set defPath =   obj ~ '[' ~ formItemLabel ~ ']'   %}
-        <template v-if="{{ formItemKey }}.type !== 'array' ">
-            <cm-field v-model="{{ path }}[{{ formItemLabel }}]"
-                      :label="{{ formItemLabel }}" :prop="{{ formItemLabel }}"
-                      :form-path="'{{ path }}.' + '{{ formItemLabel }}'"
-                      :type="{{ formItemKey }}.type"
-                      :ui="{{ formItemKey }}.ui"></cm-field>
-        </template>
-        <template v-if="{{ formItemKey }}.type === 'array' ">
-            <slot name="{{ formItemLabel }}__array__before" v-bind="{item: {{ formItemKey }}, index: {{ formItemLabel }}}"></slot>
-            {% set subItemKey = 'subItem' ~ index %}
-            {% set subItemLabel = 'subIndex' ~ index %}
-            <{{ tag}} class="{{ prefix }}{{ formItemLabel }}__{{ subItemLabel }}"
-                    v-for="({{ subItemKey }}, {{ subItemLabel }}) in {{ path }}[{{ formItemLabel }}]">
-                {% set scopePath = path ~ '[' ~ formItemLabel ~ '][' ~ subItemLabel ~ ']'  %}
-                {% set objPath = defPath ~ '.items.properties' %}
-{#                {{ objPath }} {% verbatim %}{{ {% endverbatim %} {{ objPath }} {% verbatim %} }} {% endverbatim %}#}
-                {{ _self.renderSet(objPath, scopePath, index + 1, max, tag) }}
-            </{{ tag }}>
-            <slot name="{{ formItemLabel }}__array__after"></slot>
-        </template>
-    </{{ tag }}>
+            {% set defPath =   obj ~ '[' ~ formItemLabel ~ ']'   %}
+            <template v-if="{{ formItemKey }}.type !== 'array' ">
+                <cm-field v-model="{{ path }}[{{ formItemLabel }}]"
+                          :label="{{ formItemLabel }}" :prop="{{ formItemLabel }}"
+                          :form-path="'{{ path }}.' + '{{ formItemLabel }}'"
+                          :type="{{ formItemKey }}.type"
+                          :ui="{{ formItemKey }}.ui"></cm-field>
+            </template>
+            <template v-if="{{ formItemKey }}.type === 'array' ">
+                <slot name="{{ formItemLabel }}__array__before"
+                      v-bind="{item: {{ formItemKey }}, index: {{ formItemLabel }}}"></slot>
+                {% set subItemKey = 'subItem' ~ index %}
+                {% set subItemLabel = 'subIndex' ~ index %}
+                <{{ array_tag}}
+                    class="{{ prefix }}{{ formItemLabel }}__{{ subItemLabel }} {{ prefix }}{{ formItemLabel }}__{{ subItemLabel }}__array"
+                    v-for="({{ subItemKey }}, {{ subItemLabel }}) in {{ path }}[{{ formItemLabel }}]"
+                    :span="{{ subItemKey }}.ui ? {{ subItemKey }}.ui.column : undefined"
+                >
+                    {% set scopePath = path ~ '[' ~ formItemLabel ~ '][' ~ subItemLabel ~ ']'  %}
+                    {% set objPath = defPath ~ '.items.properties' %}
+                    {#                {{ objPath }} {% verbatim %}{{ {% endverbatim %} {{ objPath }} {% verbatim %} }} {% endverbatim %}#}
+                    {{ _self.renderSet(objPath, scopePath, index + 1, max, tag, array_tag) }}
+                </{{ array_tag }}>
+                <slot name="{{ formItemLabel }}__array__after"></slot>
+            </template>
+        </{{ tag }}>
+    </el-row>
     {% else %}
 {#        {{ obj }} {{ path }}#}
 
 {#        {% verbatim %} {{ {% endverbatim %} {{ obj }} {% verbatim %} }} {% endverbatim %}#}
-        <template
-             v-for="(subFormItem, subKey) in {{ obj }}">
+    <el-row type="flex">
+        <{{ tag }}
+             v-for="(subFormItem, subKey) in {{ obj }}"
+            :span="subFormItem.ui ? subFormItem.ui.column : undefined"
+        >
 {#            {% verbatim %}{{ formItemLabel }}{% endverbatim %}#}
 
 {#            {% verbatim %} {{ {% endverbatim %} {{ path[] }} {% verbatim %} }} {% endverbatim %}#}
@@ -46,7 +56,8 @@
                       :label="subKey" :prop="subKey"
                       :form-path="'{{ path }}.' + subKey"
                       :type="subFormItem.type" :ui="subFormItem.ui"></cm-field>
-        </template>
+        </{{ tag }}>
+    </el-row>
     {% endif %}
 {% endmacro %}
 

@@ -20,17 +20,20 @@
         firstName: {
           type: 'string',
           ui: {
-            label: '姓名'
+            label: '姓名',
+            column: 12
           }
         },
         age: {
           type: 'integer',
           ui: {
+            column: 12
           }
         },
         boolean: {
           type: 'radioBoolean',
           ui: {
+            column: 8,
             widgetConfig:{
               enums: [
                 ['0'],
@@ -42,6 +45,7 @@
         radio: {
           type: 'radio',
           ui: {
+            column: 8,
             widgetConfig:{
               enums: [
                 ['sdsds12121', 'radio1'],
@@ -53,6 +57,7 @@
         check: {
           type: 'checkbox',
           ui: {
+            column: 8,
             widgetConfig:{
               enums: [
                 ['sdsds12121', 'checkbox1'],
@@ -87,6 +92,45 @@
             },
             placeholder: '请选择'
           },
+        },
+        level1:{
+          "type": "array",
+          "items": {
+            type: 'object',
+            properties: {
+              level1name: {
+                type: 'string',
+                ui: {
+                }
+              },
+              level2: {
+                "type": "array",
+                "items": {
+                  type: 'object',
+                  properties: {
+                    level2name: {
+                      type: 'string',
+                      ui: {
+                      }
+                    },
+                    level3: {
+                      "type": "array",
+                      "items": {
+                        type: 'object',
+                        properties: {
+                          level3name: {
+                            type: 'string',
+                            ui: {
+                            }
+                          },
+                        }
+                      },
+                    }
+                  }
+                },
+              }
+            }
+          }
         }
       },
     }
