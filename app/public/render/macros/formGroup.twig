@@ -55,32 +55,34 @@
 {% endmacro %}
 
 {% macro formItem(modelPath) %}
-    <template v-if="type === 'string'">
-        {{forms.input(modelPath)}}
-    </template>
-    <template v-if="type === 'number'">
-        {{forms.inputNumber(modelPath)}}
-    </template>
-    <template v-if="type === 'integer'">
-        {{forms.inputNumber(modelPath)}}
-    </template>
-    <template v-if="type === 'radio'">
-        {{forms.radio(modelPath)}}
-    </template>
-    <template v-if="type === 'radioBoolean'">
-        {{forms.radioBoolean(modelPath)}}
-    </template>
-    <template v-if="type === 'checkbox'">
-        {{forms.checkbox(modelPath)}}
-    </template>
-    <template v-if="type === 'select'">
-        {{forms.select(modelPath)}}
-    </template>
-    <template v-if="type === 'time'">
-        {{forms.time(modelPath)}}
-    </template>
-    <template v-if="type === 'custom'">
+    <template v-if="ui && ui.widget">
         {{forms.custom(modelPath)}}
+    </template>
+    <template v-else>
+        <template v-if="type === 'string'">
+            {{forms.input(modelPath)}}
+        </template>
+        <template v-if="type === 'number'">
+            {{forms.inputNumber(modelPath)}}
+        </template>
+        <template v-if="type === 'integer'">
+            {{forms.inputNumber(modelPath)}}
+        </template>
+        <template v-if="type === 'radio'">
+            {{forms.radio(modelPath)}}
+        </template>
+        <template v-if="type === 'radioBoolean'">
+            {{forms.radioBoolean(modelPath)}}
+        </template>
+        <template v-if="type === 'checkbox'">
+            {{forms.checkbox(modelPath)}}
+        </template>
+        <template v-if="type === 'select'">
+            {{forms.select(modelPath)}}
+        </template>
+        <template v-if="type === 'time'">
+            {{forms.time(modelPath)}}
+        </template>
     </template>
 {% endmacro %}
 

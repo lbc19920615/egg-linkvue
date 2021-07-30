@@ -18,8 +18,8 @@
 {% macro radio(model) %}
   <el-radio-group v-model="{{ model }}" @change="onChange">
 {% verbatim %}
-    <template v-if="ui && ui.widget && ui.widget.enums">
-      <el-radio v-for="(item, enumIndex) in ui.widget.enums"
+    <template v-if="ui && ui.widgetConfig && ui.widgetConfig.enums">
+      <el-radio v-for="(item, enumIndex) in ui.widgetConfig.enums"
               :label="item[0]">{{item[1]}}</el-radio>
     </template>
 {% endverbatim %}
@@ -29,9 +29,9 @@
 {% macro radioBoolean(model) %}
   <el-radio-group v-model="{{ model }}" @change="onChange">
     {% verbatim %}
-    <template v-if="ui && ui.widget && ui.widget.enums">
-     <el-radio :label="ui.widget.enums[0][0]">{{ui.widget.enums[0][1] ? ui.widget.enums[0][1] : '是'}}</el-radio>
-     <el-radio :label="ui.widget.enums[1][0]">{{ui.widget.enums[1][1] ? ui.widget.enums[1][1] : '否'}}</el-radio>
+    <template v-if="ui && ui.widgetConfig && ui.widgetConfig.enums">
+     <el-radio :label="ui.widgetConfig.enums[0][0]">{{ui.widgetConfig.enums[0][1] ? ui.widgetConfig.enums[0][1] : '是'}}</el-radio>
+     <el-radio :label="ui.widgetConfig.enums[1][0]">{{ui.widgetConfig.enums[1][1] ? ui.widgetConfig.enums[1][1] : '否'}}</el-radio>
     </template>
 {% endverbatim %}
   </el-radio-group>
@@ -41,8 +41,8 @@
 {% macro checkbox(model) %}
   <el-checkbox-group v-model="{{ model }}" @change="onChange">
 {% verbatim %}
-    <template v-if="ui && ui.widget && ui.widget.enums">
-      <el-checkbox v-for="(item, enumIndex) in ui.widget.enums"
+    <template v-if="ui && ui.widgetConfig && ui.widgetConfig.enums">
+      <el-checkbox v-for="(item, enumIndex) in ui.widgetConfig.enums"
               :label="item[0]">{{item[1]}}</el-checkbox>
     </template>
 {% endverbatim %}
@@ -52,8 +52,8 @@
 {% macro select(model) %}
 <el-select v-model="{{ model }}" @change="onChange">
   {% verbatim %}
-    <template v-if="ui && ui.widget && ui.widget.enums">
-      <el-option v-for="(item, enumIndex) in ui.widget.enums"
+    <template v-if="ui && ui.widgetConfig && ui.widgetConfig.enums">
+      <el-option v-for="(item, enumIndex) in ui.widgetConfig.enums"
               :label="item[1]" :value="item[0]"></el-option>
     </template>
 {% endverbatim %}
