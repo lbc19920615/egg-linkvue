@@ -171,10 +171,11 @@ class HomeController extends Controller {
     const configId = ctx.request.query.config_id ? ctx.request.query.config_id : '';
     // const config = ctx.request.query.config ? ctx.request.query.config : '';
     const source = ctx.request.body ? ctx.request.body : {};
-    console.log('source', source)
+    console.log('getContentV3', source)
     ctx.body = await this._parseContent(src, configId, {
       append: {
         source: JSON.stringify(source),
+        tplsrc: source,
       },
     });
   }
@@ -202,6 +203,7 @@ class HomeController extends Controller {
       ctx.body = await this._parseContent(src, configId, {
         append: {
           source: query,
+          tplSource: query,
         },
       });
     } catch (e) {
