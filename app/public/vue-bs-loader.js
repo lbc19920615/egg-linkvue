@@ -60,7 +60,7 @@ const ModuleConfig = (function() {
     createStore() {
       return {
         install(app) {
-          console.log(app);
+          // console.log(app);
           app.config.globalProperties.$alConfig = {
             get(id) {
               if (configMap.has(id)) {
