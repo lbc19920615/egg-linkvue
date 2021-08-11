@@ -171,7 +171,7 @@ class HomeController extends Controller {
     const configId = ctx.request.query.config_id ? ctx.request.query.config_id : '';
     // const config = ctx.request.query.config ? ctx.request.query.config : '';
     const source = ctx.request.body ? ctx.request.body : {};
-    console.log('getContentV3', source)
+    console.log('getContentV3', src, source);
     ctx.body = await this._parseContent(src, configId, {
       append: {
         source: JSON.stringify(source),
