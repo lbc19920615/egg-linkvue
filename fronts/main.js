@@ -3,6 +3,12 @@
  * @module main
  */
 
+import _PubSub from 'pubsub-js'
+export let PubSub = _PubSub
+
+import _Lock from 'js-lock'
+export let Lock = _Lock
+
 import get from 'lodash/get';
 export let lodash = {
   get

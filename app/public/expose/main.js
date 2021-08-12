@@ -4,6 +4,202 @@ import {
   __toModule
 } from "./chunks/chunk-VA6DPGD4.js";
 
+// node_modules/pubsub-js/src/pubsub.js
+var require_pubsub = __commonJS({
+  "node_modules/pubsub-js/src/pubsub.js"(exports, module) {
+    (function(root, factory) {
+      "use strict";
+      var PubSub2 = {};
+      root.PubSub = PubSub2;
+      factory(PubSub2);
+      if (typeof exports === "object") {
+        if (module !== void 0 && module.exports) {
+          exports = module.exports = PubSub2;
+        }
+        exports.PubSub = PubSub2;
+        module.exports = exports = PubSub2;
+      } else if (typeof define === "function" && define.amd) {
+        define(function() {
+          return PubSub2;
+        });
+      }
+    })(typeof window === "object" && window || exports, function(PubSub2) {
+      "use strict";
+      var messages = {}, lastUid = -1, ALL_SUBSCRIBING_MSG = "*";
+      function hasKeys(obj) {
+        var key;
+        for (key in obj) {
+          if (Object.prototype.hasOwnProperty.call(obj, key)) {
+            return true;
+          }
+        }
+        return false;
+      }
+      function throwException(ex) {
+        return function reThrowException() {
+          throw ex;
+        };
+      }
+      function callSubscriberWithDelayedExceptions(subscriber, message, data) {
+        try {
+          subscriber(message, data);
+        } catch (ex) {
+          setTimeout(throwException(ex), 0);
+        }
+      }
+      function callSubscriberWithImmediateExceptions(subscriber, message, data) {
+        subscriber(message, data);
+      }
+      function deliverMessage(originalMessage, matchedMessage, data, immediateExceptions) {
+        var subscribers = messages[matchedMessage], callSubscriber = immediateExceptions ? callSubscriberWithImmediateExceptions : callSubscriberWithDelayedExceptions, s;
+        if (!Object.prototype.hasOwnProperty.call(messages, matchedMessage)) {
+          return;
+        }
+        for (s in subscribers) {
+          if (Object.prototype.hasOwnProperty.call(subscribers, s)) {
+            callSubscriber(subscribers[s], originalMessage, data);
+          }
+        }
+      }
+      function createDeliveryFunction(message, data, immediateExceptions) {
+        return function deliverNamespaced() {
+          var topic = String(message), position = topic.lastIndexOf(".");
+          deliverMessage(message, message, data, immediateExceptions);
+          while (position !== -1) {
+            topic = topic.substr(0, position);
+            position = topic.lastIndexOf(".");
+            deliverMessage(message, topic, data, immediateExceptions);
+          }
+          deliverMessage(message, ALL_SUBSCRIBING_MSG, data, immediateExceptions);
+        };
+      }
+      function hasDirectSubscribersFor(message) {
+        var topic = String(message), found = Boolean(Object.prototype.hasOwnProperty.call(messages, topic) && hasKeys(messages[topic]));
+        return found;
+      }
+      function messageHasSubscribers(message) {
+        var topic = String(message), found = hasDirectSubscribersFor(topic) || hasDirectSubscribersFor(ALL_SUBSCRIBING_MSG), position = topic.lastIndexOf(".");
+        while (!found && position !== -1) {
+          topic = topic.substr(0, position);
+          position = topic.lastIndexOf(".");
+          found = hasDirectSubscribersFor(topic);
+        }
+        return found;
+      }
+      function publish(message, data, sync, immediateExceptions) {
+        message = typeof message === "symbol" ? message.toString() : message;
+        var deliver = createDeliveryFunction(message, data, immediateExceptions), hasSubscribers = messageHasSubscribers(message);
+        if (!hasSubscribers) {
+          return false;
+        }
+        if (sync === true) {
+          deliver();
+        } else {
+          setTimeout(deliver, 0);
+        }
+        return true;
+      }
+      PubSub2.publish = function(message, data) {
+        return publish(message, data, false, PubSub2.immediateExceptions);
+      };
+      PubSub2.publishSync = function(message, data) {
+        return publish(message, data, true, PubSub2.immediateExceptions);
+      };
+      PubSub2.subscribe = function(message, func) {
+        if (typeof func !== "function") {
+          return false;
+        }
+        message = typeof message === "symbol" ? message.toString() : message;
+        if (!Object.prototype.hasOwnProperty.call(messages, message)) {
+          messages[message] = {};
+        }
+        var token = "uid_" + String(++lastUid);
+        messages[message][token] = func;
+        return token;
+      };
+      PubSub2.subscribeAll = function(func) {
+        return PubSub2.subscribe(ALL_SUBSCRIBING_MSG, func);
+      };
+      PubSub2.subscribeOnce = function(message, func) {
+        var token = PubSub2.subscribe(message, function() {
+          PubSub2.unsubscribe(token);
+          func.apply(this, arguments);
+        });
+        return PubSub2;
+      };
+      PubSub2.clearAllSubscriptions = function clearAllSubscriptions() {
+        messages = {};
+      };
+      PubSub2.clearSubscriptions = function clearSubscriptions(topic) {
+        var m;
+        for (m in messages) {
+          if (Object.prototype.hasOwnProperty.call(messages, m) && m.indexOf(topic) === 0) {
+            delete messages[m];
+          }
+        }
+      };
+      PubSub2.countSubscriptions = function countSubscriptions(topic) {
+        var m;
+        var token;
+        var count = 0;
+        for (m in messages) {
+          if (Object.prototype.hasOwnProperty.call(messages, m) && m.indexOf(topic) === 0) {
+            for (token in messages[m]) {
+              count++;
+            }
+            break;
+          }
+        }
+        return count;
+      };
+      PubSub2.getSubscriptions = function getSubscriptions(topic) {
+        var m;
+        var list = [];
+        for (m in messages) {
+          if (Object.prototype.hasOwnProperty.call(messages, m) && m.indexOf(topic) === 0) {
+            list.push(m);
+          }
+        }
+        return list;
+      };
+      PubSub2.unsubscribe = function(value) {
+        var descendantTopicExists = function(topic) {
+          var m2;
+          for (m2 in messages) {
+            if (Object.prototype.hasOwnProperty.call(messages, m2) && m2.indexOf(topic) === 0) {
+              return true;
+            }
+          }
+          return false;
+        }, isTopic = typeof value === "string" && (Object.prototype.hasOwnProperty.call(messages, value) || descendantTopicExists(value)), isToken = !isTopic && typeof value === "string", isFunction = typeof value === "function", result = false, m, message, t;
+        if (isTopic) {
+          PubSub2.clearSubscriptions(value);
+          return;
+        }
+        for (m in messages) {
+          if (Object.prototype.hasOwnProperty.call(messages, m)) {
+            message = messages[m];
+            if (isToken && message[value]) {
+              delete message[value];
+              result = value;
+              break;
+            }
+            if (isFunction) {
+              for (t in message) {
+                if (Object.prototype.hasOwnProperty.call(message, t) && message[t] === value) {
+                  delete message[t];
+                  result = true;
+                }
+              }
+            }
+          }
+        }
+        return result;
+      };
+    });
+  }
+});
+
 // node_modules/lodash/isArray.js
 var require_isArray = __commonJS({
   "node_modules/lodash/isArray.js"(exports, module) {
@@ -2748,6 +2944,132 @@ var require_polyfill = __commonJS({
 });
 
 // fronts/main.js
+var import_pubsub_js = __toModule(require_pubsub());
+
+// node_modules/js-lock/TimeoutError.js
+var TimeoutError = class extends Error {
+  constructor(message = "") {
+    super(message);
+    this.name = "TimeoutError";
+  }
+};
+
+// node_modules/js-lock/Lock.js
+var PRIVATE = Object.freeze({
+  locked: Symbol("locked"),
+  taskTriggerQueue: Symbol("taskTriggerQueue")
+});
+var Lock = class {
+  constructor(lockName = generateLockName()) {
+    if (typeof lockName !== "string") {
+      throw new TypeError(`The lock name must be a non-empty string, ${lockName} was provided`);
+    }
+    if (!lockName) {
+      throw new Error("The lock name must be a non-empty string, but an empty string was provided");
+    }
+    this.name = lockName;
+    Object.defineProperty(this, "name", {
+      configurable: false,
+      enumerable: false,
+      writable: false
+    });
+    this[PRIVATE.locked] = false;
+    Object.defineProperty(this, PRIVATE.locked, {
+      configurable: false,
+      enumerable: false
+    });
+    this[PRIVATE.taskTriggerQueue] = [];
+    Object.defineProperty(this, PRIVATE.taskTriggerQueue, {
+      configurable: false,
+      enumerable: false,
+      writable: false
+    });
+    Object.seal(this);
+  }
+  get isLocked() {
+    return this[PRIVATE.locked];
+  }
+  async lock(task, timeout = 6e4) {
+    if (!(task instanceof Function)) {
+      throw new TypeError(`The task has to be a function, ${task} has been provided`);
+    }
+    if (typeof timeout !== "number" || Math.floor(timeout) !== timeout) {
+      throw new TypeError(`The timeout has to be a non-negative integer, ${timeout} has been provided`);
+    }
+    if (timeout < 0) {
+      throw new RangeError(`The timeout has to be a non-negative integer, ${timeout} has been provided`);
+    }
+    if (this[PRIVATE.locked]) {
+      await new Promise((resolve, reject) => {
+        this[PRIVATE.taskTriggerQueue].push(resolve);
+        if (timeout) {
+          setTimeout(() => {
+            let triggerIndex = this[PRIVATE.taskTriggerQueue].indexOf(resolve);
+            if (triggerIndex === -1) {
+              return;
+            }
+            this[PRIVATE.taskTriggerQueue].splice(triggerIndex, 1);
+            reject(new TimeoutError(`The provided task did not acquire the ${this.name} lock within the specified timeout of ${timeout} milliseconds`));
+          }, timeout);
+        }
+      });
+    } else {
+      this[PRIVATE.locked] = true;
+    }
+    try {
+      return await task();
+    } catch (error) {
+      throw error;
+    } finally {
+      if (this[PRIVATE.taskTriggerQueue].length) {
+        let trigger = this[PRIVATE.taskTriggerQueue].shift();
+        trigger();
+      } else {
+        this[PRIVATE.locked] = false;
+      }
+    }
+  }
+  static async all(locks, task, timeout = 6e4) {
+    if (!(locks instanceof Array)) {
+      throw new TypeError(`The locks must be an array of Lock instances, ${locks} has been provided`);
+    }
+    if (locks.some((lock) => !(lock instanceof Lock))) {
+      throw new TypeError(`The locks must be an array of Lock instances, ${locks} has been provided`);
+    }
+    if (!(task instanceof Function)) {
+      throw new TypeError(`The task must be a function, ${task} has been provided`);
+    }
+    if (typeof timeout !== "number" || Math.floor(timeout) !== timeout) {
+      throw new TypeError(`The timeout has to be a non-negative integer, ${timeout} has been provided`);
+    }
+    if (timeout < 0) {
+      throw new RangeError(`The timeout has to be a non-negative integer, ${timeout} has been provided`);
+    }
+    if (!locks.length) {
+      throw new RangeError("The array of locks cannot be empty");
+    }
+    if (new Set(locks.map((lock) => lock.name)).size !== locks.length) {
+      throw new Error("The names of the locks to acquire must be unique to ensure a deadlock would not occur");
+    }
+    if (locks.length === 1) {
+      return await locks[0].lock(task, timeout);
+    }
+    let sortedLocks = locks.slice().sort((lock) => lock.name);
+    let nextLock = sortedLocks.slice().shift();
+    let waitStart = Date.now();
+    return await nextLock.lock(async () => {
+      let timeWaited = Date.now() - waitStart;
+      let remainingTime = Math.max(timeout - timeWaited, 1);
+      return await Lock.all(sortedLocks.slice(1), task, remainingTime);
+    }, timeout);
+  }
+};
+function generateLockName() {
+  let subMark = Math.floor(Math.random() * 1e3).toString(36);
+  return `Lock:${Date.now().toString(36)}:${subMark}`;
+}
+
+// fronts/main.js
 var import_get = __toModule(require_get());
 var import_qs2 = __toModule(require_lib());
 
@@ -2885,6 +3207,8 @@ function formatDateTime(date, format = "YYYY-MM-DD HH:mm:ss") {
 
 // fronts/main.js
 var import_polyfill = __toModule(require_polyfill());
+var PubSub = import_pubsub_js.default;
+var Lock2 = Lock;
 var lodash = {
   get: import_get.default
 };
@@ -2924,6 +3248,8 @@ function camelNameToCls(camel) {
   return v;
 }
 export {
+  Lock2 as Lock,
+  PubSub,
   REMOTE_ORIGIN,
   Time,
   camel2hyphen,

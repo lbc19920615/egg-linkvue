@@ -3,7 +3,6 @@
 <template>
 <div>
   {% verbatim %}
-   <div> {{ num }}</div>
    <div>{{state}}</div>
    <div>{{computedState}}</div>
 {% endverbatim %}
@@ -34,47 +33,34 @@ export default {
     const config = JSON.parse(`{{source}}`);
 
     const obj = formModel.createFormModel(config.row);
-    // console.log(obj)
 
     let computed = {}
     for (let key in config.computed) {
       computed[key] = new Function('model', `
-        function GET(v) {
-          return ZY.lodash.get(model, v)
+        function GET(v, defaultVal) {
+          return ZY.lodash.get(model, v, defaultVal)
         }
         return () => ${config.computed[key]}
       `)
     }
 
-    const ret = global.storeApp.run('serviceA', 'initModel', {
+    const ret = global.storeApp.run(config.service, 'initModel', {
       plain: obj,
       computed
     })
     console.log('ret', config, ret)
 
-    const model = reactive(obj);
-
-    function setModel(newVal) {
-      console.log('formDesigner setModel', newVal);
-      for (const key in newVal) {
-        model[key] = newVal[key];
-        // console.log(key, model[key], newVal[key])
-      }
-    }
+    const model = ret.model
 
     watch(model, newVal => {
       // console.log('model.content', newVal)
       emit('model:update', newVal);
     });
 
-    let num = ref(1)
-
     return {
-      num,
       config,
       model,
       tableData,
-      setModel,
       state: ret.model,
       computedState: ret.computedModel
     };
