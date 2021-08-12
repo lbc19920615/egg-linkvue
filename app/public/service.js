@@ -2,8 +2,9 @@ export function install(Vue) {
   return {
     template: '<div></div>',
     setup() {
-      function getArr() {
-        console.log('value.value = props.modelValue', Vue);
+      async function getArr() {
+        console.log('value.value = props.modelValue');
+        return []
       }
       return {
         getArr,

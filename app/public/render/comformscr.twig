@@ -1,9 +1,17 @@
 {% import "./macros/formGroup.twig" as formGroup %}
 
 <template>
-<el-form :model="model" >
-  {{ formGroup.renderSet("config.row.properties", "model", 1,2, 'el-col', 'template') }}
-</el-form>
+<div>
+  {% verbatim %}
+   <div> {{ num }}</div>
+   <div>{{state}}</div>
+   <div>{{computedState}}</div>
+{% endverbatim %}
+
+    <el-form :model="model" >
+        {{ formGroup.renderSet("config.row.properties", "model", 1,2, 'el-col', 'template') }}
+    </el-form>
+</div>
 </template>
 
 <script type="module">
@@ -27,6 +35,23 @@ export default {
 
     const obj = formModel.createFormModel(config.row);
     // console.log(obj)
+
+    let computed = {}
+    for (let key in config.computed) {
+      computed[key] = new Function('model', `
+        function GET(v) {
+          return ZY.lodash.get(model, v)
+        }
+        return () => ${config.computed[key]}
+      `)
+    }
+
+    const ret = global.storeApp.run('serviceA', 'initModel', {
+      plain: obj,
+      computed
+    })
+    console.log('ret', config, ret)
+
     const model = reactive(obj);
 
     function setModel(newVal) {
@@ -42,11 +67,16 @@ export default {
       emit('model:update', newVal);
     });
 
+    let num = ref(1)
+
     return {
+      num,
       config,
       model,
       tableData,
       setModel,
+      state: ret.model,
+      computedState: ret.computedModel
     };
   },
 };
