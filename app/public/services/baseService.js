@@ -6,10 +6,10 @@ export const baseServiceMixin = {
   },
 };
 
-export const baseServiceDef = ({vue, ctx}) => {
+export const baseServiceDef = ({ vue }) => {
   const { defineComponent, reactive, effectScope, computed, getCurrentInstance, inject } = vue;
   const scope = effectScope();
-  const globalStore = inject('globalStore')
+  const globalStore = inject('globalStore');
 
   let model = {};
   const computedModel = {};
@@ -31,7 +31,7 @@ export const baseServiceDef = ({vue, ctx}) => {
       }
 
       // watch(() => model.name, () => console.log(model, computedModel));
-
+      global.ZY.PubSub.publish(globalStore.EVENT_TYPES.INIT_MODEL_READY, '');
     });
     return getModel();
   }
@@ -41,6 +41,7 @@ export const baseServiceDef = ({vue, ctx}) => {
     for (const key in newVal) {
       model[key] = newVal[key];
     }
+    global.ZY.PubSub.publish(globalStore.EVENT_TYPES.SET_MODEL_READY, '');
   }
   return {
     initModel,

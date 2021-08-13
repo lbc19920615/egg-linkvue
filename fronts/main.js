@@ -3,19 +3,50 @@
  * @module main
  */
 
+import getGlobalThisPolyfill from 'globalthis/polyfill';
+/**
+ * global
+ * @type {NodeJS.Global}
+ */
+export const global = getGlobalThisPolyfill();
+
+
+import { nanoid } from 'nanoid'
+
+/**
+ * @description nanoid
+ * @link https://www.npmjs.com/package/nanoid
+ * @type {(size?: number) => string}
+ */
+export let nid = nanoid
+
 import _PubSub from 'pubsub-js'
+/**
+ * PubSub
+ * @description 文件发布订阅
+ * @link https://www.npmjs.com/package/PubSub
+ * @type {{}}
+ */
 export let PubSub = _PubSub
 
 import _Lock from 'js-lock'
+/**
+ * Lock
+ * @description 文件锁
+ * @link https://www.npmjs.com/package/js-lock
+ * @type {Lock}
+ */
 export let Lock = _Lock
 
-import get from 'lodash/get';
-export let lodash = {
-  get
-}
+import _lodash from 'lodash';
+
+/**
+ * lodash
+ * @type {_.LoDashStatic | _}
+ */
+export let lodash = _lodash
 
 import _qs from 'qs';
-
 /**
  * qs
  * @type {QueryString}
@@ -23,30 +54,26 @@ import _qs from 'qs';
 export const qs = _qs;
 
 import _req from './ts/fetchio.ts';
-
 /**
  * fetchreq
  */
 export const fetchreq = _req;
 
-import * as _formModel from './formmodel';
 import * as _time from './time';
+
+/**
+ * Time类
+ * @type {{formatDateTime?: function(Date, string=): *}}
+ */
 export const Time = _time;
 
+
+import * as _formModel from './formmodel';
 /**
  * formModel
  */
 export const formModel = _formModel;
 
-import getGlobalThisPolyfill from 'globalthis/polyfill';
-
-/**
- * global
- * @type {NodeJS.Global}
- */
-export const global = getGlobalThisPolyfill();
-
-// console.log(import.meta)
 let url = new URL(import.meta.url)
 /**
  * REMOTE_ORIGIN

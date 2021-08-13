@@ -12,6 +12,8 @@
         v-for="({{ formItemKey }}, {{ formItemLabel }}) in {{ obj }}"
         slot-before="{{ formItemLabel }}"
         :span="{{ formItemKey }}.ui ? {{ formItemKey }}.ui.column : undefined"
+        :hidden="{{ formItemKey }}.ui ? dxValueAnlasye({{ formItemKey }}.ui.hidden) : undefined"
+        :debug="dxValueAnlasye({{ formItemKey }}.debug)"
         >
             {% set defPath =   obj ~ '[' ~ formItemLabel ~ ']'   %}
             <template v-if="{{ formItemKey }}.type !== 'array' ">
@@ -48,6 +50,7 @@
         <{{ tag }}
              v-for="(subFormItem, subKey) in {{ obj }}"
             :span="subFormItem.ui ? subFormItem.ui.column : undefined"
+            {{ forms.dxAttr('debug', 'subFormItem') }}
         >
 {#            {% verbatim %}{{ formItemLabel }}{% endverbatim %}#}
 

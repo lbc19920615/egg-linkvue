@@ -14,9 +14,9 @@
 </template>
 
 <script type="module">
-import { formModel } from 'http://localhost:7002/public/expose/main.js';
+  import { formModel } from 'http://localhost:7002/public/expose/main.js';
 
-export default {
+  export default {
   props: {
     modelValue: null,
   },
@@ -27,7 +27,8 @@ export default {
     this.$emit('init', this);
   },
   setup(props, { emit }) {
-    const { ref, reactive, watch } = global.Vue;
+    const { ref, inject, watch } = global.Vue;
+    const globalStore = inject('globalStore');
     const tableData = ref([]);
 
     const config = JSON.parse(`{{source}}`);
@@ -37,18 +38,18 @@ export default {
     let computed = {}
     for (let key in config.computed) {
       computed[key] = new Function('model', `
-        function GET(v, defaultVal) {
+        function VAL(v, defaultVal) {
           return ZY.lodash.get(model, v, defaultVal)
         }
         return () => ${config.computed[key]}
       `)
     }
 
-    const ret = global.storeApp.run(config.service, 'initModel', {
+    const ret = globalStore.run(config.service, 'initModel', {
       plain: obj,
       computed
     })
-    console.log('ret', config, ret)
+    // console.log('ret', config, ret)
 
     const model = ret.model
 
@@ -57,12 +58,33 @@ export default {
       emit('model:update', newVal);
     });
 
+    let templateFun = ''
+    for (let funName in ZY.lodash) {
+      templateFun = templateFun + `
+        function ${funName}(...args) {
+          return ZY.lodash.${funName}(...args)
+        }
+      `
+    }
+    function dxValueAnlasye(v) {
+      let fun = new Function('valueTemplate', '$root', `
+        ${templateFun}
+
+        function VAL(v, defaultVal) {
+          return ZY.lodash.get($root.model, v, defaultVal)
+        }
+        return eval(valueTemplate)
+      `)
+      return fun(v, ret)
+    }
+
     return {
       config,
       model,
       tableData,
       state: ret.model,
-      computedState: ret.computedModel
+      computedState: ret.computedModel,
+      dxValueAnlasye
     };
   },
 };

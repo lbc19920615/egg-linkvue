@@ -4,6 +4,10 @@
 
 {% set commonInputAttrs = [] %}
 
+{% macro dxAttr(name, path) %}
+  :{{ name }}="dxValueAnlasye({{ path }}.{{ name }})"
+{% endmacro %}
+
 {% macro input(model, type = "text") %}
   <el-input v-model="{{model}}"
             @input="onInput"
