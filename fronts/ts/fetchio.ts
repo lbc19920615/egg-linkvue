@@ -6,6 +6,8 @@
 
 import Qs from 'qs'
 
+import JSON5 from 'json5'
+
 export enum ContentType {
     json = 'application/json;charset=UTF-8',
     form = 'application/x-www-form-urlencoded; charset=UTF-8'
@@ -43,13 +45,13 @@ export interface IHeader {
 const $req = async (url: string, config: IReqConfig = {baseUrl: ""}) => {
     let promise: Response
     let contentType: string
-    if (config['Content-Type'] !== undefined) {
-        contentType = config['Content-Type']
-    } else if (config.method === HttpMethod.post) {
-        contentType = ContentType.form
-    } else {
-        contentType = ContentType.json
-    }
+    // if (config['Content-Type'] !== undefined) {
+    //     contentType = config['Content-Type']
+    // } else if (config.method === HttpMethod.post) {
+    //     contentType = ContentType.form
+    // } else {
+    //     contentType = ContentType.json
+    // }
     let reqUrl = (url).replace('//', '/')
     if (config.baseUrl) {
         reqUrl = config.baseUrl + url
@@ -58,7 +60,7 @@ const $req = async (url: string, config: IReqConfig = {baseUrl: ""}) => {
         // 如果实例配置没传token过来的话，直接使用保存在sessionStorage的token
         // 这里假设后端直接读头文件的token字段，我直接用token当字段了，Authorization也同理
         token: config.token === undefined ? sessionStorage.token : config.token,
-        'Content-Type': contentType
+        // 'Content-Type': contentType
     } as IHeader)
     if (!config.method || config.method === HttpMethod.get) {
         promise = await fetch(reqUrl, {
@@ -66,7 +68,7 @@ const $req = async (url: string, config: IReqConfig = {baseUrl: ""}) => {
         })
     } else if (config.method === HttpMethod.post) {
         promise = await fetch(reqUrl, {
-            body: Qs.stringify(config.body),
+            body: config.body,
             headers,
             method: HttpMethod.post
         })

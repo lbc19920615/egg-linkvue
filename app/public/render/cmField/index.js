@@ -50,7 +50,7 @@ export default function(name) {
       watch(() => props.modelValue, function(newVal) {
         // console.log('newVal', newVal)
         value.value = newVal;
-      }, { immediate:true });
+      }, { immediate: true });
 
       function onInput() {
         // console.log('onInput', props.modelValue, e)
@@ -58,8 +58,8 @@ export default function(name) {
         emit('update:modelValue', value.value);
       }
 
-      function onChange(e) {
-        console.log(e)
+      function onChange() {
+        // console.log(e);
         emit('update:modelValue', value.value);
       }
 

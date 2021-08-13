@@ -7,7 +7,7 @@ export const baseServiceMixin = {
 };
 
 export const baseServiceDef = ({ vue }) => {
-  const { defineComponent, reactive, effectScope, computed, getCurrentInstance, inject } = vue;
+  const { defineComponent, reactive, effectScope, computed, getCurrentInstance, inject, nextTick } = vue;
   const scope = effectScope();
   const globalStore = inject('globalStore');
 
@@ -21,14 +21,27 @@ export const baseServiceDef = ({ vue }) => {
     };
   }
 
-  function initModel(modelDef = { plain: {}, computed: {} }) {
+  function initModel(modelDef = { plain: {}, computed: {}, callback: {} }) {
     scope.run(() => {
       model = reactive(modelDef.plain);
 
       for (const computedKey in modelDef.computed) {
-        const fun = modelDef.computed[computedKey](model, computedModel);
+        const fun = modelDef.computed[computedKey](model, {
+          beforeBuild(key) {
+            // console.log('beforeBuild', key, computedModel[key].value);
+            const preValue = computedModel[key].value;
+            nextTick(() => {
+              // console.log('beforeBuild', key, computedModel[key].value);
+              const nextValue = computedModel[key].value;
+              if (modelDef.callback && modelDef.callback.onComputedChange) {
+                modelDef.callback.onComputedChange(key, nextValue, preValue);
+              }
+            });
+          },
+        });
         computedModel[computedKey] = computed(fun);
       }
+
 
       // watch(() => model.name, () => console.log(model, computedModel));
       global.ZY.PubSub.publish(globalStore.EVENT_TYPES.INIT_MODEL_READY, '');

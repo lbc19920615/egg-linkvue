@@ -31,6 +31,7 @@ export default {
     // console.log(obj)
     const model = reactive(obj);
 
+
     function setModel(newVal) {
       console.log('formDesigner setModel', newVal);
       for (const key in newVal) {

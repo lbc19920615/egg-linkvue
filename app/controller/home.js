@@ -1,7 +1,10 @@
 const _ = require('lodash');
 const Controller = require('egg').Controller;
 
+const formidable = require('formidable');
+
 const qs = require('qs');
+const JSON5 = require('json5');
 
 const sass = require('sass');
 const axios = require('axios');
@@ -165,19 +168,35 @@ class HomeController extends Controller {
     // console.log(fileurl);
     return file;
   }
+  async parse(req) {
+    return new Promise(resolve => {
+      const form = new formidable.IncomingForm();
+      form.parse(req, async (err, fields, files) => {
+        // console.log(fields.source)
+        resolve({ fields, files });
+      });
+    });
+  }
   async getContentV3() {
     const { ctx } = this;
     const src = ctx.request.query.src ? ctx.request.query.src : '';
     const configId = ctx.request.query.config_id ? ctx.request.query.config_id : '';
     // const config = ctx.request.query.config ? ctx.request.query.config : '';
-    const source = ctx.request.body ? ctx.request.body : {};
-    console.log('getContentV3', src, source);
+    // const body = ctx.request.body ? ctx.request.body : {};
+    // console.log( Object.keys(ctx.request.body) );
+    // const source = Object.keys(ctx.request.body)[0];
+    // console.log(ctx.req);
+
+    // console.log(ctx.request.body)
+
+    const { fields } = await this.parse(ctx.req);
+  // console.log('fields', fields)
     ctx.body = await this._parseContent(src, configId, {
       append: {
-        source: JSON.stringify(source),
-        tplsrc: source,
+        source: fields.source,
       },
     });
+
   }
   async getContent() {
     const { ctx } = this;

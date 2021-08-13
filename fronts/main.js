@@ -13,6 +13,14 @@ export const global = getGlobalThisPolyfill();
 
 import { nanoid } from 'nanoid'
 
+import _JSON5 from 'json5'
+
+/**
+ * JSON5
+ * @type {JSON}
+ */
+export let JSON5 = _JSON5
+
 /**
  * @description nanoid
  * @link https://www.npmjs.com/package/nanoid
