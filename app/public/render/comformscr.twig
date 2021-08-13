@@ -66,7 +66,8 @@
         }
       `
     }
-    function dxValueAnlasye(v) {
+    
+    function dxValue(v, ...args) {
       let fun = new Function('valueTemplate', '$root', `
         ${templateFun}
 
@@ -84,7 +85,9 @@
       tableData,
       state: ret.model,
       computedState: ret.computedModel,
-      dxValueAnlasye
+      defaultTo: ZY.lodash.defaultTo,
+      get: ZY.lodash.get,
+      dxValue
     };
   },
 };

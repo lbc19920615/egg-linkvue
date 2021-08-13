@@ -12,8 +12,8 @@
         v-for="({{ formItemKey }}, {{ formItemLabel }}) in {{ obj }}"
         slot-before="{{ formItemLabel }}"
         :span="{{ formItemKey }}.ui ? {{ formItemKey }}.ui.column : undefined"
-        :hidden="{{ formItemKey }}.ui ? dxValueAnlasye({{ formItemKey }}.ui.hidden) : undefined"
-        :debug="dxValueAnlasye({{ formItemKey }}.debug)"
+        :hidden="dxValue(get({{ formItemKey }}, 'ui.hidden', undefined), {{ path }})"
+        :debug="dxValue({{ formItemKey }}.debug)"
         >
             {% set defPath =   obj ~ '[' ~ formItemLabel ~ ']'   %}
             <template v-if="{{ formItemKey }}.type !== 'array' ">
@@ -32,6 +32,7 @@
                     class="{{ prefix }}{{ formItemLabel }}__{{ subItemLabel }} {{ prefix }}{{ formItemLabel }}__{{ subItemLabel }}__array"
                     v-for="({{ subItemKey }}, {{ subItemLabel }}) in {{ path }}[{{ formItemLabel }}]"
                     :span="{{ subItemKey }}.ui ? {{ subItemKey }}.ui.column : undefined"
+                    :hidden="dxValue(get({{ subItemKey }}, 'ui.hidden', undefined))"
                 >
                     {% set scopePath = path ~ '[' ~ formItemLabel ~ '][' ~ subItemLabel ~ ']'  %}
                     {% set objPath = defPath ~ '.items.properties' %}
