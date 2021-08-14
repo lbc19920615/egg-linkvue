@@ -16,92 +16,93 @@
 <script type="module">
   import { formModel } from 'http://localhost:7002/public/expose/main.js';
 
-  function findPathsToKey(options) {
-    let results = [];
 
-    (function findKey({
-      key,
-      obj,
-      pathToKey,
-    }) {
-      const oldPath = `${pathToKey ? pathToKey + "." : ""}`;
-      if (obj.hasOwnProperty(key)) {
-        results.push(`${oldPath}${key}`);
-        return;
-      }
 
-      if (obj !== null && typeof obj === "object" && !Array.isArray(obj)) {
-        for (const k in obj) {
-          if (obj.hasOwnProperty(k)) {
-            if (Array.isArray(obj[k])) {
-              for (let j = 0; j < obj[k].length; j++) {
-                findKey({
-                  obj: obj[k][j],
-                  key,
-                  pathToKey: `${oldPath}${k}[${j}]`,
-                });
-              }
-            }
+function findPathsToKey(options) {
+  let results = [];
 
-            if (obj[k] !== null && typeof obj[k] === "object") {
+  (function findKey({
+                      key,
+                      obj,
+                      pathToKey,
+                    }) {
+    const oldPath = `${pathToKey ? pathToKey + "." : ""}`;
+    if (typeof obj === "object" && obj.hasOwnProperty(key)) {
+      results.push(`${oldPath}${key}`);
+      // return;
+    }
+
+    if (obj !== null && typeof obj === "object" && !Array.isArray(obj)) {
+      for (const k in obj) {
+        if (obj.hasOwnProperty(k)) {
+          if (Array.isArray(obj[k])) {
+            for (let j = 0; j < obj[k].length; j++) {
               findKey({
-                obj: obj[k],
+                obj: obj[k][j],
                 key,
-                pathToKey: `${oldPath}${k}`,
+                pathToKey: `${oldPath}${k}[${j}]`,
               });
             }
           }
+
+          if (obj[k] !== null && typeof obj[k] === "object") {
+            findKey({
+              key,
+              pathToKey: `${oldPath}${k}`,
+            });
+          }
         }
       }
-    })(options);
+    }
+  })(options);
 
-    return results;
-  }
+  return results;
+}
 
 
-export default {
-  props: {
-    modelValue: null,
-  },
-  emits: [
-    'model:update',
-  ],
-  mounted() {
-    this.$emit('init', this);
-  },
-  setup(props, { emit }) {
-    const { ref, inject, watch } = global.Vue;
-    const globalStore = inject('globalStore');
-    const tableData = ref([]);
+  export default {
+    props: {
+      modelValue: null,
+    },
+    emits: [
+      'model:update',
+    ],
+    mounted() {
+      this.$emit('init', this);
+    },
+    setup(props, { emit }) {
+      const { ref, inject, watch } = global.Vue;
+      const globalStore = inject('globalStore');
+      const tableData = ref([]);
 
-    const config = ZY.JSON5.parse(`{{source}}`);
-    console.log('config', config)
+      const config = ZY.JSON5.parse(`{{source}}`);
+      console.log('config', config)
 
-    const obj = formModel.createFormModel(config.row);
+      const obj = formModel.createFormModel(config.row);
 
-    // let computedLinks = {
-    // }
-    //
-    // function formDefTravase(formDef = {}, computedLinks) {
-    //   if (formDef.type === 'object') {
-    //     Object.entries(formDef.properties)
-    //             .forEach(([ key, formDefProp ]) => {
-    //               if (formDefProp.type !== 'array') {
-    //                 if (formDefProp.computedProp) {
-    //                   const linked = formDefProp.computedProp
-    //                   if (!computedLinks[linked]) {
-    //                     computedLinks[linked] = []
-    //                   }
-    //                   computedLinks[linked].push(key)
-    //                 }
-    //               } else {
-    //                 formDefTravase(formDefProp.items, computedLinks);
-    //               }
-    //             });
-    //   }
-    // }
-    //
-    // formDefTravase(config.row, computedLinks);
+    let computedLinks = {
+    }
+
+    function formDefTravase(formDef = {}, computedLinks) {
+      if (formDef.type === 'object') {
+        Object.entries(formDef.properties)
+                .forEach(([ key, formDefProp ]) => {
+                  if (formDefProp.type !== 'array') {
+                    if (formDefProp.computedProp) {
+                      const linked = formDefProp.computedProp
+                      if (!computedLinks[linked]) {
+                        computedLinks[linked] = []
+                      }
+                      computedLinks[linked].push(key)
+                    }
+                  } else {
+                    formDefTravase(formDefProp.items, computedLinks);
+                  }
+                });
+      }
+    }
+
+    formDefTravase(config.row, computedLinks);
     // console.log(computedLinks)
 
     let ret = {
@@ -120,6 +121,24 @@ export default {
       `)
     }
 
+    function autoVal({obj, key, computedVal = function() {}} = {}) {
+      let paths =  findPathsToKey({obj, key})
+
+      for (let k = 0; k < paths.length; k++) {
+        let target;
+        let p =  paths[k].replace(key, '')
+        if (p.endsWith('.')) {
+          p = p.slice(0, -1)
+        }
+        if (p.trim() === '') {
+          target = model
+        } else {
+          target = ZY.lodash.get(model, p)
+        }
+        target[key] = computedVal()
+      }
+    }
+
     let model = null
     ret = globalStore.run(config.service, 'initModel', {
       plain: obj,
@@ -128,10 +147,20 @@ export default {
         onComputedChange(key, newVal) {
           // console.log('onComputedChange', key, newVal)
 
-          console.log(
-                  findPathsToKey({ obj: model, key: "linkName" })
-          )
-
+          let findKeys = computedLinks[key]
+          if (Array.isArray(findKeys)) {
+            for (let k = 0; k < findKeys.length; k++) {
+              console.log('findKeys[k]', findKeys[k])
+              autoVal({
+                obj: model,
+                key: findKeys[k],
+                computedVal() {
+                  return newVal
+                }
+              })
+            }
+          }
+          
           // model['linkName'] = newVal
         }
       }
