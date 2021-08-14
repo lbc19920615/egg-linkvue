@@ -152,7 +152,6 @@ class HomeController extends Controller {
     );
     let file = '';
 
-
     const params = (configId && configMap.has(configId)) ?
       configMap.get(configId) : {};
 
@@ -161,7 +160,8 @@ class HomeController extends Controller {
     }
 
     file = await renderTwig(fileurl,
-      Object.assign({}, params, append)
+      Object.assign({
+      }, params, append)
     );
 
     // console.log('configId', params, file)
@@ -184,16 +184,19 @@ class HomeController extends Controller {
     // const config = ctx.request.query.config ? ctx.request.query.config : '';
     // const body = ctx.request.body ? ctx.request.body : {};
     // console.log( Object.keys(ctx.request.body) );
-    // const source = Object.keys(ctx.request.body)[0];
+    // const source = Object.keys(ctx.request.body)[0c];
     // console.log(ctx.req);
 
-    // console.log(ctx.request.body)
+    // console.log(ctx.protocol);
 
     const { fields } = await this.parse(ctx.req);
-  // console.log('fields', fields)
     ctx.body = await this._parseContent(src, configId, {
       append: {
         source: fields.source,
+        APP_CONFIG: {
+          server_origin: ctx.protocol + '://' + ctx.request.header.host,
+          header: ctx.request.header,
+        },
       },
     });
 

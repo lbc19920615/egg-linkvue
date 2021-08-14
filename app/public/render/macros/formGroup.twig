@@ -1,6 +1,5 @@
 
 {% import "./form.twig" as forms %}
-
 {% macro renderSet(obj, path, index, max, tag = 'div', array_tag = 'template') %}
     {% set prefix = 'bs-' %}
     {% set formItemKey = 'formItem' ~ index %}
@@ -12,8 +11,8 @@
         v-for="({{ formItemKey }}, {{ formItemLabel }}) in {{ obj }}"
         slot-before="{{ formItemLabel }}"
         :span="{{ formItemKey }}.ui ? {{ formItemKey }}.ui.column : undefined"
-
-{#        :hidden="dxValue(get({{ formItemKey }}, 'ui.hidden', undefined), {{ path }})"#}
+        :hidden="dxValue(get({{ formItemKey }}, 'ui.hidden', undefined), {{ path }})"
+        :debug="dxValue(get({{ formItemKey }}, 'debug', undefined))"
         >
             {% set defPath =   obj ~ '[' ~ formItemLabel ~ ']'   %}
             <template v-if="{{ formItemKey }}.type !== 'array' ">

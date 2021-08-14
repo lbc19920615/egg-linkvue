@@ -21,6 +21,13 @@ import _JSON5 from 'json5'
  */
 export let JSON5 = _JSON5
 
+import _comHelper from './comHelper.js'
+/**
+ * comHelper
+ * @type {{autoVal: function({obj: *, key?: *, base?: *, computedVal?: *}=): void}}
+ */
+export let comHelper = _comHelper
+
 /**
  * @description nanoid
  * @link https://www.npmjs.com/package/nanoid
