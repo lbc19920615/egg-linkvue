@@ -101,7 +101,8 @@
 {% macro custom(model) %}
   <custom-form-render
           :ui="ui"
-          v-model="{{ model }}" @change="onChange"
+          v-model="{{ model }}"
+          @change="onChange"
           {{ _self.fieldAttr(commonInputAttrs) }}/>
 {% endmacro %}
 

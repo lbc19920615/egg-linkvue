@@ -21,7 +21,7 @@ export const baseServiceDef = ({ vue }) => {
     };
   }
 
-  function initModel(modelDef = { plain: {}, computed: {}, callback: {} }) {
+  function initModel(modelDef = { plain: {}, computed: {}, callback: {}, context: {} }) {
     scope.run(() => {
       model = reactive(modelDef.plain);
 
@@ -38,6 +38,7 @@ export const baseServiceDef = ({ vue }) => {
               }
             });
           },
+          context: modelDef.context,
         });
         computedModel[computedKey] = computed(fun);
       }

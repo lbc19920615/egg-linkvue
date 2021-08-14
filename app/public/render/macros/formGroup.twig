@@ -16,7 +16,7 @@
         >
             {% set defPath =   obj ~ '[' ~ formItemLabel ~ ']'   %}
             <template v-if="{{ formItemKey }}.type !== 'array' ">
-                {% verbatim %}{{ {% endverbatim %} {{ formItemKey }} {% verbatim %} }} {% endverbatim %}
+{#                {% verbatim %}{{ {% endverbatim %} {{ formItemKey }} {% verbatim %} }} {% endverbatim %}#}
                 <cm-field v-model="{{ path }}[{{ formItemLabel }}]"
                           :label="{{ formItemLabel }}" :prop="{{ formItemLabel }}"
                           :form-path="'{{ path }}.' + '{{ formItemLabel }}'"

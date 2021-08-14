@@ -25,7 +25,9 @@ export default function(name) {
       },
     },
     setup(props, { emit }) {
-      const { ref, onMounted, watch } = global.Vue;
+      const { ref, watch, nextTick } = global.Vue;
+
+      let lock = new ZY.Lock(/* optional lock name, should be unique */)
 
       const commonCom = useCommonComponent({ name });
 
@@ -36,26 +38,29 @@ export default function(name) {
       if (props.type === 'time') {
         value = ref(new Date());
       }
-      onMounted(() => {
-        // value.value = props.modelValue;
-        // if (props.type === 'time') {
-        //   console.log(value.value)
-        // }
-        // setTimeout(() => {
-        //   console.log('sdsds', props, props.modelValue);
-        //   value.value = props.modelValue;
-        // }, 30);
-      });
 
       watch(() => props.modelValue, function(newVal) {
-        // console.log('newVal', newVal)
-        value.value = newVal;
+        if (newVal !== value.value) {
+          // console.log('newVal', newVal)
+          value.value = newVal;
+        }
       }, { immediate: true });
 
       function onInput() {
-        // console.log('onInput', props.modelValue, e)
+        // console.log('onInput', props.modelValue)
         // console.log('value.value', value.value)
-        emit('update:modelValue', value.value);
+        // emit('update:modelValue', value.value);
+        if (!lock.isLocked) {
+          lock.lock(() => {
+            // console.log('sdsdsds', v)
+            // ZY.PubSub.publish('value-change', v)
+            emit('update:modelValue', value.value);
+          }, 100);
+        }
+
+        // nextTick(() => {
+        //   emit('update:modelValue', value.value);
+        // });
       }
 
       function onChange() {
@@ -77,12 +82,17 @@ export default function(name) {
         return lodash.get(props.ui, path, defaultVal);
       }
 
+      // function onUpdateModelValue(v) {
+      //   console.log('onUpdateModelValue', v)
+      // }
+
       return {
         onInput,
         ...commonCom,
         getOpt,
         getUIOpt,
         isArray,
+        // onUpdateModelValue,
         value,
         onChange,
       };

@@ -27,15 +27,45 @@
     mounted() {
       this.$emit('init', this);
     },
+    created() {
+      const { provide } = global.Vue;
+      provide('curFormCon', this)
+    },
     setup(props, { emit }) {
-      const { ref, inject, watch } = global.Vue;
+
+      const { ref, inject, watch, getCurrentInstance } = global.Vue;
       const globalStore = inject('globalStore');
+      const curFormCon = getCurrentInstance().ctx;
+      // console.log('curFormCon', curFormCon)
       const tableData = ref([]);
 
       const config = ZY.JSON5.parse(`{{source}}`);
-      console.log('config', config)
+      // console.log('config', config)
 
       const obj = formModel.createFormModel(config.row);
+
+      let templateFun = ''
+      for (let funName in ZY.lodash) {
+        templateFun = templateFun + `
+        function ${funName}(...args) {
+          return ZY.lodash.${funName}(...args)
+        }
+      `
+      }
+
+      let commonFun = `
+        ${templateFun}
+
+        function LENGTH(v) {
+          if (v && v.length) {
+            return v.length
+          }
+          return -1
+        }
+        function VAL(v, defaultVal) {
+          return ZY.lodash.get($root, v, defaultVal)
+        }
+      `
 
     let computedLinks = {
     }
@@ -68,8 +98,11 @@
     }
     let computed = {}
     for (let key in config.computed) {
-      computed[key] = new Function('model', 'options',`
-        function VAL(v, defaultVal) {
+      computed[key] = new Function('model', 'options', `
+        let $root = options.context
+        ${commonFun}
+
+        function MODEL(v, defaultVal) {
           return ZY.lodash.get(model, v, defaultVal)
         }
         return () => {
@@ -102,7 +135,8 @@
             })
           }
         }
-      }
+      },
+      context: curFormCon
     })
     // console.log('ret', config, ret)
 
@@ -113,14 +147,6 @@
       emit('model:update', newVal);
     });
 
-    let templateFun = ''
-    for (let funName in ZY.lodash) {
-      templateFun = templateFun + `
-        function ${funName}(...args) {
-          return ZY.lodash.${funName}(...args)
-        }
-      `
-    }
 
     function dxValue(v, ...args) {
       let fun = new Function('valueTemplate', '$root', `
@@ -132,11 +158,30 @@
           return -1
         }
         function VAL(v, defaultVal) {
+          return ZY.lodash.get($root, v, defaultVal)
+        }
+        function MODEL(v, defaultVal) {
           return ZY.lodash.get($root.model, v, defaultVal)
         }
         return eval(valueTemplate)
       `)
       return fun(v, ret)
+    }
+
+    function dxEval(v, context) {
+      let trueContext = context ? context : this;
+      let fun = new Function('valueTemplate', '$context', `
+      // let $config = $context.config
+
+
+      function VAL(v, defaultVal) {
+        return ZY.lodash.get($context, v, defaultVal)
+      }
+
+      ${templateFun}
+      return eval(valueTemplate)
+    `)
+      return fun(v, trueContext)
     }
 
     return {
@@ -147,7 +192,8 @@
       computedState: ret.computedModel,
       defaultTo: ZY.lodash.defaultTo,
       get: ZY.lodash.get,
-      dxValue
+      dxValue,
+      dxEval
     };
   },
 };
