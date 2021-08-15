@@ -17,6 +17,7 @@
     "egg-validate": "^2.0.2",
     "egg-view-nunjucks": "^2.2.0",
     "egg-view-twig": "0.0.1",
+    "eval5": "^1.4.6",
     "formidable": "^1.2.2",
     "fs-jetpack": "^4.1.1",
     "globalthis": "^1.0.2",
