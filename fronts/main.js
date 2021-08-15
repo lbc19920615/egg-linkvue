@@ -15,6 +15,12 @@ import { nanoid } from 'nanoid'
 
 import _JSON5 from 'json5'
 
+import * as ramda from 'ramda'
+/**
+ *
+ */
+export let R = ramda
+
 /**
  * JSON5
  * @type {JSON}
