@@ -29,6 +29,7 @@
     "require-json5": "^1.1.0",
     "safe-eval": "^0.4.1",
     "sass": "^1.35.1",
+    "sleep-promise": "^9.1.0",
     "twig": "^1.15.4",
     "url-resolve-browser": "^1.2.0",
     "vue-sfc-parser": "^0.1.2"

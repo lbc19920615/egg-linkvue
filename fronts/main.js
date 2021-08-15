@@ -129,6 +129,13 @@ export function fetchContentV3 (data = {}, query = {}) {
 }
 
 
+import _sleep from 'sleep-promise'
+
+/**
+ * 睡眠
+ */
+export let sleep = _sleep
+
 /**
  * camel
  * @param camel { string } 驼峰格式转为dash格式

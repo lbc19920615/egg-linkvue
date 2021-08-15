@@ -12,6 +12,7 @@
 {% macro input(model, type = "text") %}
   <el-input v-model="{{model}}"
             @input="onInput"
+            v-bind="ui ? ui.widgetConfig : null"
           {{ _self.fieldAttr(commonInputAttrs) }}
   ></el-input>
 {% endmacro %}

@@ -56,6 +56,21 @@
       let commonFun = `
         ${templateFun}
 
+        function ZY_hour_between_2_date(date1, date2) {
+          if (date1 && date2) {
+            return ZY.Time.subtract2Date(date1, date2).asHours()
+          }
+          return null
+        }
+
+        function ZY_floor(v, presion) {
+          let ret = floor(v, presion)
+          if (ret === 0) {
+            return ''
+          }
+          return ret
+        }
+
         function LENGTH(v) {
           if (v && v.length) {
             return v.length
