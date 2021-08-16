@@ -103,6 +103,15 @@ let url = new URL(import.meta.url)
 export const REMOTE_ORIGIN = url.origin
 
 /**
+ * getImportURL
+ * @param url {string}
+ * @returns {string}
+ */
+export function getImportURL(url) {
+  return new URL(import.meta.url)
+}
+
+/**
  * fetchContentV2
  * @param queryObj {{}}
  * @param params {{}}

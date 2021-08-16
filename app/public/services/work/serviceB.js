@@ -1,4 +1,4 @@
-import { baseServiceDef, baseServiceMixin } from './baseService.js';
+import { baseServiceDef, baseServiceMixin } from '../baseService.js';
 
 export function install(vue) {
   const { defineComponent } = vue;

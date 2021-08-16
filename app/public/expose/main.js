@@ -14409,6 +14409,9 @@ var Time = time_exports;
 var formModel = formmodel_exports;
 var url = new URL(import.meta.url);
 var REMOTE_ORIGIN = url.origin;
+function getImportURL(url2) {
+  return new URL(import.meta.url);
+}
 function fetchContentV2(queryObj = {}, params = {}) {
   let query = qs.stringify(queryObj);
   return fetchreq("/getcontentv2?" + query, {
@@ -14452,6 +14455,7 @@ export {
   fetchContentV3,
   fetchreq,
   formModel,
+  getImportURL,
   global2 as global,
   lodash,
   nid,
