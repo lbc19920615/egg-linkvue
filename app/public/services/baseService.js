@@ -10,10 +10,12 @@ export const baseServiceMixin = {
 export const baseServiceDef = ({ vue, props }) => {
   const { onMounted, reactive, effectScope, computed, onBeforeUnmount, inject, nextTick, getCurrentInstance } = vue;
 
+  const ctx = getCurrentInstance().ctx;
 
   const scope = effectScope();
   const globalStore = inject('globalStore');
 
+  let ret = {};
   let model = {};
   const computedModel = {};
 
@@ -49,6 +51,7 @@ export const baseServiceDef = ({ vue, props }) => {
 
       // watch(() => model.name, () => console.log(model, computedModel));
       global.ZY.PubSub.publish(globalStore.EVENT_TYPES.INIT_MODEL_READY, '');
+      ctx.RefsManager.emit(globalStore.EVENT_TYPES.INIT_MODEL_READY, { ctx });
     });
     return getModel();
   }
@@ -59,20 +62,13 @@ export const baseServiceDef = ({ vue, props }) => {
       model[key] = newVal[key];
     }
     global.ZY.PubSub.publish(globalStore.EVENT_TYPES.SET_MODEL_READY, '');
+    ctx.RefsManager.emit(globalStore.EVENT_TYPES.SET_MODEL_READY, { ctx, model });
   }
-  const ret = {
+  ret = {
     initModel,
     getModel,
     setModel,
   };
-
-  // servicesManager.register(props.is, ret);
-  //
-  // console.log(props.is)
-  // onMounted(() => {
-  //   let ctx = getCurrentInstance().ctx
-  //   console.log('getCurrentInstance', ctx)
-  // });
 
   return ret;
 };
