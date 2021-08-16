@@ -30,14 +30,20 @@
     created() {
       const { provide } = global.Vue;
       provide('curFormCon', this)
+      // console.log(this.$store)
     },
     setup(props, { emit }) {
 
       const { ref, inject, watch, getCurrentInstance } = global.Vue;
+      const { useStore } = global.Vuex
+      let store = useStore()
+
       const globalStore = inject('globalStore');
       const curFormCon = getCurrentInstance().ctx;
       // console.log('curFormCon', curFormCon)
       const tableData = ref([]);
+
+      console.log('globalStore', globalStore)
 
       const config = ZY.JSON5.parse(`{{source}}`);
       // console.log('config', config)
@@ -77,6 +83,7 @@
           }
           return -1
         }
+
         function VAL(v, defaultVal) {
           return ZY.lodash.get($root, v, defaultVal)
         }
@@ -114,12 +121,19 @@
     let computed = {}
     for (let key in config.computed) {
       computed[key] = new Function('model', 'options', `
-        let $root = options.context
+        let $root = options.context.ctx
+        let $rootStore = options.context.store
+
         ${commonFun}
 
         function MODEL(v, defaultVal) {
           return ZY.lodash.get(model, v, defaultVal)
         }
+
+        function ROOT_STATE(v, defaultVal) {
+           return ZY.lodash.get($rootStore.state, v, defaultVal)
+        }
+
         return () => {
           // console.log('computed ${key} build', options)
           options.beforeBuild('${key}')
@@ -151,7 +165,10 @@
           }
         }
       },
-      context: curFormCon
+      context: {
+        ctx: curFormCon,
+        store
+      }
     })
     // console.log('ret', config, ret)
 
@@ -163,40 +180,70 @@
     });
 
 
-    function dxValue(v, ...args) {
-      let fun = new Function('valueTemplate', '$root', `
-        ${templateFun}
-        function LENGTH(v) {
-          if (v && v.length) {
-            return v.length
+    //   function dxValue(v, ...args) {
+    //     let fun = new Function('valueTemplate', '$root', `
+    //     ${templateFun}
+    //     function LENGTH(v) {
+    //       if (v && v.length) {
+    //         return v.length
+    //   function dxEval(v, context) {
+    //     let trueContext = context ? context : this;
+    //     let fun = new Function('valueTemplate', 'options', `
+    //     // let $config = $context.config
+    //     let $root = options.$root
+    //     let $rootStore = options.store
+    //
+    //     ${commonFun}
+    //
+    //     function ROOT_STATE(v, defaultVal) {
+    //       return ZY.lodash.get($rootStore.state, v, defaultVal)
+    //     }
+    //     return -1
+    //   }
+    //   function VAL(v, defaultVal) {
+    //     return ZY.lodash.get($root, v, defaultVal)
+    //   }
+    //   function MODEL(v, defaultVal) {
+    //     return ZY.lodash.get($root.model, v, defaultVal)
+    //   }
+    //   return eval(valueTemplate)
+    //           `)
+    //   return fun(v, ret)
+    // }
+
+      function dxEval(v, context) {
+        let trueContext = context ? context : this;
+        // console.log('trueContext', trueContext)
+        let fun = new Function('valueTemplate', 'options', `
+            // let $config = $context.config
+            let $root = options.$root
+            let $rootStore = options.store
+
+           ${commonFun}
+
+           function ROOT_STATE(v, defaultVal) {
+             return ZY.lodash.get($rootStore.state, v, defaultVal)
           }
-          return -1
-        }
-        function VAL(v, defaultVal) {
-          return ZY.lodash.get($root, v, defaultVal)
-        }
-        function MODEL(v, defaultVal) {
-          return ZY.lodash.get($root.model, v, defaultVal)
-        }
-        return eval(valueTemplate)
-      `)
-      return fun(v, ret)
-    }
 
-    function dxEval(v, context) {
-      let trueContext = context ? context : this;
-      let fun = new Function('valueTemplate', '$context', `
-      // let $config = $context.config
+            function VAL(v, defaultVal) {
+              return ZY.lodash.get($root, v, defaultVal)
+            }
 
+            function MODEL(v, defaultVal) {
+              return ZY.lodash.get($root.model, v, defaultVal)
+            }
 
-      function VAL(v, defaultVal) {
-        return ZY.lodash.get($context, v, defaultVal)
+            return eval(valueTemplate)
+          `)
+
+        return fun(v, {
+          $root: trueContext,
+          store
+        })
       }
 
-      ${templateFun}
-      return eval(valueTemplate)
-    `)
-      return fun(v, trueContext)
+    function dxValue(v) {
+        return dxEval(v, this)
     }
 
     return {
