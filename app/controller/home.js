@@ -193,6 +193,9 @@ class HomeController extends Controller {
     ctx.body = await this._parseContent(src, configId, {
       append: {
         source: fields.source,
+        CONFIG_SOURCE: fields.source,
+        CONFIG_SOURCE_JSON5: JSON5.stringify(JSON.parse(fields.source)),
+        CONFIG: JSON.parse(fields.source),
         APP_CONFIG: {
           server_origin: ctx.protocol + '://' + ctx.request.header.host,
           header: ctx.request.header,
