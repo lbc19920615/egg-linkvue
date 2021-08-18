@@ -21,7 +21,9 @@
                           :label="{{ formItemLabel }}" :prop="{{ formItemLabel }}"
                           :form-path="'{{ path }}.' + '{{ formItemLabel }}'"
                           :type="{{ formItemKey }}.type"
-                          :ui="{{ formItemKey }}.ui"></cm-field>
+                          :ui="{{ formItemKey }}.ui"
+                          :rules="{{ formItemKey }}.rules"
+                ></cm-field>
             </template>
             <template v-if="{{ formItemKey }}.type === 'array' ">
                 <slot name="{{ formItemLabel }}__array__before"
@@ -60,7 +62,9 @@
                       :label="subKey" :prop="subKey"
                       :form-path="'{{ path }}.' + subKey"
                       :type="subFormItem.type"
-                      :ui="subFormItem.ui"></cm-field>
+                      :ui="subFormItem.ui"
+                      :rules="subFormItem.rules"
+            ></cm-field>
         </{{ tag }}>
     </el-row>
     {% endif %}

@@ -23,6 +23,12 @@ export default function(name) {
           return {};
         },
       },
+      rules: {
+        type: Object,
+        default() {
+          return {};
+        },
+      },
     },
     setup(props, { emit }) {
       const { ref, watch, nextTick } = global.Vue;

@@ -21,6 +21,14 @@ import * as ramda from 'ramda'
  */
 export let R = ramda
 
+import _to from 'await-to-js'
+
+/**
+ * to
+ * @type {<T, U=Error>(promise: Promise<T>, errorExt?: object) => Promise<[U, undefined] | [null, T]>}
+ */
+export let awaitTo = _to
+
 /**
  * JSON5
  * @type {JSON}

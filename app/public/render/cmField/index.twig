@@ -3,6 +3,7 @@
               :x-path="formPath"
                 v-bind="ui"
               :label="ui && ui.label ? ui.label : label"
+              :rules="rules"
 >
     {{ formGroup.formItem("value") }}
 </el-form-item>

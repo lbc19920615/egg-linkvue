@@ -13205,11 +13205,11 @@ var modulo = /* @__PURE__ */ _curry2(function modulo2(a, b) {
 var modulo_default = modulo;
 
 // node_modules/ramda/es/move.js
-var move = /* @__PURE__ */ _curry3(function(from, to, list) {
+var move = /* @__PURE__ */ _curry3(function(from, to2, list) {
   var length3 = list.length;
   var result = list.slice();
   var positiveFrom = from < 0 ? length3 + from : from;
-  var positiveTo = to < 0 ? length3 + to : to;
+  var positiveTo = to2 < 0 ? length3 + to2 : to2;
   var item = result.splice(positiveFrom, 1);
   return positiveFrom < 0 || positiveFrom >= list.length || positiveTo < 0 || positiveTo >= list.length ? list : [].concat(result.slice(0, positiveTo)).concat(item).concat(result.slice(positiveTo, list.length));
 });
@@ -13475,13 +13475,13 @@ var props = /* @__PURE__ */ _curry2(function props2(ps, obj) {
 var props_default = props;
 
 // node_modules/ramda/es/range.js
-var range = /* @__PURE__ */ _curry2(function range2(from, to) {
-  if (!(_isNumber(from) && _isNumber(to))) {
+var range = /* @__PURE__ */ _curry2(function range2(from, to2) {
+  if (!(_isNumber(from) && _isNumber(to2))) {
     throw new TypeError("Both arguments to range must be numbers");
   }
   var result = [];
   var n2 = from;
-  while (n2 < to) {
+  while (n2 < to2) {
     result.push(n2);
     n2 += 1;
   }
@@ -14053,6 +14053,19 @@ var thunkify = /* @__PURE__ */ _curry1(function thunkify2(fn) {
 });
 var thunkify_default = thunkify;
 
+// node_modules/await-to-js/dist/await-to-js.es5.js
+function to(promise, errorExt) {
+  return promise.then(function(data) {
+    return [null, data];
+  }).catch(function(err) {
+    if (errorExt) {
+      Object.assign(err, errorExt);
+    }
+    return [err, void 0];
+  });
+}
+var await_to_js_es5_default = to;
+
 // fronts/comHelper.js
 var import_get = __toModule(require_get());
 function findPathsToKey(options) {
@@ -14397,6 +14410,7 @@ var esm_default = n;
 // fronts/main.js
 var global2 = (0, import_polyfill.default)();
 var R = es_exports;
+var awaitTo = await_to_js_es5_default;
 var JSON5 = import_json5.default;
 var comHelper = comHelper_default;
 var nid = nanoid;
@@ -14448,6 +14462,7 @@ export {
   R,
   REMOTE_ORIGIN,
   Time,
+  awaitTo,
   camel2hyphen,
   camelNameToCls,
   comHelper,

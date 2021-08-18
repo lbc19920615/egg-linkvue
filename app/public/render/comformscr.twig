@@ -9,7 +9,7 @@
    <div>{{computedState}}</div>
 </div>
 {% endverbatim %}
-    <el-form :model="model" {{ attr.parseKeyValue(CONFIG.attrs.form) }}>
+    <el-form ref="formCom" :model="model" {{ attr.parseKeyValue(CONFIG.attrs.form) }}>
       {{ formGroup.renderSet("config.row.properties", "model", 1,6, 'el-col', 'template') }}
       <slot-com :defs="slotContent" name="default"></slot-com>
     </el-form>
@@ -254,6 +254,14 @@
         return dxEval(v, this)
     }
 
+    let formCom = ref(null)
+    async function callCom(methodName, ...args) {
+        if (!formCom.value) {
+          throw new Error('formCom.value null')
+        }
+     return  await ZY.awaitTo(formCom.value[methodName](...args))
+    }
+
     let instanse = {
       config,
       model,
@@ -263,7 +271,9 @@
       defaultTo: ZY.lodash.defaultTo,
       get: ZY.lodash.get,
       dxValue,
-      dxEval
+      dxEval,
+      formCom,
+      callCom
     };
 
       instanse.slotContent = (function() {
