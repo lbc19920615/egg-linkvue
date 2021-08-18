@@ -9,7 +9,7 @@
    <div>{{computedState}}</div>
 </div>
 {% endverbatim %}
-    <el-form ref="formCom" :model="model" {{ attr.parseKeyValue(CONFIG.attrs.form) }}>
+    <el-form ref="formCom" :model="model" {{ attr.parseKeyValue(CONFIG.ui.attrs) }}>
       {{ formGroup.renderSet("config.row.properties", "model", 1,6, 'el-col', 'template') }}
       <slot-com :defs="slotContent" name="default"></slot-com>
     </el-form>
