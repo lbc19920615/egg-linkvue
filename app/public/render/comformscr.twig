@@ -3,10 +3,10 @@
 
 <template>
 <div>
-{#  {% verbatim %}#}
-{#   <div>{{state}}</div>#}
-{#   <div>{{computedState}}</div>#}
-{#{% endverbatim %}#}
+  {% verbatim %}
+   <div hidden>{{state}}</div>
+   <div hidden>{{computedState}}</div>
+{% endverbatim %}
     <el-form :model="model" {{ attr.parseKeyValue(CONFIG.attrs.form) }}>
       {{ formGroup.renderSet("config.row.properties", "model", 1,6, 'el-col', 'template') }}
       <slot-com :defs="slotContent" name="default"></slot-com>
@@ -52,7 +52,7 @@
       // console.log('globalStore', globalStore)
 
       const config = ZY.JSON5.parse(`{{CONFIG_SOURCE_JSON5}}`);
-      console.log('config', config)
+      // console.log('config', config)
 
       const obj = formModel.createFormModel(config.row);
 
@@ -272,6 +272,26 @@
           default: []
         }
       })()
+
+      instanse.getState = function() {
+        let res = {}
+        for (let k in ret.model) {
+          res[k] = ret.model[k]
+        }
+        for (let k in ret.computedModel) {
+          res[k] = ret.computedModel[k].value
+        }
+        return {
+          val: res,
+          toRaw() {
+            return ZY.JSON5.parse(ZY.JSON5.stringify(res))
+          }
+        }
+      }
+
+      instanse.getRawState = function() {
+        return instanse.getState().toRaw()
+      }
 
       return instanse
   },
