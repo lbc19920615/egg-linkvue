@@ -4,8 +4,10 @@
 <template>
 <div>
   {% verbatim %}
-   <div hidden>{{state}}</div>
-   <div hidden>{{computedState}}</div>
+<div>
+   <div>{{state}}</div>
+   <div>{{computedState}}</div>
+</div>
 {% endverbatim %}
     <el-form :model="model" {{ attr.parseKeyValue(CONFIG.attrs.form) }}>
       {{ formGroup.renderSet("config.row.properties", "model", 1,6, 'el-col', 'template') }}
