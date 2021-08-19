@@ -184,38 +184,6 @@
       emit('model:update', newVal);
     });
 
-
-    //   function dxValue(v, ...args) {
-    //     let fun = new Function('valueTemplate', '$root', `
-    //     ${templateFun}
-    //     function LENGTH(v) {
-    //       if (v && v.length) {
-    //         return v.length
-    //   function dxEval(v, context) {
-    //     let trueContext = context ? context : this;
-    //     let fun = new Function('valueTemplate', 'options', `
-    //     // let $config = $context.config
-    //     let $root = options.$root
-    //     let $rootStore = options.store
-    //
-    //     ${commonFun}
-    //
-    //     function ROOT_STATE(v, defaultVal) {
-    //       return ZY.lodash.get($rootStore.state, v, defaultVal)
-    //     }
-    //     return -1
-    //   }
-    //   function VAL(v, defaultVal) {
-    //     return ZY.lodash.get($root, v, defaultVal)
-    //   }
-    //   function MODEL(v, defaultVal) {
-    //     return ZY.lodash.get($root.model, v, defaultVal)
-    //   }
-    //   return eval(valueTemplate)
-    //           `)
-    //   return fun(v, ret)
-    // }
-
       function dxEval(v, context) {
         let trueContext = context ? context : this;
         // console.log('trueContext', trueContext)
