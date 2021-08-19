@@ -68,7 +68,14 @@
       'model:update',
     ],
     mounted() {
+      const { ref, inject, watch, getCurrentInstance } = global.Vue;
       this.$emit('init', this);
+
+      let comManager = inject('comManager')
+      comManager.context.sendEvent('http-component:com:mounted', {
+        httpComponentComContext: this,
+        httpComponentContext: comManager,
+      })
     },
     created() {
       const { provide } = global.Vue;
@@ -259,8 +266,6 @@
       `
 
       // console.log('curFormCon', curFormCon)
-
-      // let comManager = inject('comManager')
       // function callComManager(name,e ) {
       //   comManager.context.sendEvent(name,e)
       // }
