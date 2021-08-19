@@ -14455,6 +14455,14 @@ function camelNameToCls(camel) {
   }
   return v;
 }
+function buildAsyncpipe() {
+  const steps = Array.from(arguments);
+  return function asyncpipe(arg) {
+    return steps.reduce(function(result, nextStep) {
+      return result.then(nextStep);
+    }, Promise.resolve(arg));
+  };
+}
 export {
   JSON5,
   Lock2 as Lock,
@@ -14463,6 +14471,7 @@ export {
   REMOTE_ORIGIN,
   Time,
   awaitTo,
+  buildAsyncpipe,
   camel2hyphen,
   camelNameToCls,
   comHelper,

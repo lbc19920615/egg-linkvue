@@ -5,7 +5,7 @@
 {% set commonInputAttrs = [] %}
 
 {% macro dxAttr(name, path) %}
-  :{{ name }}="dxValue({{ path }}.{{ name }})"
+{#  :{{ name }}="dxValue({{ path }}.{{ name }})"#}
 {% endmacro %}
 
 
@@ -102,6 +102,7 @@
 {% macro custom(model) %}
   <custom-form-render
           :ui="ui"
+          :context="context"
           v-model="{{ model }}"
           @change="onChange"
           {{ _self.fieldAttr(commonInputAttrs) }}/>

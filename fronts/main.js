@@ -180,3 +180,16 @@ export function camelNameToCls(camel) {
   }
   return v;
 }
+
+/**
+ * buildAsyncpipe
+ * @returns {function(*=): T}
+ */
+export function buildAsyncpipe() {
+  const steps = Array.from(arguments);
+  return function asyncpipe(arg) {
+    return steps.reduce(function(result, nextStep) {
+      return result.then(nextStep);
+    }, Promise.resolve(arg));
+  };
+}

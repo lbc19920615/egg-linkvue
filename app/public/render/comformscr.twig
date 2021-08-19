@@ -14,11 +14,12 @@
   {% for part in CONFIG.parts %}
     {% set partConfigKey = 'config.parts[' ~ loop.index0 ~ '].def.properties' %}
     {% set pathKey = "parts." ~ part.name %}
+    {% set pathSKey = "'parts." ~ part.name ~ "'" %}
     {% if part.type == 'form' %}
       <el-form :ref="{{ pathKey }}.initEl" :model="{{ pathKey }}.model" {{ attr.parseKeyValue(part.def.ui.attrs) }}>
 {#        {{ formGroup.renderSet(partConfigKey, "parts.form.model", 1,6, 'el-col', 'template') }}#}
-        {{ formGroup.renderSet(partConfigKey, pathKey ~ ".model", 1,6, 'el-col', 'template') }}
-        <slot-com :defs="slotContent" :attrs="{partKey: '{{ part.name }}', parts}" name="default"></slot-com>
+        {{ formGroup.renderSet(partConfigKey, pathKey, pathKey ~ ".model", 1,6, 'el-col', 'template') }}
+        <slot-com :defs="slotContent" :attrs="{parts}" name="default"></slot-com>
       </el-form>
     {% endif %}
     {% if part.type == 'table' %}
@@ -172,6 +173,14 @@
           }
         }
 
+        ret.getModel = function() {
+          let res = {}
+          for (let k in ret.model) {
+            res[k] = ret.model[k]
+          }
+          return res
+        }
+
         ret.getRawState = function(...args) {
           return ret.getState(...args).toRaw()
         }
@@ -247,9 +256,8 @@
 
       // console.log('globalStore', globalStore)
 
-      function dxEval(v, context) {
+      function dxEval(v, $root, context) {
         let trueContext = context ? context : this;
-        // console.log('trueContext', trueContext)
         let fun = new Function('valueTemplate', 'options', `
           // let $config = $context.config
           let $root = options.$root
@@ -273,13 +281,17 @@
         `)
 
         return fun(v, {
-          $root: trueContext,
+          $root,
+          context: trueContext,
           store
         })
       }
 
-      function dxValue(v) {
-        return dxEval(v, this)
+      function dxValue(partContext, v) {
+        if (!partContext) {
+          throw new Error(`no partContext`)
+        }
+        return dxEval(v, partContext, this)
       }
 
 
@@ -308,7 +320,7 @@
       defaultTo: ZY.lodash.defaultTo,
       get: ZY.lodash.get,
       dxValue,
-      dxEval,
+      // dxEval,
     };
 
     instanse.slotContent = (function() {

@@ -1,6 +1,6 @@
 
 {% import "./form.twig" as forms %}
-{% macro renderSet(obj, path, index, max, tag = 'div', array_tag = 'template') %}
+{% macro renderSet(obj, pathKey, path, index, max, tag = 'div', array_tag = 'template') %}
     {% set prefix = 'bs-' %}
     {% set formItemKey = 'formItem' ~ index %}
     {% set formItemLabel = 'key' ~ index %}
@@ -11,8 +11,9 @@
         v-for="({{ formItemKey }}, {{ formItemLabel }}) in {{ obj }}"
         slot-before="{{ formItemLabel }}"
         :span="{{ formItemKey }}.ui ? {{ formItemKey }}.ui.column : undefined"
-        :hidden="dxValue(get({{ formItemKey }}, 'ui.hidden', undefined), {{ path }})"
-        :debug="dxValue(get({{ formItemKey }}, 'debug', undefined))"
+        :hidden="dxValue({{ pathKey }}, get({{ formItemKey }}, 'ui.hidden', undefined))"
+{#        :debug="dxValue(get({{ formItemKey }}, 'debug', undefined))"#}
+{#        :debug="get({{ formItemKey }}, 'debug', undefined)"#}
         >
             {% set defPath =   obj ~ '[' ~ formItemLabel ~ ']'   %}
             <template v-if="{{ formItemKey }}.type !== 'array' ">
@@ -23,6 +24,7 @@
                           :type="{{ formItemKey }}.type"
                           :ui="{{ formItemKey }}.ui"
                           :rules="{{ formItemKey }}.rules"
+                          :context="{{ pathKey }}"
                 ></cm-field>
             </template>
             <template v-if="{{ formItemKey }}.type === 'array' ">
@@ -40,11 +42,13 @@
                     {% set objPath = defPath ~ '.items.properties' %}
 {#                {{ objPath }}#}
 {#                                     {% verbatim %}{{ {% endverbatim %} {{ objPath }} {% verbatim %} }} {% endverbatim %}#}
-                    {{ _self.renderSet(objPath, scopePath, index + 1, max, tag, array_tag) }}
+                    {{ _self.renderSet(objPath, pathKey, scopePath, index + 1, max, tag, array_tag) }}
                 </{{ array_tag }}>
                 <slot name="{{ formItemLabel }}__array__after"></slot>
             </template>
         </{{ tag }}>
+        <slot-com :defs="slotContent"
+                  :attrs="{parts}" name="form"></slot-com>
     </el-row>
     {% else %}
 {#        {{ obj }} {{ path }}#}
@@ -64,6 +68,7 @@
                       :type="subFormItem.type"
                       :ui="subFormItem.ui"
                       :rules="subFormItem.rules"
+                      :context="{{ pathKey }}"
             ></cm-field>
         </{{ tag }}>
     </el-row>
