@@ -2,3 +2,7 @@
 {% macro parseKeyValue(arr) %}
     {% for KeyValue in arr %}{{ KeyValue[0] }}="{{ KeyValue[1] }}"{% endfor %}
 {% endmacro %}
+
+{% macro parseUIAttrs(obj, path) %}
+    {% for key,value in obj %} :{{ key }}="get({{ path }}, 'ui.{{ key }}', '')" {% endfor %}
+{% endmacro %}

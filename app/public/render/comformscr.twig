@@ -3,19 +3,42 @@
 
 <template>
 <div>
-  {% verbatim %}
-<div>
-   <div>{{parts.form.model}}</div>
-   <div>{{parts.form.computedModel}}</div>
-</div>
-{% endverbatim %}
   {% for part in CONFIG.parts %}
+    {% set pathKey = "parts." ~ part.name %}
+<div v-if="{{pathKey}}">
+   <div>{% verbatim %}{{{% endverbatim %} {{pathKey}}.model {% verbatim %}}}{% endverbatim %}</div>
+  <div>{% verbatim %}{{{% endverbatim %} {{pathKey}}.computedModel {% verbatim %}}}{% endverbatim %}</div>
+{#   <div>{{parts.form.computedModel}}</div>#}
+</div>
+  {% endfor %}
+  {% for part in CONFIG.parts %}
+    {% set partConfigKey = 'config.parts[' ~ loop.index0 ~ '].def.properties' %}
+    {% set pathKey = "parts." ~ part.name %}
     {% if part.type == 'form' %}
-      {% set partConfigKey = 'config.parts[' ~ loop.index0 ~ '].def.properties' %}
-      <el-form :ref="parts.form.initEl" :model="parts.form.model" {{ attr.parseKeyValue(part.def.ui.attrs) }}>
-        {{ formGroup.renderSet(partConfigKey, "parts.form.model", 1,6, 'el-col', 'template') }}
-        <slot-com :defs="slotContent" :attrs="{partKey: 'form'}" name="default"></slot-com>
+      <el-form :ref="{{ pathKey }}.initEl" :model="{{ pathKey }}.model" {{ attr.parseKeyValue(part.def.ui.attrs) }}>
+{#        {{ formGroup.renderSet(partConfigKey, "parts.form.model", 1,6, 'el-col', 'template') }}#}
+        {{ formGroup.renderSet(partConfigKey, pathKey ~ ".model", 1,6, 'el-col', 'template') }}
+        <slot-com :defs="slotContent" :attrs="{partKey: '{{ part.name }}', parts}" name="default"></slot-com>
       </el-form>
+    {% endif %}
+    {% if part.type == 'table' %}
+      <el-table :ref="{{ pathKey }}.initEl" :data="{{ pathKey }}.model.records"  stripe="true" border="true" {{ attr.parseKeyValue(part.def.ui.attrs) }}>
+        {% for key,record in part.def.properties.records.items.properties %}
+          {% set configKey = partConfigKey ~ '.records.items.properties.' ~ key %}
+          <div v-html="get({{ configKey }}, 'ui.label', '')">1111</div>
+          <el-table-column prop="{{ key }}"
+                           :label="get({{ configKey }}, 'ui.label', '')"
+                  {{ attr.parseUIAttrs(record.ui, configKey) }}
+          ></el-table-column>
+        {% endfor %}
+      </el-table>
+      <el-pagination
+              background
+              layout="prev, pager, next"
+              :current-page="{{ pathKey }}.model.page"
+              :page-size="{{ pathKey }}.model.limit"
+              :total="{{ pathKey }}.model.total">
+      </el-pagination>
     {% endif %}
   {% endfor %}
 </div>
@@ -118,6 +141,39 @@
         ret.initEl = function(ctx) {
           // console.log(ctx)
           ret.el.value = ctx
+        }
+
+        async function callEl(methodName, ...args) {
+          if (!ret.el ) {
+            throw new Error('formCom.value null')
+          }
+          // console.log(partKey, parts, part.el)
+          let elRef = ret.el.value
+          if (!elRef) {
+            throw new Error('formCom.value null')
+          }
+          return await ZY.awaitTo(elRef[methodName](...args))
+        }
+        ret.callEl = callEl
+
+        ret.getState = function() {
+          let res = {}
+          for (let k in ret.model) {
+            res[k] = ret.model[k]
+          }
+          for (let k in ret.computedModel) {
+            res[k] = ret.computedModel[k].value
+          }
+          return {
+            val: res,
+            toRaw() {
+              return ZY.JSON5.parse(ZY.JSON5.stringify(res))
+            }
+          }
+        }
+
+        ret.getRawState = function(...args) {
+          return ret.getState(...args).toRaw()
         }
         return ret
       }
@@ -229,20 +285,22 @@
 
       const config = ZY.JSON5.parse(`{{CONFIG_SOURCE_JSON5}}`);
       let parts = {}
-      parts['form'] = initPart(config.parts[0])
+      config.parts.forEach(part => {
+        parts[part.name] = initPart(part)
+      })
 
-    async function callCom(partKey, methodName, ...args) {
-      let part = parts[partKey]
-      if (!part.el ) {
-        throw new Error('formCom.value null')
-      }
-      // console.log(partKey, parts, part.el)
-      let elRef = part.el.value
-      if (!elRef) {
-        throw new Error('formCom.value null')
-      }
-      return await ZY.awaitTo(elRef[methodName](...args))
-    }
+    // async function callCom(partKey, methodName, ...args) {
+    //   let part = parts[partKey]
+    //   if (!part.el ) {
+    //     throw new Error('formCom.value null')
+    //   }
+    //   // console.log(partKey, parts, part.el)
+    //   let elRef = part.el.value
+    //   if (!elRef) {
+    //     throw new Error('formCom.value null')
+    //   }
+    //   return await ZY.awaitTo(elRef[methodName](...args))
+    // }
 
     let instanse = {
       config,
@@ -251,7 +309,6 @@
       get: ZY.lodash.get,
       dxValue,
       dxEval,
-      callCom
     };
 
     instanse.slotContent = (function() {
@@ -264,26 +321,26 @@
     })()
 
 
-    instanse.getState = function(partKey = '') {
-      let ret = parts[partKey]
-      let res = {}
-      for (let k in ret.model) {
-        res[k] = ret.model[k]
-      }
-      for (let k in ret.computedModel) {
-        res[k] = ret.computedModel[k].value
-      }
-      return {
-        val: res,
-        toRaw() {
-          return ZY.JSON5.parse(ZY.JSON5.stringify(res))
-        }
-      }
-    }
-
-    instanse.getRawState = function(...args) {
-      return instanse.getState(...args).toRaw()
-    }
+    // instanse.getState = function(partKey = '') {
+    //   let ret = parts[partKey]
+    //   let res = {}
+    //   for (let k in ret.model) {
+    //     res[k] = ret.model[k]
+    //   }
+    //   for (let k in ret.computedModel) {
+    //     res[k] = ret.computedModel[k].value
+    //   }
+    //   return {
+    //     val: res,
+    //     toRaw() {
+    //       return ZY.JSON5.parse(ZY.JSON5.stringify(res))
+    //     }
+    //   }
+    // }
+    //
+    // instanse.getRawState = function(...args) {
+    //   return instanse.getState(...args).toRaw()
+    // }
 
     return instanse
   },
