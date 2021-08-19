@@ -30,7 +30,18 @@
           <el-table-column prop="{{ key }}"
                            :label="get({{ configKey }}, 'ui.label', '')"
                   {{ attr.parseUIAttrs(record.ui, configKey) }}
-          ></el-table-column>
+          >
+            {% if record.useSlotTemplate %}
+              <template  #default="scope">
+{#                {{ formGroup.tag(record.template) }}#}
+                <slot-com :defs="slotContent" :attrs="{parts, scope}" name="actions"></slot-com>
+              </template>
+            {% else %}
+              <template #default="scope">
+                {% verbatim %}{{ {% endverbatim %} scope.row[scope.column.property] {% verbatim %}}}{% endverbatim %}
+              </template>
+            {% endif %}
+          </el-table-column>
         {% endfor %}
       </el-table>
       <el-pagination

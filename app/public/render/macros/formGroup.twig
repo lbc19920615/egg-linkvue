@@ -1,5 +1,8 @@
 
 {% import "./form.twig" as forms %}
+{% import "./attr.twig" as attr %}
+
+
 {% macro renderSet(obj, pathKey, path, index, max, tag = 'div', array_tag = 'template') %}
     {% set prefix = 'bs-' %}
     {% set formItemKey = 'formItem' ~ index %}
@@ -136,4 +139,18 @@
                 {% endif %}
         {% endfor %}
     {% endif %}
+{% endmacro %}
+
+
+{% macro tag(def, tagName = '') %}
+    {% for item in def %}
+        {% if item.tag %}
+            {% set tagName = item.tag %}
+            <{{ tagName }}  {{ attr.parseKeyValue(item.attrs) }}>
+            {{ _self.tag(item.children, tagName) }}
+        {% else %}
+            {{ item }}
+            </{{ tagName }}>
+        {% endif %}
+    {% endfor %}
 {% endmacro %}

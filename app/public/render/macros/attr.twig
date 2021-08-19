@@ -1,8 +1,21 @@
 
 {% macro parseKeyValue(arr) %}
-    {% for KeyValue in arr %}{{ KeyValue[0] }}="{{ KeyValue[1] }}"{% endfor %}
+    {% for KeyValue in arr %} {{ KeyValue[0] }}="{{ KeyValue[1] }}"{% endfor %}
+{% endmacro %}
+
+{% macro parseKeyObj(arr) %}
+    {% for key,value in arr %}{{ key }}="{{ value }}"{% endfor %}
 {% endmacro %}
 
 {% macro parseUIAttrs(obj, path) %}
     {% for key,value in obj %} :{{ key }}="get({{ path }}, 'ui.{{ key }}', '')" {% endfor %}
 {% endmacro %}
+
+{% macro left_in() %}
+    {% verbatim %}{{ {% endverbatim %}
+{% endmacro %}
+
+{% macro right_in() %}
+    {% verbatim %}{{ {% endverbatim %}
+{% endmacro %}
+
