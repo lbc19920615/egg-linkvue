@@ -72,9 +72,11 @@
       this.$emit('init', this);
 
       let comManager = inject('comManager')
-      comManager.context.sendEvent('http-component:com:mounted', {
-        httpComponentComContext: this,
-        httpComponentContext: comManager,
+      this.$nextTick(()=> {
+        comManager.context.sendEvent('http-component:com:mounted', {
+          httpComponentComContext: this,
+          httpComponentContext: comManager,
+        })
       })
     },
     created() {
