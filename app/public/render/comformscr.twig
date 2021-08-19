@@ -57,33 +57,33 @@
         let ret = {
         }
         let computed = {}
-        for (let key in config.computed) {
+        for (let key in partDef.computed) {
           computed[key] = new Function('model', 'options', `
-          let $root = options.context.ctx
-          let $rootStore = options.context.store
+            let $root = options.context.ctx
+            let $rootStore = options.context.store
 
-          ${commonFun}
+            ${commonFun}
 
-          function MODEL(v, defaultVal) {
-            return ZY.lodash.get(model, v, defaultVal)
-          }
+            function MODEL(v, defaultVal) {
+              return ZY.lodash.get(model, v, defaultVal)
+            }
 
-          function ROOT_STATE(v, defaultVal) {
-             return ZY.lodash.get($rootStore.state, v, defaultVal)
-          }
+            function ROOT_STATE(v, defaultVal) {
+               return ZY.lodash.get($rootStore.state, v, defaultVal)
+            }
 
-          return () => {
-            // console.log('computed ${key} build', options)
-            options.beforeBuild('${key}')
-            return ${config.computed[key]}
-          }
+            return () => {
+              // console.log('computed ${key} build', options)
+              options.beforeBuild('${key}')
+              return ${partDef.computed[key]}
+            }
         `)
         }
         // computed end
         let model = null
         const obj = formModel.createFormModel(rowDef);
         formDefTravase(rowDef, computedLinks);
-        ret = globalStore.run(config.service, 'initModel', {
+        ret = globalStore.run(partDef.service, 'initModel', {
           plain: obj,
           computed,
           callback: {
