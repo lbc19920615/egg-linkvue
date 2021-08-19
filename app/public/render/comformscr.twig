@@ -42,14 +42,11 @@
       const globalStore = inject('globalStore');
       const curFormCon = getCurrentInstance().ctx;
       // console.log('curFormCon', curFormCon)
-      const tableData = ref([]);
 
-      let comManager = inject('comManager')
-
-      function callComManager(name,e ) {
-        // console.log('comManager', comManager)
-        comManager.context.sendEvent(name,e)
-      }
+      // let comManager = inject('comManager')
+      // function callComManager(name,e ) {
+      //   comManager.context.sendEvent(name,e)
+      // }
 
       // console.log('globalStore', globalStore)
 
@@ -265,7 +262,6 @@
     let instanse = {
       config,
       model,
-      tableData,
       state: ret.model,
       computedState: ret.computedModel,
       defaultTo: ZY.lodash.defaultTo,
