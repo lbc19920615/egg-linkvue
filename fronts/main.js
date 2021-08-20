@@ -201,7 +201,7 @@ export function buildAsyncpipe() {
  */
 export function importJsStr(content) {
   const objectURL = URL.createObjectURL(
-    new Blob([sfc.script.content],
+    new Blob([content],
       { type: 'text/javascript' })
   );
   return import(objectURL)

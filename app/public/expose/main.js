@@ -14464,7 +14464,7 @@ function buildAsyncpipe() {
   };
 }
 function importJsStr(content) {
-  const objectURL = URL.createObjectURL(new Blob([sfc.script.content], { type: "text/javascript" }));
+  const objectURL = URL.createObjectURL(new Blob([content], { type: "text/javascript" }));
   return import(objectURL);
 }
 export {
