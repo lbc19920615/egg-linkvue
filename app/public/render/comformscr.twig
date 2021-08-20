@@ -19,7 +19,7 @@
       <el-form :ref="{{ pathKey }}.initEl" :model="{{ pathKey }}.model" {{ attr.parseKeyValue(part.def.ui.attrs) }}>
 {#        {{ formGroup.renderSet(partConfigKey, "parts.form.model", 1,6, 'el-col', 'template') }}#}
         {{ formGroup.renderSet(partConfigKey, pathKey, pathKey ~ ".model", 1,6, 'el-col', 'template') }}
-        <slot-com :defs="slotContent" :attrs="{parts}" name="default"></slot-com>
+        <slot-com :defs="slotContent" :attrs="{parts}" name="{{ CONFIG.process }}_default"></slot-com>
       </el-form>
     {% endif %}
     {% if part.type == 'table' %}
@@ -69,7 +69,9 @@
     ],
     data() {
       return {
-        comUUID: ZY.nid()
+        comUUID: ZY.nid(),
+        comManager: null,
+        currentProcess: '{{ CONFIG.process }}',
       }
     },
     mounted() {
@@ -80,18 +82,25 @@
       this.$nextTick(()=> {
         comManager.context.sendEvent('http-component:com:mounted', {
           httpComponentComContext: this,
-          httpComponentContext: comManager,
+          comManager,
+          httpComponentContext: comManager.context,
+        })
+        comManager.context.sendEvent(`${comManager.context.is}@http-component:com:mounted`, {
+          httpComponentComContext: this,
+          comManager,
+          httpComponentContext: comManager.context,
         })
         comManager.register(this, this.comUUID)
         comManager.context.setCurrentChild(this.comUUID)
         // console.log(comManager)
       })
+      this.comManager = comManager
     },
     beforeUnmount() {
-      let comManager = inject('comManager')
-      this.$nextTick(()=> {
-        comManager.destroy(this.comUUID)
-      })
+      const { ref, inject, watch, getCurrentInstance } = global.Vue;
+      let comManager = this.comManager
+      // console.log(comManager)
+      comManager.destory(this.comUUID)
     },
     created() {
       const { provide } = global.Vue;
