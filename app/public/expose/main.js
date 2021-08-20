@@ -14463,6 +14463,10 @@ function buildAsyncpipe() {
     }, Promise.resolve(arg));
   };
 }
+function importJsStr(content) {
+  const objectURL = URL.createObjectURL(new Blob([sfc.script.content], { type: "text/javascript" }));
+  return import(objectURL);
+}
 export {
   JSON5,
   Lock2 as Lock,
@@ -14481,6 +14485,7 @@ export {
   formModel,
   getImportURL,
   global2 as global,
+  importJsStr,
   lodash,
   nid,
   qs,
