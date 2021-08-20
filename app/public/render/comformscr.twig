@@ -67,6 +67,11 @@
     emits: [
       'model:update',
     ],
+    data() {
+      return {
+        comUUID: ZY.nid()
+      }
+    },
     mounted() {
       const { ref, inject, watch, getCurrentInstance } = global.Vue;
       this.$emit('init', this);
@@ -77,6 +82,15 @@
           httpComponentComContext: this,
           httpComponentContext: comManager,
         })
+        comManager.register(this, this.comUUID)
+        comManager.context.setCurrentChild(this.comUUID)
+        // console.log(comManager)
+      })
+    },
+    beforeUnmount() {
+      let comManager = inject('comManager')
+      this.$nextTick(()=> {
+        comManager.destroy(this.comUUID)
       })
     },
     created() {
