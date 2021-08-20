@@ -19,7 +19,9 @@
       <el-form :ref="{{ pathKey }}.initEl" :model="{{ pathKey }}.model" {{ attr.parseKeyValue(part.def.ui.attrs) }}>
 {#        {{ formGroup.renderSet(partConfigKey, "parts.form.model", 1,6, 'el-col', 'template') }}#}
         {{ formGroup.renderSet(partConfigKey, pathKey, pathKey ~ ".model", 1,6, 'el-col', 'template') }}
-        <slot-com :defs="slotContent" :attrs="{parts}" name="{{ CONFIG.process }}_default"></slot-com>
+        <slot-com :defs="slotContent" :attrs="{parts}"
+                  :binds="{name: '{{ part.name }}', process: '{{ CONFIG.process}}' }"
+                  name="{{ CONFIG.process }}_default"></slot-com>
       </el-form>
     {% endif %}
     {% if part.type == 'table' %}
