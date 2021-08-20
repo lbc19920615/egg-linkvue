@@ -193,3 +193,16 @@ export function buildAsyncpipe() {
     }, Promise.resolve(arg));
   };
 }
+
+/**
+ * importJsStr
+ * @param content
+ * @returns {Promise<*>}
+ */
+export function importJsStr(content) {
+  const objectURL = URL.createObjectURL(
+    new Blob([sfc.script.content],
+      { type: 'text/javascript' })
+  );
+  return import(objectURL)
+}
