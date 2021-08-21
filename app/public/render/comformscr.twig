@@ -5,7 +5,7 @@
 <div>
   {% for part in CONFIG.parts %}
     {% set pathKey = "parts." ~ part.name %}
-<div v-if="{{pathKey}}">
+<div v-if="{{pathKey}}" hidden>
    <div>{% verbatim %}{{{% endverbatim %} {{pathKey}}.model {% verbatim %}}}{% endverbatim %}</div>
   <div>{% verbatim %}{{{% endverbatim %} {{pathKey}}.computedModel {% verbatim %}}}{% endverbatim %}</div>
 {#   <div>{{parts.form.computedModel}}</div>#}
@@ -110,6 +110,9 @@
     },
     setup(props, { emit }) {
 
+
+
+      const config = ZY.JSON5.parse(`{{CONFIG_SOURCE_JSON5}}`);
       const { ref, inject, watch, getCurrentInstance } = global.Vue;
       const { useStore } = global.Vuex
       let store = useStore()
@@ -179,10 +182,27 @@
           }
         })
         model = ret.model
-        watch(model, newVal => {
-          // console.log('model.content', newVal)
-          emit('model:update', newVal);
-        });
+        for (let key in model) {
+          // console.log('model', key)
+          watch(() => model[key], newVal => {
+            // console.log('model.content', newVal)
+            let obj = {
+              key,
+              newVal,
+              config,
+              model
+            }
+            emit('model:update', obj);
+            curFormCon.comManager.context.sendEvent('model:update', obj)
+          });
+        }
+        // watch(model, newVal => {
+        //   // console.log('model.content', newVal)
+        //   emit('model:update', newVal);
+        //   curFormCon.comManager.context.sendEvent('model:update', {
+        //     newVal
+        //   })
+        // });
         ret.el = ref(null)
         ret.initEl = function(ctx) {
           // console.log(ctx)
@@ -338,7 +358,6 @@
       }
 
 
-      const config = ZY.JSON5.parse(`{{CONFIG_SOURCE_JSON5}}`);
       let parts = {}
       config.parts.forEach(part => {
         parts[part.name] = initPart(part)

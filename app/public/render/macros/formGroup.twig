@@ -31,6 +31,10 @@
                 ></cm-field>
             </template>
             <template v-if="{{ formItemKey }}.type === 'array' ">
+                <slot-com :defs="slotContent"
+                          :attrs="{parts}"
+                          :binds="{item: {{ formItemKey }}, index: {{ formItemLabel }}}"
+                          name="form_array_before"></slot-com>
                 <slot name="{{ formItemLabel }}__array__before"
                       v-bind="{item: {{ formItemKey }}, index: {{ formItemLabel }}}"></slot>
                 {% set subItemKey = 'subItem' ~ index %}
