@@ -8,12 +8,14 @@ export const baseServiceMixin = {
 };
 
 export const baseServiceDef = ({ vue, props, config }) => {
-  const { onMounted, reactive, effectScope, computed, onBeforeUnmount, inject, nextTick, getCurrentInstance } = vue;
+  const { onMounted, reactive, effectScope, computed, onBeforeUnmount, ref, inject, nextTick, getCurrentInstance } = vue;
 
   const ctx = getCurrentInstance().ctx;
 
   const scope = effectScope();
   const globalStore = inject('globalStore');
+
+  let modeljson = ref('')
 
   let ret = {};
   let model = {};
@@ -61,10 +63,11 @@ export const baseServiceDef = ({ vue, props, config }) => {
 
   async function setModel(newVal) {
     // console.log(ZY.lodash.get(model, path));
-    console.log('setModel', newVal)
+    // console.log('setModel', newVal)
     for (const key in newVal) {
       model[key] = newVal[key];
     }
+    modeljson.value = ZY.JSON5.stringify(model)
     global.ZY.PubSub.publish(globalStore.EVENT_TYPES.SET_MODEL_READY, '');
     ctx.RefsManager.emit(globalStore.EVENT_TYPES.SET_MODEL_READY, { ctx, model });
   }
@@ -72,6 +75,7 @@ export const baseServiceDef = ({ vue, props, config }) => {
     model,
     computedModel,
     config,
+    modeljson,
     initModel,
     getModel,
     setModel,
