@@ -7,7 +7,7 @@ export const baseServiceMixin = {
   },
 };
 
-export const baseServiceDef = ({ vue, props }) => {
+export const baseServiceDef = ({ vue, props, config }) => {
   const { onMounted, reactive, effectScope, computed, onBeforeUnmount, inject, nextTick, getCurrentInstance } = vue;
 
   const ctx = getCurrentInstance().ctx;
@@ -65,6 +65,9 @@ export const baseServiceDef = ({ vue, props }) => {
     ctx.RefsManager.emit(globalStore.EVENT_TYPES.SET_MODEL_READY, { ctx, model });
   }
   ret = {
+    model,
+    computedModel,
+    config,
     initModel,
     getModel,
     setModel,

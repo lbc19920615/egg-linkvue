@@ -10,7 +10,8 @@
         baseServiceMixin,
       ],
       setup(props, ctx) {
-        return baseServiceDef({ props, ctx, vue });
+        const config = ZY.JSON5.parse(`{{CONFIG_SOURCE_JSON5}}`);
+        return baseServiceDef({ props, ctx, vue, config });
       },
     });
   }
