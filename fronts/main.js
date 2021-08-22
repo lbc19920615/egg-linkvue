@@ -11,6 +11,22 @@ import getGlobalThisPolyfill from 'globalthis/polyfill';
 export const global = getGlobalThisPolyfill();
 
 
+import compareFactory from './compare'
+let _compareByValue = compareFactory(Object)
+
+/**
+ * compare
+ * @param obj1 {Object}
+ * @param obj2 {Object}
+ */
+export function compareObj(obj1, obj2) {
+  if (Object.is(obj1, obj2)) {
+    return true
+  } else {
+    return _compareByValue(obj1, obj2)
+  }
+}
+
 import { nanoid } from 'nanoid'
 
 import _JSON5 from 'json5'

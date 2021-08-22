@@ -35,8 +35,8 @@ var require_polyfill = __commonJS({
 // node_modules/json5/dist/index.js
 var require_dist = __commonJS({
   "node_modules/json5/dist/index.js"(exports, module) {
-    (function(global3, factory) {
-      typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory() : typeof define === "function" && define.amd ? define(factory) : global3.JSON5 = factory();
+    (function(global3, factory2) {
+      typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory2() : typeof define === "function" && define.amd ? define(factory2) : global3.JSON5 = factory2();
     })(exports, function() {
       "use strict";
       function createCommonjsModule(fn, module2) {
@@ -2188,11 +2188,11 @@ var require_get = __commonJS({
 // node_modules/pubsub-js/src/pubsub.js
 var require_pubsub = __commonJS({
   "node_modules/pubsub-js/src/pubsub.js"(exports, module) {
-    (function(root, factory) {
+    (function(root, factory2) {
       "use strict";
       var PubSub2 = {};
       root.PubSub = PubSub2;
-      factory(PubSub2);
+      factory2(PubSub2);
       if (typeof exports === "object") {
         if (module !== void 0 && module.exports) {
           exports = module.exports = PubSub2;
@@ -9841,6 +9841,57 @@ var require_duration = __commonJS({
 // fronts/main.js
 var import_polyfill = __toModule(require_polyfill());
 
+// fronts/compare.js
+function factory(Object2) {
+  const default_options = {
+    strict: true,
+    order: true,
+    caseSensitive: true
+  };
+  function compare(obj1, obj2, options) {
+    options = options === void 0 || typeof options !== "object" || Array.isArray(options) ? default_options : Object2.assign(JSON.parse(JSON.stringify(default_options)), options);
+    if (typeof obj1 !== typeof obj2) {
+      if (!options.strict && (typeof obj1 === "number" || typeof obj1 === "string") && (typeof obj2 === "number" || typeof obj2 === "string")) {
+        return obj1 == obj2;
+      }
+      return false;
+    }
+    switch (typeof obj1) {
+      case "object":
+        if (Array.isArray(obj1) || Array.isArray(obj2)) {
+          if (Array.isArray(obj1) && Array.isArray(obj2)) {
+            if (obj1.length !== obj2.length) {
+              return false;
+            } else if (options.order) {
+              return obj1.every(function(element, index) {
+                return compare(element, obj2[index], options);
+              });
+            }
+            return obj1.every(function(element) {
+              return obj2.some(function(element2) {
+                return compare(element, element2, options);
+              });
+            });
+          }
+          return false;
+        }
+        if (Object2.keys(obj1).length !== Object2.keys(obj2).length) {
+          return false;
+        }
+        return Object2.keys(obj1).every(function(key) {
+          return key in obj2 && compare(obj1[key], obj2[key], options);
+        });
+        break;
+      case "string":
+        return options.caseSensitive ? obj1 === obj2 : obj1.toLocaleLowerCase() === obj2.toLocaleLowerCase();
+      default:
+        return obj1 === obj2;
+    }
+  }
+  return compare;
+}
+var compare_default = factory;
+
 // node_modules/nanoid/index.prod.js
 if (false) {
   if (typeof navigator !== "undefined" && navigator.product === "ReactNative" && typeof crypto === "undefined") {
@@ -14409,6 +14460,14 @@ var esm_default = n;
 
 // fronts/main.js
 var global2 = (0, import_polyfill.default)();
+var _compareByValue = compare_default(Object);
+function compareObj(obj1, obj2) {
+  if (Object.is(obj1, obj2)) {
+    return true;
+  } else {
+    return _compareByValue(obj1, obj2);
+  }
+}
 var R = es_exports;
 var awaitTo = await_to_js_es5_default;
 var JSON5 = import_json5.default;
@@ -14479,6 +14538,7 @@ export {
   camel2hyphen,
   camelNameToCls,
   comHelper,
+  compareObj,
   fetchContentV2,
   fetchContentV3,
   fetchreq,

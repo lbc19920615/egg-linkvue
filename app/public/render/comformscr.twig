@@ -182,9 +182,8 @@
           }
         })
         model = ret.model
-        for (let key in model) {
-          // console.log('model', key)
-          watch(() => model[key], newVal => {
+        function watchHandler(key) {
+          return function(newVal) {
             // console.log('model.content', newVal)
             let obj = {
               key,
@@ -194,8 +193,28 @@
             }
             emit('model:update', obj);
             curFormCon.comManager.context.sendEvent('model:update', obj)
-          });
+          }
         }
+        function attachModelWatcher(model, parentPath, subModel) {
+          if (typeof subModel === 'object') {
+            for (let key in subModel) {
+              let tureKey = parentPath ? `${parentPath}.${key}` : key
+              if (Array.isArray(subModel[key])) {
+                subModel[key].forEach((subItem, subIndex) => {
+                  // console.log(subItem, subIndex)
+                  attachModelWatcher(model, `${tureKey}[${subIndex}]`, subItem)
+                })
+              } else {
+                // console.log('model', tureKey,  ZY.lodash.get(model, tureKey))
+
+                watch(() => ZY.lodash.get(model, tureKey), watchHandler(tureKey));
+              }
+            }
+          }
+        }
+
+        attachModelWatcher(model, '', model)
+
         // watch(model, newVal => {
         //   // console.log('model.content', newVal)
         //   emit('model:update', newVal);
