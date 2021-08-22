@@ -1,5 +1,6 @@
 const _ = require('lodash');
-const Controller = require('egg').Controller;
+// const Controller = require('egg').Controller;
+const Controller = require('../core/controller');
 
 const formidable = require('formidable');
 
@@ -190,16 +191,34 @@ class HomeController extends Controller {
     // console.log(ctx.protocol);
 
     const { fields } = await this.parse(ctx.req);
+    const CONFIG = JSON.parse(fields.source);
+
+    // console.dir(CONFIG)
+
+    const partStr = {};
+
+    if (Array.isArray(CONFIG.parts)) {
+      CONFIG.parts.forEach((part, index) => {
+        console.dir(part.def, {
+          depth: null
+        });
+        const modelKey = 'parts.' + part.name + '.model';
+        const partConfigKey = 'config.parts[' + index + '].def';
+        partStr[part.name] = this.BASE_renderForm(part.def, modelKey, partConfigKey);
+      });
+    }
+
     ctx.body = await this._parseContent(src, configId, {
       append: {
         source: fields.source,
         CONFIG_SOURCE: fields.source,
         CONFIG_SOURCE_JSON5: JSON5.stringify(JSON.parse(fields.source)),
-        CONFIG: JSON.parse(fields.source),
+        CONFIG,
         APP_CONFIG: {
           server_origin: ctx.protocol + '://' + ctx.request.header.host,
           header: ctx.request.header,
         },
+        partStr,
       },
     });
 

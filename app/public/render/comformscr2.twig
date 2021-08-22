@@ -1,0 +1,447 @@
+{% import "./macros/formGroup.twig" as formGroup %}
+{% import "./macros/attr.twig" as attr %}
+
+<template>
+<div>
+  {% for part in CONFIG.parts %}
+    {% set pathKey = "parts." ~ part.name %}
+<div v-if="{{pathKey}}" :hidden="!debug">
+   <div>{% verbatim %}{{{% endverbatim %} {{pathKey}}.model {% verbatim %}}}{% endverbatim %}</div>
+  <div>{% verbatim %}{{{% endverbatim %} {{pathKey}}.computedModel {% verbatim %}}}{% endverbatim %}</div>
+{#   <div>{{parts.form.computedModel}}</div>#}
+</div>
+  {% endfor %}
+  {% for part in CONFIG.parts %}
+    {% set partConfigKey = 'config.parts[' ~ loop.index0 ~ '].def' %}
+    {% set pathKey = "parts." ~ part.name %}
+    {% set pathSKey = "'parts." ~ part.name ~ "'" %}
+    {% set modelKey = pathKey ~ ".model"  %}
+    {% if part.type == 'form' %}
+      <el-form :ref="{{ pathKey }}.initEl" :model="{{ pathKey }}.model" {{ attr.parseKeyValue(part.def.ui.attrs) }}>
+{#{{ modelKey }}#}
+{#        {{ partConfigKey }}#}
+{#            {% verbatim %}{{ {% endverbatim %} {{ modelKey }} {% verbatim %} }} {% endverbatim %}#}
+        {{ partStr[part.name] }}
+        <slot-com :defs="slotContent" :attrs="{parts}"
+                  :binds="{name: '{{ part.name }}', process: '{{ CONFIG.process}}' }"
+                  name="form_after"></slot-com>
+      </el-form>
+    {% endif %}
+    {% if part.type == 'table' %}
+      <el-table :ref="{{ pathKey }}.initEl" :data="{{ pathKey }}.model.records"  stripe="true" border="true" {{ attr.parseKeyValue(part.def.ui.attrs) }}>
+        {% for key,record in part.def.properties.records.items.properties %}
+          {% set configKey = partConfigKey ~ '.records.items.properties.' ~ key %}
+          <div v-html="get({{ configKey }}, 'ui.label', '')">1111</div>
+          <el-table-column prop="{{ key }}"
+                           :label="get({{ configKey }}, 'ui.label', '')"
+                  {{ attr.parseUIAttrs(record.ui, configKey) }}
+          >
+            {% if record.useSlotTemplate %}
+              <template  #default="scope">
+{#                {{ formGroup.tag(record.template) }}#}
+                <slot-com :defs="slotContent" :attrs="{parts, scope}" name="actions"></slot-com>
+              </template>
+            {% else %}
+              <template #default="scope">
+                {% verbatim %}{{ {% endverbatim %} scope.row[scope.column.property] {% verbatim %}}}{% endverbatim %}
+              </template>
+            {% endif %}
+          </el-table-column>
+        {% endfor %}
+      </el-table>
+      <el-pagination
+              background
+              layout="prev, pager, next"
+              :current-page="{{ pathKey }}.model.page"
+              :page-size="{{ pathKey }}.model.limit"
+              :total="{{ pathKey }}.model.total">
+      </el-pagination>
+    {% endif %}
+  {% endfor %}
+</div>
+</template>
+
+<script type="module">
+  import { formModel, comHelper } from '{{ APP_CONFIG.server_origin }}/public/expose/main.js';
+
+  export default {
+    props: {
+      debug: {
+        type: Boolean
+      },
+      modelValue: null,
+      render: null
+    },
+    emits: [
+      'model:update',
+    ],
+    data() {
+      return {
+        comUUID: ZY.nid(),
+        comManager: null,
+        currentProcess: '{{ CONFIG.process }}',
+      }
+    },
+    mounted() {
+      const { ref, inject, watch, getCurrentInstance } = global.Vue;
+      this.$emit('init', this);
+
+      let comManager = inject('comManager')
+      this.$nextTick(()=> {
+        comManager.context.sendEvent('http-component:com:mounted', {
+          httpComponentComContext: this,
+          comManager,
+          httpComponentContext: comManager.context,
+        })
+        comManager.context.sendEvent(`${comManager.context.is}@http-component:com:mounted`, {
+          httpComponentComContext: this,
+          comManager,
+          httpComponentContext: comManager.context,
+        })
+        comManager.register(this, this.comUUID)
+        comManager.context.setCurrentChild(this.comUUID)
+        // console.log(comManager)
+      })
+      this.comManager = comManager
+    },
+    beforeUnmount() {
+      const { ref, inject, watch, getCurrentInstance } = global.Vue;
+      let comManager = this.comManager
+      // console.log(comManager)
+      comManager.destory(this.comUUID)
+    },
+    created() {
+      const { provide } = global.Vue;
+      provide('curFormCon', this)
+    },
+    setup(props, { emit }) {
+
+
+
+      const config = ZY.JSON5.parse(`{{CONFIG_SOURCE_JSON5}}`);
+      const { ref, inject, watch, getCurrentInstance } = global.Vue;
+      const { useStore } = global.Vuex
+      let store = useStore()
+
+      const globalStore = inject('globalStore');
+      const curFormCon = getCurrentInstance().ctx;
+
+
+      function initPart(partDef) {
+        let rowDef = partDef.def
+        let computedLinks = {
+        }
+        // computed start
+        let ret = {
+        }
+        let computed = {}
+        for (let key in partDef.computed) {
+          computed[key] = new Function('model', 'options', `
+            let $root = options.context.ctx
+            let $rootStore = options.context.store
+
+            ${commonFun}
+
+            function MODEL(v, defaultVal) {
+              return ZY.lodash.get(model, v, defaultVal)
+            }
+
+            function ROOT_STATE(v, defaultVal) {
+               return ZY.lodash.get($rootStore.state, v, defaultVal)
+            }
+
+            return () => {
+              // console.log('computed ${key} build', options)
+              options.beforeBuild('${key}')
+              return ${partDef.computed[key]}
+            }
+        `)
+        }
+        // computed end
+        let model = null
+        const obj = formModel.createFormModel(rowDef);
+        formDefTravase(rowDef, computedLinks);
+        ret = globalStore.run(partDef.service, 'initModel', {
+          plain: obj,
+          computed,
+          callback: {
+            onComputedChange(key, newVal) {
+              // console.log('onComputedChange', key, newVal)
+              let findKeys = computedLinks[key]
+              if (Array.isArray(findKeys)) {
+                findKeys.forEach(findKeyItem => {
+                  comHelper.autoVal({
+                    obj: model,
+                    key: findKeyItem.key,
+                    base: model,
+                    computedVal() {
+                      return newVal
+                    }
+                  })
+                })
+              }
+            }
+          },
+          context: {
+            ctx: curFormCon,
+            store
+          }
+        })
+        model = ret.model
+        function watchHandler(key) {
+          return function(newVal) {
+            // console.log('model.content', newVal)
+            let obj = {
+              key,
+              newVal,
+              config,
+              model
+            }
+            emit('model:update', obj);
+            curFormCon.comManager.context.sendEvent('model:update', obj)
+          }
+        }
+        function attachModelWatcher(model, parentPath, subModel) {
+          if (typeof subModel === 'object') {
+            for (let key in subModel) {
+              let tureKey = parentPath ? `${parentPath}.${key}` : key
+              if (Array.isArray(subModel[key])) {
+                subModel[key].forEach((subItem, subIndex) => {
+                  // console.log(subItem, subIndex)
+                  attachModelWatcher(model, `${tureKey}[${subIndex}]`, subItem)
+                })
+              } else {
+                // console.log('model', tureKey,  ZY.lodash.get(model, tureKey))
+
+                watch(() => ZY.lodash.get(model, tureKey), watchHandler(tureKey));
+              }
+            }
+          }
+        }
+
+        attachModelWatcher(model, '', model)
+
+        // watch(model, newVal => {
+        //   // console.log('model.content', newVal)
+        //   emit('model:update', newVal);
+        //   curFormCon.comManager.context.sendEvent('model:update', {
+        //     newVal
+        //   })
+        // });
+        ret.el = ref(null)
+        ret.initEl = function(ctx) {
+          // console.log(ctx)
+          ret.el.value = ctx
+        }
+
+        async function callEl(methodName, ...args) {
+          if (!ret.el ) {
+            throw new Error('formCom.value null')
+          }
+          // console.log(partKey, parts, part.el)
+          let elRef = ret.el.value
+          if (!elRef) {
+            throw new Error('formCom.value null')
+          }
+          return await ZY.awaitTo(elRef[methodName](...args))
+        }
+        ret.callEl = callEl
+
+        ret.getState = function() {
+          let res = {}
+          for (let k in ret.model) {
+            res[k] = ret.model[k]
+          }
+          for (let k in ret.computedModel) {
+            res[k] = ret.computedModel[k].value
+          }
+          return {
+            val: res,
+            toRaw() {
+              return ZY.JSON5.parse(ZY.JSON5.stringify(res))
+            }
+          }
+        }
+
+        ret.getModel = function() {
+          let res = {}
+          for (let k in ret.model) {
+            res[k] = ret.model[k]
+          }
+          return res
+        }
+
+        ret.getRawState = function(...args) {
+          return ret.getState(...args).toRaw()
+        }
+        return ret
+      }
+
+      function formDefTravase(formDef = {}, computedLinks) {
+        if (formDef.type === 'object') {
+          Object.entries(formDef.properties)
+                  .forEach(([ key, formDefProp ]) => {
+                    if (formDefProp.type !== 'array') {
+                      if (formDefProp.computedProp) {
+                        const linked = formDefProp.computedProp;
+                        if (!computedLinks[linked]) {
+                          computedLinks[linked] = [];
+                        }
+                        computedLinks[linked].push({
+                          key
+                        });
+                      }
+                    } else {
+                      formDefTravase(formDefProp.items, computedLinks);
+                    }
+                  });
+        }
+      }
+
+      let templateFun = ''
+      for (let funName in ZY.lodash) {
+        templateFun = templateFun + `
+        function ${funName}(...args) {
+          return ZY.lodash.${funName}(...args)
+        }
+      `
+      }
+
+      let commonFun = `
+        ${templateFun}
+
+        function ZY_hour_between_2_date(date1, date2) {
+          if (date1 && date2) {
+            return ZY.Time.subtract2Date(date1, date2).asHours()
+          }
+          return null
+        }
+
+        function ZY_floor(v, presion) {
+          let ret = floor(v, presion)
+          if (ret === 0) {
+            return ''
+          }
+          return ret
+        }
+
+        function LENGTH(v) {
+          if (v && v.length) {
+            return v.length
+          }
+          return -1
+        }
+
+        function VAL(v, defaultVal) {
+          return ZY.lodash.get($root, v, defaultVal)
+        }
+      `
+
+      // console.log('curFormCon', curFormCon)
+      // function callComManager(name,e ) {
+      //   comManager.context.sendEvent(name,e)
+      // }
+
+      // console.log('globalStore', globalStore)
+
+      function dxEval(v, $root, context) {
+        let trueContext = context ? context : this;
+        let fun = new Function('valueTemplate', 'options', `
+          // let $config = $context.config
+          let $root = options.$root
+          let $rootStore = options.store
+
+         ${commonFun}
+
+         function ROOT_STATE(v, defaultVal) {
+           return ZY.lodash.get($rootStore.state, v, defaultVal)
+         }
+
+          function VAL(v, defaultVal) {
+            return ZY.lodash.get($root, v, defaultVal)
+          }
+
+          function MODEL(v, defaultVal) {
+            return ZY.lodash.get($root.model, v, defaultVal)
+          }
+
+          return eval(valueTemplate)
+        `)
+
+        return fun(v, {
+          $root,
+          context: trueContext,
+          store
+        })
+      }
+
+      function dxValue(partContext, v) {
+        if (!partContext) {
+          throw new Error(`no partContext`)
+        }
+        return dxEval(v, partContext, this)
+      }
+
+
+      let parts = {}
+      config.parts.forEach(part => {
+        parts[part.name] = initPart(part)
+      })
+
+    // async function callCom(partKey, methodName, ...args) {
+    //   let part = parts[partKey]
+    //   if (!part.el ) {
+    //     throw new Error('formCom.value null')
+    //   }
+    //   // console.log(partKey, parts, part.el)
+    //   let elRef = part.el.value
+    //   if (!elRef) {
+    //     throw new Error('formCom.value null')
+    //   }
+    //   return await ZY.awaitTo(elRef[methodName](...args))
+    // }
+
+    let instanse = {
+      config,
+      parts,
+      defaultTo: ZY.lodash.defaultTo,
+      get: ZY.lodash.get,
+      dxValue,
+      // dxEval,
+    };
+
+    instanse.slotContent = (function() {
+      if (props.render) {
+        return props.render()
+      }
+      return {
+        default: []
+      }
+    })()
+
+
+    // instanse.getState = function(partKey = '') {
+    //   let ret = parts[partKey]
+    //   let res = {}
+    //   for (let k in ret.model) {
+    //     res[k] = ret.model[k]
+    //   }
+    //   for (let k in ret.computedModel) {
+    //     res[k] = ret.computedModel[k].value
+    //   }
+    //   return {
+    //     val: res,
+    //     toRaw() {
+    //       return ZY.JSON5.parse(ZY.JSON5.stringify(res))
+    //     }
+    //   }
+    // }
+    //
+    // instanse.getRawState = function(...args) {
+    //   return instanse.getState(...args).toRaw()
+    // }
+
+    return instanse
+  },
+};
+</script>

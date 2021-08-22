@@ -17,7 +17,7 @@ export default function(name) {
       type: String,
       formPath: String,
       modelValue: null,
-      context: null,
+      // context: null,
       ui: {
         type: Object,
         default() {
