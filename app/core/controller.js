@@ -31,7 +31,11 @@ v-if="${basePath}"
  <slot-com :defs="slotContent" :attrs="{parts}"
            :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}', selfpath: '${fromPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
               name="array_before"></slot-com>
-<template v-for="(${itemKey}, ${indexKey}) in ${basePath}" >`;
+<template v-for="(${itemKey}, ${indexKey}) in ${basePath}" >
+<slot-com :defs="slotContent" :attrs="{parts}"
+         :binds="{key: '${key}', partName: '${append.part.name}', indexKey:${indexKey}, fromPath: '${fromPath}', selfpath: '${fromPath}['+ ${indexKey} +']', level:'${level}', parentlevel:'${level - 1}', basePath: '${basePath}', configPath: '${configPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
+            name="array_item_before"></slot-com>
+`;
       if (p.items.type === 'object') {
         for (const [ key, value ] of Object.entries(p.items.properties)) {
           render(value, key, context, level + 1,

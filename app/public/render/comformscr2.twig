@@ -276,12 +276,13 @@
         ret.arrAppend = function(path) {
           let arr = ZY.lodash.get(ret.model, path)
           if (Array.isArray(arr)) {
-            if (arr[0]) {
-              let type = typeof arr[0]
-              if (type === 'object') {
-                arr.push({})
-              }
-            }
+            // if (arr[0]) {
+            //   let type = typeof arr[0]
+            //   if (type === 'object') {
+            //     arr.push({})
+            //   }
+            // }
+            arr.push({})
           }
         }
 
