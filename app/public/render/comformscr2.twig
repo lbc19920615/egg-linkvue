@@ -265,6 +265,40 @@
           }
         }
 
+        ret.setModel = function(path, value) {
+          ZY.lodash.set(ret.model, path, value)
+        }
+
+        /**
+         * arr自动添加
+         * @param path
+         */
+        ret.arrAppend = function(path) {
+          let arr = ZY.lodash.get(ret.model, path)
+          if (Array.isArray(arr)) {
+            if (arr[0]) {
+              let type = typeof arr[0]
+              if (type === 'object') {
+                arr.push({})
+              }
+            }
+          }
+        }
+
+        /**
+         * arr删除
+         * @param path
+         * @param index
+         * @param deleteCount
+         */
+        ret.appSplice = function(path, index, deleteCount = 1) {
+          let arr = ZY.lodash.get(ret.model, path)
+          if (Array.isArray(arr)) {
+            arr.splice(index, deleteCount)
+          }
+          console.log(arr)
+        }
+
         ret.getModel = function() {
           let res = {}
           for (let k in ret.model) {
