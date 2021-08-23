@@ -193,18 +193,18 @@ class HomeController extends Controller {
     const { fields } = await this.parse(ctx.req);
     const CONFIG = JSON.parse(fields.source);
 
-    // console.dir(CONFIG)
+    console.dir(CONFIG);
 
     const partStr = {};
 
     if (Array.isArray(CONFIG.parts)) {
       CONFIG.parts.forEach((part, index) => {
-        console.dir(part.def, {
-          depth: null
-        });
+        // console.dir(part.def, {
+        //   depth: null
+        // });
         const modelKey = 'parts.' + part.name + '.model';
         const partConfigKey = 'config.parts[' + index + '].def';
-        partStr[part.name] = this.BASE_renderForm(part.def, modelKey, partConfigKey);
+        partStr[part.name] = this.BASE_renderForm(part.def, modelKey, partConfigKey, { part, CONFIG });
       });
     }
 

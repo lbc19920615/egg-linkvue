@@ -17,6 +17,8 @@
     {% set pathSKey = "'parts." ~ part.name ~ "'" %}
     {% set modelKey = pathKey ~ ".model"  %}
     {% if part.type == 'form' %}
+
+      {% verbatim %}{{ {% endverbatim %} parts {% verbatim %} }} {% endverbatim %}
       <el-form :ref="{{ pathKey }}.initEl" :model="{{ pathKey }}.model" {{ attr.parseKeyValue(part.def.ui.attrs) }}>
 {#{{ modelKey }}#}
 {#        {{ partConfigKey }}#}

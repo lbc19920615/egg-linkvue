@@ -1,4 +1,4 @@
-function renderForm(p, basePath, configPath) {
+function renderForm(p, basePath, configPath, append = {}) {
   const context = {
     tpl: '',
   };
@@ -19,6 +19,9 @@ v-if="${basePath}"
       const indexKey = 'index' + level;
       context.tpl = context.tpl + `
 <el-row class="level_${level} array">
+ <slot-com :defs="slotContent" :attrs="{parts}"
+           :binds="{key: '${key}', partName: '${append.part.name}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
+              name="array_before"></slot-com>
 <template v-for="(${itemKey}, ${indexKey}) in ${basePath}" >`;
       if (p.items.type === 'object') {
         for (const [ key, value ] of Object.entries(p.items.properties)) {
@@ -61,8 +64,9 @@ class BaseController extends Controller {
   constructor(ctx) {
     super(ctx);
   }
-  BASE_renderForm(config, basePath, configPath) {
-    return renderForm(config, basePath, configPath);
+  BASE_renderForm(config, basePath, configPath, append) {
+    append.BASE_PATH = basePath
+    return renderForm(config, basePath, configPath, append);
   }
 }
 
