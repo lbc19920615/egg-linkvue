@@ -14,7 +14,7 @@
         v-for="({{ formItemKey }}, {{ formItemLabel }}) in {{ obj }}"
         slot-before="{{ formItemLabel }}"
         :span="{{ formItemKey }}.ui ? {{ formItemKey }}.ui.column : undefined"
-        :hidden="dxValue({{ pathKey }}, get({{ formItemKey }}, 'ui.hidden', undefined))"
+{#        :hidden="dxValue({{ pathKey }}, get({{ formItemKey }}, 'ui.hidden', undefined))"#}
 {#        :debug="dxValue(get({{ formItemKey }}, 'debug', undefined))"#}
 {#        :debug="get({{ formItemKey }}, 'debug', undefined)"#}
         >
