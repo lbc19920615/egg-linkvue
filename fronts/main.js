@@ -222,3 +222,28 @@ export function importJsStr(content) {
   );
   return import(objectURL)
 }
+
+
+let _U = {}
+/**
+ * objArr2OptionsManager
+ * @param arrObj {[{}]}
+ * @param labelKey
+ * @param valueKey
+ */
+_U.objArr2OptionsManager = function(arrObj = [], labelKey, valueKey) {
+  let ret = {}
+  ret.origin = arrObj
+  ret.options = _lodash.map(arrObj, (item) => {
+    return {
+      label: item[labelKey],
+      value: item[valueKey],
+    }
+  }) ?? []
+  ret.find = function(...args) {
+    return _lodash.find(arrObj, ...args)
+  }
+  return ret
+}
+
+export let U = _U

@@ -14526,6 +14526,22 @@ function importJsStr(content) {
   const objectURL = URL.createObjectURL(new Blob([content], { type: "text/javascript" }));
   return import(objectURL);
 }
+var _U = {};
+_U.objArr2OptionsManager = function(arrObj = [], labelKey, valueKey) {
+  let ret = {};
+  ret.origin = arrObj;
+  ret.options = import_lodash.default.map(arrObj, (item) => {
+    return {
+      label: item[labelKey],
+      value: item[valueKey]
+    };
+  }) ?? [];
+  ret.find = function(...args) {
+    return import_lodash.default.find(arrObj, ...args);
+  };
+  return ret;
+};
+var U = _U;
 export {
   JSON5,
   Lock2 as Lock,
@@ -14533,6 +14549,7 @@ export {
   R,
   REMOTE_ORIGIN,
   Time,
+  U,
   awaitTo,
   buildAsyncpipe,
   camel2hyphen,
