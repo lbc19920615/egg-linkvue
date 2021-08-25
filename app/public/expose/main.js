@@ -6577,7 +6577,7 @@ var require_lodash = __commonJS({
           copyObject(source, keys4(source), object, customizer);
         });
         var at = flatRest(baseAt);
-        function create(prototype, properties) {
+        function create2(prototype, properties) {
           var result2 = baseCreate(prototype);
           return properties == null ? result2 : baseAssign(result2, properties);
         }
@@ -7321,7 +7321,7 @@ var require_lodash = __commonJS({
         lodash2.conforms = conforms;
         lodash2.constant = constant;
         lodash2.countBy = countBy2;
-        lodash2.create = create;
+        lodash2.create = create2;
         lodash2.curry = curry3;
         lodash2.curryRight = curryRight;
         lodash2.debounce = debounce;
@@ -14398,6 +14398,7 @@ function subtract2Date(date1, date2) {
 // fronts/formmodel.js
 var formmodel_exports = {};
 __export(formmodel_exports, {
+  create: () => create,
   createFormModel: () => createFormModel,
   defDefault: () => defDefault
 });
@@ -14434,6 +14435,12 @@ function formSchemaToObject(formDef, obj) {
   }
 }
 function createFormModel(formDef) {
+  let obj;
+  obj = initFormBase(formDef);
+  formSchemaToObject(formDef, obj);
+  return obj;
+}
+function create(formDef) {
   let obj;
   obj = initFormBase(formDef);
   formSchemaToObject(formDef, obj);

@@ -81,3 +81,16 @@ export function createFormModel(formDef) {
   formSchemaToObject(formDef, obj);
   return obj;
 }
+
+/**
+ * 通过formDef生成model
+ * @param formDef
+ * @returns {{}|[]}
+ */
+export function create(formDef) {
+  let obj;
+  // eslint-disable-next-line prefer-const
+  obj = initFormBase(formDef);
+  formSchemaToObject(formDef, obj);
+  return obj;
+}
