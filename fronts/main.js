@@ -246,4 +246,20 @@ _U.objArr2OptionsManager = function(arrObj = [], labelKey, valueKey) {
   return ret
 }
 
+/**
+ * awaitAxios
+ * @param p {Promise}
+ * @returns {Promise<{data, err: *, response: *}>}
+ */
+_U.awaitAxios = async function(p) {
+  let [err,response] = await ZY.awaitTo(
+    p
+  )
+  return {
+    data: response.data,
+    err,
+    response,
+  }
+}
+
 export let U = _U

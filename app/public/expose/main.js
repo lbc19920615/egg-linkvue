@@ -14541,6 +14541,14 @@ _U.objArr2OptionsManager = function(arrObj = [], labelKey, valueKey) {
   };
   return ret;
 };
+_U.awaitAxios = async function(p) {
+  let [err, response] = await ZY.awaitTo(p);
+  return {
+    data: response.data,
+    err,
+    response
+  };
+};
 var U = _U;
 export {
   JSON5,
