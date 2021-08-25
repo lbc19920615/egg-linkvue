@@ -9,27 +9,15 @@ export const eval5 = _eval5;
 
 /**
  * evaluate
- * @param codes {[string]}
+ * @param code {string}
  * @param ctx
  */
 // eslint-disable-next-line no-undef
-export function run(codes = [], ctx = globalThis) {
-  const interpreter = new Interpreter(ctx, {
-    timeout: 1000,
-  });
-
-  let result;
-
-  try {
-    codes.forEach(code => {
-      result = interpreter.evaluate(code);
-    });
-    // interpreter.evaluate("var a=100");
-    // interpreter.evaluate("var b=200");
-    // result = interpreter.evaluate("a+b");
-
-    console.log(result);
-  } catch (e) {
-    console.log(e);
-  }
+export function run(code = '', ctx = {}) {
+  return eval5(`
+function __main() {
+${code}
+}
+__main();
+`, ctx ? ctx : {});
 }

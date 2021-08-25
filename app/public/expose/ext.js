@@ -6107,19 +6107,13 @@ var esm_default = evaluate_default;
 
 // fronts/ext.js
 var eval5 = esm_default;
-function run(codes = [], ctx = globalThis) {
-  const interpreter = new Interpreter(ctx, {
-    timeout: 1e3
-  });
-  let result;
-  try {
-    codes.forEach((code) => {
-      result = interpreter.evaluate(code);
-    });
-    console.log(result);
-  } catch (e) {
-    console.log(e);
-  }
+function run(code = "", ctx = {}) {
+  return eval5(`
+function __main() {
+${code}
+}
+__main();
+`, ctx ? ctx : {});
 }
 export {
   eval5,
