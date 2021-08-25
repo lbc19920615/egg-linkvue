@@ -1,3 +1,7 @@
+function isNull(value) {
+  return value === null;
+}
+
 /**
  * formmodel
  * @module formmodel
@@ -12,7 +16,7 @@ function initFormBase(def = { type: '' }) {
   if (def.type === 'object') {
     return {};
   }
-  if (def.type === 'array') {
+  if (def.type === 'array' || def.type === Array) {
     return [];
   }
   return null;
@@ -20,11 +24,20 @@ function initFormBase(def = { type: '' }) {
 
 const ARRAY_TYPES = [ 'checkbox' ];
 
-export function defDefault(type) {
+export function defDefault(type, formDefProp) {
   // console.log('formDefProp.type', formDefProp.type)
+  let defaultFun;
+  if (Array.isArray(formDefProp.default) && formDefProp.default.length > 1) {
+    // eslint-disable-next-line no-new-func
+    defaultFun = new Function(formDefProp.default[0], formDefProp.default[1]);
+    return defaultFun({});
+  }
   if (ARRAY_TYPES.includes(type)) {
     return [];
   }
+  // if (isNull(type)) {
+  //   return null;
+  // }
   return undefined;
 }
 
@@ -39,15 +52,17 @@ function formSchemaToObject(formDef, obj) {
     Object.entries(formDef.properties).forEach(([ key, formDefProp ]) => {
       // console.log('formDefProp', formDefProp)
       if (formDefProp.type !== 'array') {
-        obj[key] = defDefault(formDefProp.type);
+        obj[key] = defDefault(formDefProp.type, formDefProp);
       } else {
-        obj[key] = [ undefined ];
+        // obj[key] = [ undefined ];
         // if (formDefProp.items.type === 'object') {
         //   obj[key][0] = {}
         // }
-        obj[key][0] = initFormBase(formDefProp.items);
+        // obj[key][0] = initFormBase(formDefProp.items);
 
-        formSchemaToObject(formDefProp.items, obj[key][0]);
+        obj[key] = [ ];
+
+        // formSchemaToObject(formDefProp.items, obj[key][0]);
       }
     });
   }

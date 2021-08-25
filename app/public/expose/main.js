@@ -14405,13 +14405,18 @@ function initFormBase(def = { type: "" }) {
   if (def.type === "object") {
     return {};
   }
-  if (def.type === "array") {
+  if (def.type === "array" || def.type === Array) {
     return [];
   }
   return null;
 }
 var ARRAY_TYPES = ["checkbox"];
-function defDefault(type3) {
+function defDefault(type3, formDefProp) {
+  let defaultFun;
+  if (Array.isArray(formDefProp.default) && formDefProp.default.length > 1) {
+    defaultFun = new Function(formDefProp.default[0], formDefProp.default[1]);
+    return defaultFun({});
+  }
   if (ARRAY_TYPES.includes(type3)) {
     return [];
   }
@@ -14421,11 +14426,9 @@ function formSchemaToObject(formDef, obj) {
   if (formDef.type === "object") {
     Object.entries(formDef.properties).forEach(([key, formDefProp]) => {
       if (formDefProp.type !== "array") {
-        obj[key] = defDefault(formDefProp.type);
+        obj[key] = defDefault(formDefProp.type, formDefProp);
       } else {
-        obj[key] = [void 0];
-        obj[key][0] = initFormBase(formDefProp.items);
-        formSchemaToObject(formDefProp.items, obj[key][0]);
+        obj[key] = [];
       }
     });
   }
@@ -14544,7 +14547,7 @@ _U.objArr2OptionsManager = function(arrObj = [], labelKey, valueKey) {
 _U.awaitAxios = async function(p) {
   let [err, response] = await ZY.awaitTo(p);
   return {
-    data: response.data,
+    data: response.data ?? null,
     err,
     response
   };
