@@ -256,7 +256,7 @@ _U.awaitAxios = async function(p) {
     p
   )
   return {
-    data: response.data,
+    data: response.data ?? null,
     err,
     response,
   }
