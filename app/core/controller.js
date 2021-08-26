@@ -17,6 +17,7 @@ function renderForm(p, basePath, configPath, append = {}) {
 v-if="${basePath}"
 >`;
       for (const [ key, value ] of Object.entries(p.properties)) {
+        ext.parentModel = `${basePath}`;
         render(value, key, context, level + 1,
           `${basePath}.${key}`, `${configPath}.properties.${key}`, ext);
       }
@@ -38,10 +39,10 @@ v-if="${basePath}"
 `;
       if (p.items.type === 'object') {
         for (const [ key, value ] of Object.entries(p.items.properties)) {
+          ext.parentModel = `${basePath}[${indexKey}]`;
           render(value, key, context, level + 1,
             `${basePath}[${indexKey}].${key}`, `${configPath}.items.properties.${key}`, ext);
         }
-        // render(p.items, context, level + 1)
       }
       context.tpl = context.tpl + `
 <slot-com :defs="slotContent" :attrs="{parts}"
@@ -63,6 +64,7 @@ v-if="${basePath}"
 v-model="${basePath}"
 label="${key}" prop="${key}"
 form-path="${basePath}"
+:parent-model="${ext.parentModel}"
 type="${p.type}"
 :ui="${configPath}.ui"
 :rules="${configPath}.rules"
@@ -76,7 +78,7 @@ type="${p.type}"
     }
   }
 
-  render(p, '', context, 1, basePath, configPath, { arrIndexes: {} });
+  render(p, '', context, 1, basePath, configPath, { arrIndexes: {},  });
   return context.tpl;
 }
 

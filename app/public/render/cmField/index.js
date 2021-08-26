@@ -34,8 +34,6 @@ export default function(name) {
     },
     setup(props, { emit }) {
       const { ref, watch, nextTick, inject } = global.Vue;
-
-
       // let curFormCon = inject('curFormCon')
       // console.log(curFormCon, props)
       let context = props.context
