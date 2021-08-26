@@ -24,6 +24,7 @@
                 <cm-field v-model="{{ path }}[{{ formItemLabel }}]"
                           :label="{{ formItemLabel }}" :prop="{{ formItemLabel }}"
                           :form-path="'{{ path }}.' + '{{ formItemLabel }}'"
+                          :parent-model="{{ path }}"
                           :type="{{ formItemKey }}.type"
                           :ui="{{ formItemKey }}.ui"
                           :rules="{{ formItemKey }}.rules"

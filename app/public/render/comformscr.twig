@@ -5,8 +5,8 @@
 <div>
   {% for part in CONFIG.parts %}
     {% set pathKey = "parts." ~ part.name %}
-<div v-if="{{pathKey}}">
-{#   <div>{% verbatim %}{{{% endverbatim %} {{pathKey}}.model {% verbatim %}}}{% endverbatim %}</div>#}
+<div v-if="{{pathKey}}"  :hidden="!debug">
+   <div>{% verbatim %}{{{% endverbatim %} {{pathKey}}.model {% verbatim %}}}{% endverbatim %}</div>
   <div>{% verbatim %}{{{% endverbatim %} {{pathKey}}.computedModel {% verbatim %}}}{% endverbatim %}</div>
 {#   <div>{{parts.form.computedModel}}</div>#}
 </div>
@@ -183,6 +183,20 @@
           }
         })
         model = ret.model
+
+        function forceUpdate(parent, key, newVal) {
+          parent[key] = newVal
+          let obj = {
+            key,
+            newVal,
+            config,
+            model
+          }
+          // console.log('sdsdsdsds')
+          curFormCon.comManager.context.sendEvent('model:update', obj)
+        }
+        ret.forceUpdate = forceUpdate
+
         function watchHandler(key) {
           return function(newVal) {
             // console.log('model.content', newVal)

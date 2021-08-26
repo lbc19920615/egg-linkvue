@@ -16,6 +16,7 @@ export default function(name) {
       label: String,
       type: String,
       formPath: String,
+      parentModel: null,
       modelValue: null,
       context: null,
       ui: {
@@ -32,7 +33,12 @@ export default function(name) {
       },
     },
     setup(props, { emit }) {
-      const { ref, watch, nextTick } = global.Vue;
+      const { ref, watch, nextTick, inject } = global.Vue;
+
+
+      // let curFormCon = inject('curFormCon')
+      // console.log(curFormCon, props)
+      let context = props.context
 
       let lock = new ZY.Lock(/* optional lock name, should be unique */)
 
@@ -75,6 +81,13 @@ export default function(name) {
         emit('update:modelValue', value.value);
       }
 
+      function onFchange(e) {
+        // console.log('fchange', props.parentModel);
+        if (context && context.forceUpdate) {
+          context.forceUpdate(props.parentModel, props.prop, e);
+        }
+      }
+
       function isArray(v) {
         return Array.isArray(v);
       }
@@ -98,6 +111,7 @@ export default function(name) {
         ...commonCom,
         getOpt,
         getUIOpt,
+        onFchange,
         isArray,
         // onUpdateModelValue,
         value,
