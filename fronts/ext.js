@@ -22,3 +22,10 @@ __main();
 `, ctx ? ctx : {});
 }
 
+import _local from 'localforage';
+
+/**
+ * store
+ * @type {LocalForage}
+ */
+export const store = _local;
