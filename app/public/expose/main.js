@@ -14538,8 +14538,14 @@ var awaitTo = await_to_js_es5_default;
 var JSON5 = import_json5.default;
 var comHelper = comHelper_default;
 var nid = nanoid;
+function isNumeric(n2) {
+  return !isNaN(parseFloat(n2)) && isFinite(n2);
+}
 function rid(...args) {
   let v = nid(...args);
+  if (isNumeric(v[0]) || v[0] === "-" || v[0] === "_") {
+    v = rid(...args);
+  }
   return v.replace(/-/g, "_");
 }
 var PubSub = import_pubsub_js.default;
@@ -14640,6 +14646,7 @@ export {
   getImportURL,
   global2 as global,
   importJsStr,
+  isNumeric,
   lodash,
   nid,
   qs,

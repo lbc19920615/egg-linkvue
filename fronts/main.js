@@ -67,8 +67,25 @@ export let comHelper = _comHelper
  */
 export let nid = nanoid
 
+/**
+ * isNumeric
+ * @param n
+ * @returns {boolean}
+ */
+export function isNumeric(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+/**
+ * rid
+ * @param args
+ * @returns {string}
+ */
 export function rid(...args) {
   let v = nid(...args)
+  if (isNumeric(v[0]) || v[0] === '-' || v[0] === '_') {
+    v = rid(...args)
+  }
   return v.replace(/-/g, '_')
 }
 
