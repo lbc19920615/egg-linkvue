@@ -1156,7 +1156,7 @@ var require_dist = __commonJS({
         err.columnNumber = column;
         return err;
       }
-      var stringify = function stringify2(value, replacer, space) {
+      var stringify2 = function stringify3(value, replacer, space) {
         var stack2 = [];
         var indent = "";
         var propertyList;
@@ -1374,7 +1374,7 @@ var require_dist = __commonJS({
       };
       var JSON52 = {
         parse,
-        stringify
+        stringify: stringify2
       };
       var lib = JSON52;
       var es5 = lib;
@@ -9137,7 +9137,7 @@ var require_stringify = __commonJS({
     var isNonNullishPrimitive = function isNonNullishPrimitive2(v) {
       return typeof v === "string" || typeof v === "number" || typeof v === "boolean" || typeof v === "symbol" || typeof v === "bigint";
     };
-    var stringify = function stringify2(object, prefix, generateArrayPrefix, strictNullHandling, skipNulls, encoder, filter2, sort3, allowDots, serializeDate, format, formatter, encodeValuesOnly, charset, sideChannel) {
+    var stringify2 = function stringify3(object, prefix, generateArrayPrefix, strictNullHandling, skipNulls, encoder, filter2, sort3, allowDots, serializeDate, format, formatter, encodeValuesOnly, charset, sideChannel) {
       var obj = object;
       if (sideChannel.has(object)) {
         throw new RangeError("Cyclic object value");
@@ -9189,7 +9189,7 @@ var require_stringify = __commonJS({
         var keyPrefix = isArray(obj) ? typeof generateArrayPrefix === "function" ? generateArrayPrefix(prefix, key) : prefix : prefix + (allowDots ? "." + key : "[" + key + "]");
         sideChannel.set(object, true);
         var valueSideChannel = getSideChannel();
-        pushToArray(values3, stringify2(value, keyPrefix, generateArrayPrefix, strictNullHandling, skipNulls, encoder, filter2, sort3, allowDots, serializeDate, format, formatter, encodeValuesOnly, charset, valueSideChannel));
+        pushToArray(values3, stringify3(value, keyPrefix, generateArrayPrefix, strictNullHandling, skipNulls, encoder, filter2, sort3, allowDots, serializeDate, format, formatter, encodeValuesOnly, charset, valueSideChannel));
       }
       return values3;
     };
@@ -9271,7 +9271,7 @@ var require_stringify = __commonJS({
         if (options.skipNulls && obj[key] === null) {
           continue;
         }
-        pushToArray(keys4, stringify(obj[key], key, generateArrayPrefix, options.strictNullHandling, options.skipNulls, options.encode ? options.encoder : null, options.filter, options.sort, options.allowDots, options.serializeDate, options.format, options.formatter, options.encodeValuesOnly, options.charset, sideChannel));
+        pushToArray(keys4, stringify2(obj[key], key, generateArrayPrefix, options.strictNullHandling, options.skipNulls, options.encode ? options.encoder : null, options.filter, options.sort, options.allowDots, options.serializeDate, options.format, options.formatter, options.encodeValuesOnly, options.charset, sideChannel));
       }
       var joined = keys4.join(options.delimiter);
       var prefix = options.addQueryPrefix === true ? "?" : "";
@@ -9489,13 +9489,13 @@ var require_parse = __commonJS({
 var require_lib = __commonJS({
   "node_modules/qs/lib/index.js"(exports, module) {
     "use strict";
-    var stringify = require_stringify();
+    var stringify2 = require_stringify();
     var parse = require_parse();
     var formats = require_formats();
     module.exports = {
       formats,
       parse,
-      stringify
+      stringify: stringify2
     };
   }
 });
@@ -9840,6 +9840,60 @@ var require_duration = __commonJS({
 
 // fronts/main.js
 var import_polyfill = __toModule(require_polyfill());
+
+// node_modules/uuid/dist/esm-browser/rng.js
+var getRandomValues;
+var rnds8 = new Uint8Array(16);
+function rng() {
+  if (!getRandomValues) {
+    getRandomValues = typeof crypto !== "undefined" && crypto.getRandomValues && crypto.getRandomValues.bind(crypto) || typeof msCrypto !== "undefined" && typeof msCrypto.getRandomValues === "function" && msCrypto.getRandomValues.bind(msCrypto);
+    if (!getRandomValues) {
+      throw new Error("crypto.getRandomValues() not supported. See https://github.com/uuidjs/uuid#getrandomvalues-not-supported");
+    }
+  }
+  return getRandomValues(rnds8);
+}
+
+// node_modules/uuid/dist/esm-browser/regex.js
+var regex_default = /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i;
+
+// node_modules/uuid/dist/esm-browser/validate.js
+function validate(uuid2) {
+  return typeof uuid2 === "string" && regex_default.test(uuid2);
+}
+var validate_default = validate;
+
+// node_modules/uuid/dist/esm-browser/stringify.js
+var byteToHex = [];
+for (var i = 0; i < 256; ++i) {
+  byteToHex.push((i + 256).toString(16).substr(1));
+}
+function stringify(arr) {
+  var offset = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : 0;
+  var uuid2 = (byteToHex[arr[offset + 0]] + byteToHex[arr[offset + 1]] + byteToHex[arr[offset + 2]] + byteToHex[arr[offset + 3]] + "-" + byteToHex[arr[offset + 4]] + byteToHex[arr[offset + 5]] + "-" + byteToHex[arr[offset + 6]] + byteToHex[arr[offset + 7]] + "-" + byteToHex[arr[offset + 8]] + byteToHex[arr[offset + 9]] + "-" + byteToHex[arr[offset + 10]] + byteToHex[arr[offset + 11]] + byteToHex[arr[offset + 12]] + byteToHex[arr[offset + 13]] + byteToHex[arr[offset + 14]] + byteToHex[arr[offset + 15]]).toLowerCase();
+  if (!validate_default(uuid2)) {
+    throw TypeError("Stringified UUID is invalid");
+  }
+  return uuid2;
+}
+var stringify_default = stringify;
+
+// node_modules/uuid/dist/esm-browser/v4.js
+function v4(options, buf, offset) {
+  options = options || {};
+  var rnds = options.random || (options.rng || rng)();
+  rnds[6] = rnds[6] & 15 | 64;
+  rnds[8] = rnds[8] & 63 | 128;
+  if (buf) {
+    offset = offset || 0;
+    for (var i = 0; i < 16; ++i) {
+      buf[offset + i] = rnds[i];
+    }
+    return buf;
+  }
+  return stringify_default(rnds);
+}
+var v4_default = v4;
 
 // fronts/compare.js
 function factory(Object2) {
@@ -14470,6 +14524,7 @@ var esm_default = n;
 
 // fronts/main.js
 var global2 = (0, import_polyfill.default)();
+var uuid = v4_default;
 var _compareByValue = compare_default(Object);
 function compareObj(obj1, obj2) {
   if (Object.is(obj1, obj2)) {
@@ -14584,7 +14639,8 @@ export {
   lodash,
   nid,
   qs,
-  sleep
+  sleep,
+  uuid
 };
 /**
  * @license

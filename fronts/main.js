@@ -10,6 +10,8 @@ import getGlobalThisPolyfill from 'globalthis/polyfill';
  */
 export const global = getGlobalThisPolyfill();
 
+import { v4 } from 'uuid';
+export let uuid = v4
 
 import compareFactory from './compare'
 let _compareByValue = compareFactory(Object)
