@@ -1,8 +1,14 @@
 {% import "./macros/formGroup.twig" as formGroup %}
 {% import "./macros/attr.twig" as attr %}
 
+<style>
+  .z-form__object {
+    flex-direction: column;
+  }
+</style>
+
 <template>
-<div>
+<div class="http-com">
   {% for part in CONFIG.parts %}
     {% set pathKey = "parts." ~ part.name %}
 <div v-if="{{pathKey}}" :hidden="!debug">
@@ -19,7 +25,8 @@
     {% if part.type == 'form' %}
 
       {% verbatim %}{{ {% endverbatim %} parts {% verbatim %} }} {% endverbatim %}
-      <el-form :ref="{{ pathKey }}.initEl" :model="{{ pathKey }}.model" {{ attr.parseKeyValue(part.def.ui.attrs) }}>
+      <el-form class="z-form http-com-part http-com-part__{{ part.name }}"
+               :ref="{{ pathKey }}.initEl" :model="{{ pathKey }}.model" {{ attr.parseKeyValue(part.def.ui.attrs) }}>
 {#{{ modelKey }}#}
 {#        {{ partConfigKey }}#}
 {#            {% verbatim %}{{ {% endverbatim %} {{ modelKey }} {% verbatim %} }} {% endverbatim %}#}
@@ -30,7 +37,7 @@
       </el-form>
     {% endif %}
     {% if part.type == 'table' %}
-      <el-table :ref="{{ pathKey }}.initEl" :data="{{ pathKey }}.model.records"  stripe="true" border="true" {{ attr.parseKeyValue(part.def.ui.attrs) }}>
+      <el-table class="z-table  http-com-part http-com-part__{{ part.name }}" :ref="{{ pathKey }}.initEl" :data="{{ pathKey }}.model.records"  stripe="true" border="true" {{ attr.parseKeyValue(part.def.ui.attrs) }}>
         {% for key,record in part.def.properties.records.items.properties %}
           {% set configKey = partConfigKey ~ '.records.items.properties.' ~ key %}
           <div v-html="get({{ configKey }}, 'ui.label', '')">1111</div>
