@@ -14538,6 +14538,10 @@ var awaitTo = await_to_js_es5_default;
 var JSON5 = import_json5.default;
 var comHelper = comHelper_default;
 var nid = nanoid;
+function rid(...args) {
+  let v = nid(...args);
+  return v.replace(/-/g, "_");
+}
 var PubSub = import_pubsub_js.default;
 var Lock2 = Lock;
 var lodash = import_lodash.default;
@@ -14639,6 +14643,7 @@ export {
   lodash,
   nid,
   qs,
+  rid,
   sleep,
   uuid
 };

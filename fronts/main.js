@@ -67,6 +67,11 @@ export let comHelper = _comHelper
  */
 export let nid = nanoid
 
+export function rid(...args) {
+  let v = nid(...args)
+  return v.replace(/-/g, '_')
+}
+
 import _PubSub from 'pubsub-js'
 /**
  * PubSub
