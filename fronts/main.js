@@ -29,6 +29,10 @@ export function compareObj(obj1, obj2) {
   }
 }
 
+import Res from "date-timeout-interval"; // TypeScript
+export let Timeout = Res.Timeout
+export let Interval = Res.Interval
+
 import { nanoid } from 'nanoid'
 
 import _JSON5 from 'json5'

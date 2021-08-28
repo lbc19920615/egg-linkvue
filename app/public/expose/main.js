@@ -32,8 +32,180 @@ var require_polyfill = __commonJS({
   }
 });
 
-// node_modules/json5/dist/index.js
+// node_modules/date-timeout-interval/dist/index.js
 var require_dist = __commonJS({
+  "node_modules/date-timeout-interval/dist/index.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.TimerState = exports.Interval = exports.Timeout = void 0;
+    var Timeout2 = function() {
+      function Timeout3(callback, timeMS, autoStart) {
+        var _this = this;
+        if (typeof callback == "number") {
+          autoStart = !!timeMS;
+          timeMS = callback;
+          (this._callbacks = []).push(function() {
+            return _this.state = 3;
+          });
+        } else {
+          (this._callbacks = []).push(function() {
+            _this.state = 3;
+            callback.call(_this);
+          });
+        }
+        this.currentTime = Number(timeMS);
+        this._startedAt = 0;
+        this._timeLeft = this.currentTime;
+        this._timerId = null;
+        this.state = 0;
+        if (autoStart)
+          this.start();
+      }
+      Object.defineProperty(Timeout3.prototype, "timeLeft", {
+        get: function() {
+          if (this.state == 0 || this.state == 3)
+            return 0;
+          return Date.now() - this._startedAt;
+        },
+        enumerable: false,
+        configurable: true
+      });
+      Timeout3.prototype.start = function(timeMS) {
+        if (this.state == 3)
+          this.stop();
+        if (arguments.length > 0 && this.state == 0)
+          this.currentTime = timeMS;
+        if (this._timerId == null) {
+          if (this.state == 2) {
+            this._startedAt = Date.now();
+            this._timerId = setTimeout(this._executeCallbacks.bind(this), this._timeLeft);
+            this.state = 1;
+          } else if (this.state == 0) {
+            this._startedAt = Date.now();
+            this._timerId = setTimeout(this._executeCallbacks.bind(this), this.currentTime);
+            this.state = 1;
+          }
+        }
+        return this;
+      };
+      Timeout3.prototype.pause = function() {
+        if (this.state != 1)
+          return this;
+        clearTimeout(this._timerId);
+        this._timerId = null;
+        this._timeLeft -= Date.now() - this._startedAt;
+        this.state = 2;
+        return this;
+      };
+      Timeout3.prototype.stop = function() {
+        return this._stop(true);
+      };
+      Timeout3.prototype._stop = function(reject3) {
+        clearTimeout(this._timerId);
+        this._timerId = null;
+        this._timeLeft = 0;
+        this.state = 0;
+        if (reject3)
+          this._rejecters.splice(0).forEach(function(r) {
+            return r();
+          });
+        return this;
+      };
+      Timeout3.prototype.restart = function() {
+        return this._stop(false).start();
+      };
+      Timeout3.prototype.then = function(onResolve, onReject) {
+        this._callbacks.push(onResolve);
+        this._rejecters.push(onReject);
+      };
+      Timeout3.prototype._executeCallbacks = function() {
+        var _this = this;
+        this._callbacks.forEach(function(c) {
+          return c.call(_this);
+        });
+        this._callbacks = [this._callbacks[0]];
+      };
+      return Timeout3;
+    }();
+    exports.Timeout = Timeout2;
+    var Interval2 = function() {
+      function Interval3(callback, timeMS, autoStart) {
+        var _this = this;
+        this._callback = function() {
+          _this._lastTrigger = Date.now();
+          callback.call(_this);
+        };
+        this.currentTime = timeMS;
+        this._lastTrigger = 0;
+        this._timeLeft = timeMS;
+        this._timerId = null;
+        this.state = 0;
+        this._isInTimeout = false;
+        if (autoStart)
+          this.start();
+      }
+      Object.defineProperty(Interval3.prototype, "timeLeft", {
+        get: function() {
+          if (this.state == 0)
+            return 0;
+          return Date.now() - this._lastTrigger;
+        },
+        enumerable: false,
+        configurable: true
+      });
+      Interval3.prototype.start = function(timeMS) {
+        var _this = this;
+        if (arguments.length > 0 && this.state == 0)
+          this.currentTime = timeMS;
+        if (this._timerId == null) {
+          if (this.state == 2) {
+            this._lastTrigger = Date.now();
+            this._timerId = setTimeout(function() {
+              _this._isInTimeout = false;
+              _this._timerId = setInterval(_this._callback, _this.currentTime);
+            }, this._timeLeft);
+            this.state = 1;
+            this._isInTimeout = true;
+          } else if (this.state == 0) {
+            this._lastTrigger = Date.now();
+            this._timerId = setInterval(this._callback, this.currentTime);
+            this.state = 1;
+          }
+        }
+        return this;
+      };
+      Interval3.prototype.pause = function() {
+        if (this.state != 1)
+          return this;
+        this._isInTimeout ? clearTimeout(this._timerId) : clearInterval(this._timerId);
+        this._timerId = null;
+        this._timeLeft -= Date.now() - this._lastTrigger;
+        this.state = 2;
+        return this;
+      };
+      Interval3.prototype.stop = function() {
+        this._isInTimeout ? clearTimeout(this._timerId) : clearInterval(this._timerId);
+        this._timerId = null;
+        this._timeLeft = 0;
+        this.state = 0;
+        this._isInTimeout = false;
+        return this;
+      };
+      return Interval3;
+    }();
+    exports.Interval = Interval2;
+    var TimerState;
+    (function(TimerState2) {
+      TimerState2[TimerState2["Reset"] = 0] = "Reset";
+      TimerState2[TimerState2["Running"] = 1] = "Running";
+      TimerState2[TimerState2["Paused"] = 2] = "Paused";
+      TimerState2[TimerState2["Done"] = 3] = "Done";
+    })(TimerState = exports.TimerState || (exports.TimerState = {}));
+  }
+});
+
+// node_modules/json5/dist/index.js
+var require_dist2 = __commonJS({
   "node_modules/json5/dist/index.js"(exports, module) {
     (function(global3, factory2) {
       typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory2() : typeof define === "function" && define.amd ? define(factory2) : global3.JSON5 = factory2();
@@ -4333,7 +4505,7 @@ var require_lodash = __commonJS({
           end = end === undefined2 ? length3 : end;
           return !start && end >= length3 ? array : baseSlice(array, start, end);
         }
-        var clearTimeout = ctxClearTimeout || function(id) {
+        var clearTimeout2 = ctxClearTimeout || function(id) {
           return root.clearTimeout(id);
         };
         function cloneBuffer(buffer, isDeep) {
@@ -6182,7 +6354,7 @@ var require_lodash = __commonJS({
           }
           function cancel() {
             if (timerId !== undefined2) {
-              clearTimeout(timerId);
+              clearTimeout2(timerId);
             }
             lastInvokeTime = 0;
             lastArgs = lastCallTime = lastThis = timerId = undefined2;
@@ -6200,7 +6372,7 @@ var require_lodash = __commonJS({
                 return leadingEdge(lastCallTime);
               }
               if (maxing) {
-                clearTimeout(timerId);
+                clearTimeout2(timerId);
                 timerId = setTimeout2(timerExpired, wait);
                 return invokeFunc(lastCallTime);
               }
@@ -9946,6 +10118,9 @@ function factory(Object2) {
 }
 var compare_default = factory;
 
+// fronts/main.js
+var import_date_timeout_interval = __toModule(require_dist());
+
 // node_modules/nanoid/index.prod.js
 if (false) {
   if (typeof navigator !== "undefined" && navigator.product === "ReactNative" && typeof crypto === "undefined") {
@@ -9977,7 +10152,7 @@ var nanoid = (size = 21) => {
 };
 
 // fronts/main.js
-var import_json5 = __toModule(require_dist());
+var import_json5 = __toModule(require_dist2());
 
 // node_modules/ramda/es/index.js
 var es_exports = {};
@@ -14533,6 +14708,8 @@ function compareObj(obj1, obj2) {
     return _compareByValue(obj1, obj2);
   }
 }
+var Timeout = import_date_timeout_interval.default.Timeout;
+var Interval = import_date_timeout_interval.default.Interval;
 var R = es_exports;
 var awaitTo = await_to_js_es5_default;
 var JSON5 = import_json5.default;
@@ -14626,12 +14803,14 @@ _U.awaitAxios = async function(p) {
 };
 var U = _U;
 export {
+  Interval,
   JSON5,
   Lock2 as Lock,
   PubSub,
   R,
   REMOTE_ORIGIN,
   Time,
+  Timeout,
   U,
   awaitTo,
   buildAsyncpipe,
