@@ -204,7 +204,7 @@ class HomeController extends Controller {
         // });
         const modelKey = 'parts.' + part.name + '.model';
         const partConfigKey = 'config.parts[' + index + '].def';
-        partStr[part.name] = this.BASE_renderForm(part.def, modelKey, partConfigKey, { part, CONFIG });
+        partStr[part.name] = this.BASE_renderForm(part.def, modelKey, partConfigKey, { part, CONFIG, partKey: `parts.${part.name}` });
       });
     }
 

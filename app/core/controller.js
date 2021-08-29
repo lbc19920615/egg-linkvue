@@ -68,6 +68,8 @@ form-path="${basePath}"
 type="${p.type}"
 :ui="${configPath}.ui"
 :rules="${configPath}.rules"
+:context="${append.partKey}"
+part_key="${append.partKey}"
 >
 </cm-field>`;
       context.tpl = context.tpl + `
@@ -78,7 +80,7 @@ type="${p.type}"
     }
   }
 
-  render(p, '', context, 1, basePath, configPath, { arrIndexes: {},  });
+  render(p, '', context, 1, basePath, configPath, { arrIndexes: {} });
   return context.tpl;
 }
 

@@ -111,6 +111,7 @@ export default function(name) {
         getUIOpt,
         onFchange,
         isArray,
+        context,
         // onUpdateModelValue,
         value,
         onChange,

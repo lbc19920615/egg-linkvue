@@ -420,8 +420,10 @@
       }
 
       function dxValue(partContext, v) {
+        // console.log('this', this, v)
         if (!partContext) {
-          throw new Error(`no partContext`)
+          // throw new Error(`no partContext`)
+          return undefined
         }
         return dxEval(v, partContext, this)
       }
