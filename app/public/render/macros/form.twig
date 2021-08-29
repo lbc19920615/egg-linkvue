@@ -13,7 +13,7 @@
   <el-input v-model="{{model}}"
             @input="onInput"
             v-bind="ui ? ui.widgetConfig : null"
-          {{ _self.fieldAttr(commonInputAttrs) }}
+          {{ _self.fieldAttr(['readonly', 'disabled']) }}
   ></el-input>
 {% endmacro %}
 
