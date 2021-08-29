@@ -197,6 +197,21 @@
           }
         })
         model = ret.model
+
+
+        function forceUpdate(parent, key, newVal) {
+          parent[key] = newVal
+          let obj = {
+            key,
+            newVal,
+            config,
+            model
+          }
+          // console.log('sdsdsdsds')
+          curFormCon.comManager.context.sendEvent('model:update', obj)
+        }
+        ret.forceUpdate = forceUpdate
+
         function watchHandler(key) {
           return function(newVal) {
             // console.log('model.content', newVal)

@@ -80,7 +80,7 @@ export default function(name) {
       }
 
       function onFchange(e) {
-        // console.log('fchange', props.parentModel);
+        // console.log('fchange', context, props.parentModel, props.prop, e);
         if (context && context.forceUpdate) {
           context.forceUpdate(props.parentModel, props.prop, e);
         }
