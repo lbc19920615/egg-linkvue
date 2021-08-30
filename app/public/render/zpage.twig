@@ -1,0 +1,49 @@
+<template>
+    <div class="z-page">
+      <template v-if="page.inited">
+{% verbatim %}
+  <template v-if="renderC.state.refresh">
+      <render-layout :map="renderC.state.currentLayoutMap"
+                     :id="renderC.state.rootId"
+                     :handleNext="renderC.handleNext"
+                     :page="page">
+{% endverbatim %}
+{{CONFIG.layoutSlots}}
+<!--    <template #form_after="scope">-->
+<!--      <CusSubmitButton-->
+<!--          :scope="scope"-->
+<!--          class="el-col z-submit-btn"></CusSubmitButton>-->
+<!--    </template>-->
+        {% verbatim %}
+      </render-layout>
+    </template>
+{% endverbatim %}
+      </template>
+    </div>
+</template>
+
+<script>
+    export default {
+        setup() {
+
+          let renderC = useRenderControl()
+          {{ CONFIG.beforeScript }}
+
+          let computed = {}
+          let page = useControl({properties, computed}, {
+            onInited
+          })
+          page = extendControl2Page(page)
+          page = useAppPageControl(page)
+
+          async function onInited({storeControl}) {
+            {{ CONFIG.onInited }}
+          }
+
+          return {
+            page,
+            renderC
+          }
+        }
+    }
+</script>
