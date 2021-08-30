@@ -55,11 +55,12 @@ v-if="${basePath}"
 </el-row>`;
     } else {
       // console.log(p, key);
-      context.tpl = context.tpl + `
+      if (!p.hidden) {
+        context.tpl = context.tpl + `
 <el-col class="level_${level} z-form__prop"
 >`;
-      context.tpl = context.tpl +
-        `
+        context.tpl = context.tpl +
+          `
 <cm-field
 v-model="${basePath}"
 label="${key}" prop="${key}"
@@ -72,11 +73,14 @@ type="${p.type}"
 part_key="${append.partKey}"
 >
 </cm-field>`;
-      context.tpl = context.tpl + `
+        context.tpl = context.tpl + `
  <slot-com :defs="slotContent" :attrs="{parts}"
            :binds="{key: '${key}', type: '${p.type}', partName: '${append.part.name}', level:'${level}', parentlevel:'${level - 1}', basePath: '${basePath}', configPath: '${configPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
               name="prop_after"></slot-com>
 </el-col>`;
+      } else {
+      // 
+      }
     }
   }
 
