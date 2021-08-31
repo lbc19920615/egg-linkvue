@@ -292,6 +292,7 @@
           }
           let oldObj = ZY.JSON5.parse(cachedModel)
           let diffed = ZY.diff(oldObj, newObj)
+          console.log(diffed)
           // console.log('model.content', reflectMap, newObj, oldObj, diffed)
           reflectMap.forEach((arr, key) => {
             // console.log(key, value)
@@ -302,25 +303,24 @@
               //
               // }
               ZY.lodash.each(hasDiffedChange, (svalue, skey) => {
-                let fullPath = key + '.' + skey
-                // console.log(`${fullPath} changed`, svalue)
-                let modelTarget = ZY.lodash.get(model, fullPath)
-                // let changed = {}
-                arr.forEach((arrItem) => {
-                  let {key,reflect, valTpl}  = arrItem
-                  if (valTpl) {
-                    modelTarget[key] = ZY_EXT.eval5(valTpl, {
-                      A: globalThis.getApp(),
-                      $VAL: modelTarget[reflect],
-                      L: ZY.lodash,
-                    })
-                  }else {
-                    modelTarget[key] = modelTarget[reflect]
-                  }
-                })
-
-                // ZY.lodash.set(model, fullPath, modelTarget)
-                // console.log(modelTarget)
+                if (typeof svalue !== 'undefined') {
+                  let fullPath = key + '.' + skey
+                  // console.log(`${fullPath} changed`, svalue)
+                  let modelTarget = ZY.lodash.get(model, fullPath)
+                  // let changed = {}
+                  arr.forEach((arrItem) => {
+                    let {key,reflect, valTpl}  = arrItem
+                    if (valTpl) {
+                      modelTarget[key] = ZY_EXT.eval5(valTpl, {
+                        A: globalThis.getApp(),
+                        $VAL: modelTarget[reflect],
+                        L: ZY.lodash,
+                      })
+                    }else {
+                      modelTarget[key] = modelTarget[reflect]
+                    }
+                  })
+                }
               })
             }
             // console.log(key, hasDiffedChange)
