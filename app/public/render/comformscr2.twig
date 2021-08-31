@@ -32,6 +32,10 @@
 {#{{ modelKey }}#}
 {#        {{ partConfigKey }}#}
 {#            {% verbatim %}{{ {% endverbatim %} {{ modelKey }} {% verbatim %} }} {% endverbatim %}#}
+
+        <slot-com :defs="slotContent" :attrs="{parts}"
+                  :binds="{name: '{{ part.name }}', process: '{{ CONFIG.process}}' }"
+                  name="form_before"></slot-com>
         {{ partStr[part.name] }}
         <slot-com :defs="slotContent" :attrs="{parts}"
                   :binds="{name: '{{ part.name }}', process: '{{ CONFIG.process}}' }"
@@ -292,7 +296,6 @@
           }
           let oldObj = ZY.JSON5.parse(cachedModel)
           let diffed = ZY.diff(oldObj, newObj)
-          console.log(diffed)
           // console.log('model.content', reflectMap, newObj, oldObj, diffed)
           reflectMap.forEach((arr, key) => {
             // console.log(key, value)
@@ -328,9 +331,14 @@
 
           cachedModel = ZY.JSON5.stringify(newObj)
           // emit('model:update', newVal);
-          // curFormCon.comManager.context.sendEvent('model:update', {
-          //   newVal
-          // })
+
+          console.log(curFormCon.comManager.context)
+          curFormCon.comManager.context.sendEvent('model:update:all', {
+            newVal,
+            diffed,
+            config,
+            model
+          })
         });
         ret.el = ref(null)
         ret.initEl = function(ctx) {
