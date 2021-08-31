@@ -216,7 +216,8 @@
                         // console.log(findKeyItem.valTpl)
                         let context = {
                           A: globalThis.getApp(),
-                          $VAL: newVal
+                          $VAL: newVal,
+                          L: ZY.lodash
                         }
                         return ZY_EXT.eval5(findKeyItem.valTpl, context)
                       }
@@ -285,42 +286,46 @@
         watch(model, (newVal, oldVal) => {
           let newObj = toRaw(newVal)
           if (!cachedModel) {
-          //
+            cachedModel = '{}'
           } else {
-            let oldObj = ZY.JSON5.parse(cachedModel)
-            let diffed = ZY.diff(oldObj, newObj)
-            // console.log('model.content', reflectMap, newObj, oldObj, diffed)
-            reflectMap.forEach((arr, key) => {
-              // console.log(key, value)
-              // console.log(arr)
-              let hasDiffedChange = ZY.lodash.get(diffed, key)
-              if (hasDiffedChange) {
-                // for (let [diffedChangedKey, diffedChangedValue] of Object.entries(hasDiffedChange)) {
-                //
-                // }
-                ZY.lodash.each(hasDiffedChange, (svalue, skey) => {
-                  let fullPath = key + '.' + skey
-                  // console.log(`${fullPath} changed`, svalue)
-                  let modelTarget = ZY.lodash.get(model, fullPath)
-                  // let changed = {}
-                  arr.forEach((arrItem) => {
-                    let {key,reflect, valTpl}  = arrItem
-                    if (valTpl) {
-                      modelTarget[key] = ZY_EXT.eval5(valTpl, {
-                        $REFLECT_VAL: modelTarget[reflect]
-                      })
-                    }else {
-                      modelTarget[key] = modelTarget[reflect]
-                    }
-                  })
-
-                  // ZY.lodash.set(model, fullPath, modelTarget)
-                  // console.log(modelTarget)
-                })
-              }
-              // console.log(key, hasDiffedChange)
-            })
+          //
           }
+          let oldObj = ZY.JSON5.parse(cachedModel)
+          let diffed = ZY.diff(oldObj, newObj)
+          // console.log('model.content', reflectMap, newObj, oldObj, diffed)
+          reflectMap.forEach((arr, key) => {
+            // console.log(key, value)
+            // console.log(arr)
+            let hasDiffedChange = ZY.lodash.get(diffed, key)
+            if (hasDiffedChange) {
+              // for (let [diffedChangedKey, diffedChangedValue] of Object.entries(hasDiffedChange)) {
+              //
+              // }
+              ZY.lodash.each(hasDiffedChange, (svalue, skey) => {
+                let fullPath = key + '.' + skey
+                // console.log(`${fullPath} changed`, svalue)
+                let modelTarget = ZY.lodash.get(model, fullPath)
+                // let changed = {}
+                arr.forEach((arrItem) => {
+                  let {key,reflect, valTpl}  = arrItem
+                  if (valTpl) {
+                    modelTarget[key] = ZY_EXT.eval5(valTpl, {
+                      A: globalThis.getApp(),
+                      $VAL: modelTarget[reflect],
+                      L: ZY.lodash,
+                    })
+                  }else {
+                    modelTarget[key] = modelTarget[reflect]
+                  }
+                })
+
+                // ZY.lodash.set(model, fullPath, modelTarget)
+                // console.log(modelTarget)
+              })
+            }
+            // console.log(key, hasDiffedChange)
+          })
+
           cachedModel = ZY.JSON5.stringify(newObj)
           // emit('model:update', newVal);
           // curFormCon.comManager.context.sendEvent('model:update', {
