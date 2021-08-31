@@ -6,6 +6,7 @@
       <render-layout :map="renderC.state.currentLayoutMap"
                      :id="renderC.state.rootId"
                      :handleNext="renderC.handleNext"
+                     :handleDefMap="handleDefMap"
                      :page="page">
 {% endverbatim %}
 {{CONFIG.layoutSlots}}
@@ -23,7 +24,81 @@
 </template>
 
 <script>
-    export default {
+  let obj = {
+    name: 'process-step1',
+    init: {
+      def: {
+        constants: {
+        },
+        parts: [
+          {
+            type: "form",
+            name: "form",
+            serviceTpl: {
+              def: {},
+              args: {
+                src: "bservice.twig"
+              }
+            },
+            def: {
+              type: 'object',
+              ui: {
+                attrs: [
+                  ['label-width', '100px']
+                ],
+              },
+              properties: {
+                name: {
+                  type: 'string',
+                  ui: {
+                    label: '姓名'
+                  }
+                },
+                select1: {
+                  type: 'string',
+                  ui: {
+                    label: '请假类型',
+                    widget: 'CusSelect',
+                    widgetConfig: {
+                      enums: "ROOT_STATE('sapp.constants.types', [])",
+                    },
+                    events: {
+                    }
+                  },
+                },
+                prop1: {
+                  type: 'string',
+                  ui: {
+                    widgetConfig: {
+                      type: "textarea",
+                      rows: 3
+                    }
+                  }
+                },
+                prop2: {
+                  type: 'string',
+                  ui: {
+                    widgetConfig: {
+                      type: "textarea",
+                      rows: 3
+                    }
+                  }
+                },
+              }
+            },
+            computed: {
+              doubled: "MODEL('name', '') + ',s'",
+            }
+          }
+        ],
+      },
+      args: {
+        src: 'comformscr2.twig'
+      }
+    }
+  }
+
+  export default {
         setup() {
 
           let renderC = useRenderControl()
@@ -36,11 +111,23 @@
           page = extendControl2Page(page)
           page = useAppPageControl(page)
 
+          page.defMap.set(obj.name, obj)
+
+          function handleDefMap(partName) {
+            let stepMap = {
+              test: 'process-step1'
+            }
+            let is = stepMap[partName]
+            console.log(partName)
+            return page.defMap.get(is)
+          }
+
           async function onInited({storeControl}) {
             {{ CONFIG.onInited }}
           }
 
           return {
+            handleDefMap,
             page,
             renderC
           }
