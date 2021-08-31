@@ -50,6 +50,7 @@ function findPathsToKey(options) {
  */
 function autoVal({ obj, key, base, computedVal = function() {} } = {}) {
   const paths = findPathsToKey({ obj, key });
+  // console.log(obj, key, paths)
 
   for (let k = 0; k < paths.length; k++) {
     let target;

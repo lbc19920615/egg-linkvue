@@ -251,6 +251,8 @@ export function importJsStr(content) {
   return import(objectURL)
 }
 
+export { diff, addedDiff, deletedDiff, updatedDiff, detailedDiff } from 'deep-object-diff';
+
 
 let _U = {}
 /**

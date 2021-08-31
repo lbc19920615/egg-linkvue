@@ -10010,6 +10010,415 @@ var require_duration = __commonJS({
   }
 });
 
+// node_modules/deep-object-diff/dist/utils/index.js
+var require_utils2 = __commonJS({
+  "node_modules/deep-object-diff/dist/utils/index.js"(exports) {
+    (function(global3, factory2) {
+      if (typeof define === "function" && define.amd) {
+        define(["exports"], factory2);
+      } else if (typeof exports !== "undefined") {
+        factory2(exports);
+      } else {
+        var mod = {
+          exports: {}
+        };
+        factory2(mod.exports);
+        global3.index = mod.exports;
+      }
+    })(exports, function(exports2) {
+      "use strict";
+      Object.defineProperty(exports2, "__esModule", {
+        value: true
+      });
+      var _extends = Object.assign || function(target) {
+        for (var i = 1; i < arguments.length; i++) {
+          var source = arguments[i];
+          for (var key in source) {
+            if (Object.prototype.hasOwnProperty.call(source, key)) {
+              target[key] = source[key];
+            }
+          }
+        }
+        return target;
+      };
+      var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function(obj) {
+        return typeof obj;
+      } : function(obj) {
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+      };
+      var isDate = exports2.isDate = function isDate2(d) {
+        return d instanceof Date;
+      };
+      var isEmpty3 = exports2.isEmpty = function isEmpty4(o3) {
+        return Object.keys(o3).length === 0;
+      };
+      var isObject = exports2.isObject = function isObject2(o3) {
+        return o3 != null && (typeof o3 === "undefined" ? "undefined" : _typeof(o3)) === "object";
+      };
+      var properObject = exports2.properObject = function properObject2(o3) {
+        return isObject(o3) && !o3.hasOwnProperty ? _extends({}, o3) : o3;
+      };
+    });
+  }
+});
+
+// node_modules/deep-object-diff/dist/diff/index.js
+var require_diff = __commonJS({
+  "node_modules/deep-object-diff/dist/diff/index.js"(exports, module) {
+    (function(global3, factory2) {
+      if (typeof define === "function" && define.amd) {
+        define(["module", "exports", "../utils"], factory2);
+      } else if (typeof exports !== "undefined") {
+        factory2(module, exports, require_utils2());
+      } else {
+        var mod = {
+          exports: {}
+        };
+        factory2(mod, mod.exports, global3.utils);
+        global3.index = mod.exports;
+      }
+    })(exports, function(module2, exports2, _utils) {
+      "use strict";
+      Object.defineProperty(exports2, "__esModule", {
+        value: true
+      });
+      function _defineProperty(obj, key, value) {
+        if (key in obj) {
+          Object.defineProperty(obj, key, {
+            value,
+            enumerable: true,
+            configurable: true,
+            writable: true
+          });
+        } else {
+          obj[key] = value;
+        }
+        return obj;
+      }
+      var _extends = Object.assign || function(target) {
+        for (var i = 1; i < arguments.length; i++) {
+          var source = arguments[i];
+          for (var key in source) {
+            if (Object.prototype.hasOwnProperty.call(source, key)) {
+              target[key] = source[key];
+            }
+          }
+        }
+        return target;
+      };
+      var diff2 = function diff3(lhs, rhs) {
+        if (lhs === rhs)
+          return {};
+        if (!(0, _utils.isObject)(lhs) || !(0, _utils.isObject)(rhs))
+          return rhs;
+        var l = (0, _utils.properObject)(lhs);
+        var r = (0, _utils.properObject)(rhs);
+        var deletedValues = Object.keys(l).reduce(function(acc, key) {
+          return r.hasOwnProperty(key) ? acc : _extends({}, acc, _defineProperty({}, key, void 0));
+        }, {});
+        if ((0, _utils.isDate)(l) || (0, _utils.isDate)(r)) {
+          if (l.valueOf() == r.valueOf())
+            return {};
+          return r;
+        }
+        return Object.keys(r).reduce(function(acc, key) {
+          if (!l.hasOwnProperty(key))
+            return _extends({}, acc, _defineProperty({}, key, r[key]));
+          var difference3 = diff3(l[key], r[key]);
+          if ((0, _utils.isObject)(difference3) && (0, _utils.isEmpty)(difference3) && !(0, _utils.isDate)(difference3))
+            return acc;
+          return _extends({}, acc, _defineProperty({}, key, difference3));
+        }, deletedValues);
+      };
+      exports2.default = diff2;
+      module2.exports = exports2["default"];
+    });
+  }
+});
+
+// node_modules/deep-object-diff/dist/added/index.js
+var require_added = __commonJS({
+  "node_modules/deep-object-diff/dist/added/index.js"(exports, module) {
+    (function(global3, factory2) {
+      if (typeof define === "function" && define.amd) {
+        define(["module", "exports", "../utils"], factory2);
+      } else if (typeof exports !== "undefined") {
+        factory2(module, exports, require_utils2());
+      } else {
+        var mod = {
+          exports: {}
+        };
+        factory2(mod, mod.exports, global3.utils);
+        global3.index = mod.exports;
+      }
+    })(exports, function(module2, exports2, _utils) {
+      "use strict";
+      Object.defineProperty(exports2, "__esModule", {
+        value: true
+      });
+      function _defineProperty(obj, key, value) {
+        if (key in obj) {
+          Object.defineProperty(obj, key, {
+            value,
+            enumerable: true,
+            configurable: true,
+            writable: true
+          });
+        } else {
+          obj[key] = value;
+        }
+        return obj;
+      }
+      var _extends = Object.assign || function(target) {
+        for (var i = 1; i < arguments.length; i++) {
+          var source = arguments[i];
+          for (var key in source) {
+            if (Object.prototype.hasOwnProperty.call(source, key)) {
+              target[key] = source[key];
+            }
+          }
+        }
+        return target;
+      };
+      var addedDiff2 = function addedDiff3(lhs, rhs) {
+        if (lhs === rhs || !(0, _utils.isObject)(lhs) || !(0, _utils.isObject)(rhs))
+          return {};
+        var l = (0, _utils.properObject)(lhs);
+        var r = (0, _utils.properObject)(rhs);
+        return Object.keys(r).reduce(function(acc, key) {
+          if (l.hasOwnProperty(key)) {
+            var difference3 = addedDiff3(l[key], r[key]);
+            if ((0, _utils.isObject)(difference3) && (0, _utils.isEmpty)(difference3))
+              return acc;
+            return _extends({}, acc, _defineProperty({}, key, difference3));
+          }
+          return _extends({}, acc, _defineProperty({}, key, r[key]));
+        }, {});
+      };
+      exports2.default = addedDiff2;
+      module2.exports = exports2["default"];
+    });
+  }
+});
+
+// node_modules/deep-object-diff/dist/deleted/index.js
+var require_deleted = __commonJS({
+  "node_modules/deep-object-diff/dist/deleted/index.js"(exports, module) {
+    (function(global3, factory2) {
+      if (typeof define === "function" && define.amd) {
+        define(["module", "exports", "../utils"], factory2);
+      } else if (typeof exports !== "undefined") {
+        factory2(module, exports, require_utils2());
+      } else {
+        var mod = {
+          exports: {}
+        };
+        factory2(mod, mod.exports, global3.utils);
+        global3.index = mod.exports;
+      }
+    })(exports, function(module2, exports2, _utils) {
+      "use strict";
+      Object.defineProperty(exports2, "__esModule", {
+        value: true
+      });
+      function _defineProperty(obj, key, value) {
+        if (key in obj) {
+          Object.defineProperty(obj, key, {
+            value,
+            enumerable: true,
+            configurable: true,
+            writable: true
+          });
+        } else {
+          obj[key] = value;
+        }
+        return obj;
+      }
+      var _extends = Object.assign || function(target) {
+        for (var i = 1; i < arguments.length; i++) {
+          var source = arguments[i];
+          for (var key in source) {
+            if (Object.prototype.hasOwnProperty.call(source, key)) {
+              target[key] = source[key];
+            }
+          }
+        }
+        return target;
+      };
+      var deletedDiff2 = function deletedDiff3(lhs, rhs) {
+        if (lhs === rhs || !(0, _utils.isObject)(lhs) || !(0, _utils.isObject)(rhs))
+          return {};
+        var l = (0, _utils.properObject)(lhs);
+        var r = (0, _utils.properObject)(rhs);
+        return Object.keys(l).reduce(function(acc, key) {
+          if (r.hasOwnProperty(key)) {
+            var difference3 = deletedDiff3(l[key], r[key]);
+            if ((0, _utils.isObject)(difference3) && (0, _utils.isEmpty)(difference3))
+              return acc;
+            return _extends({}, acc, _defineProperty({}, key, difference3));
+          }
+          return _extends({}, acc, _defineProperty({}, key, void 0));
+        }, {});
+      };
+      exports2.default = deletedDiff2;
+      module2.exports = exports2["default"];
+    });
+  }
+});
+
+// node_modules/deep-object-diff/dist/updated/index.js
+var require_updated = __commonJS({
+  "node_modules/deep-object-diff/dist/updated/index.js"(exports, module) {
+    (function(global3, factory2) {
+      if (typeof define === "function" && define.amd) {
+        define(["module", "exports", "../utils"], factory2);
+      } else if (typeof exports !== "undefined") {
+        factory2(module, exports, require_utils2());
+      } else {
+        var mod = {
+          exports: {}
+        };
+        factory2(mod, mod.exports, global3.utils);
+        global3.index = mod.exports;
+      }
+    })(exports, function(module2, exports2, _utils) {
+      "use strict";
+      Object.defineProperty(exports2, "__esModule", {
+        value: true
+      });
+      function _defineProperty(obj, key, value) {
+        if (key in obj) {
+          Object.defineProperty(obj, key, {
+            value,
+            enumerable: true,
+            configurable: true,
+            writable: true
+          });
+        } else {
+          obj[key] = value;
+        }
+        return obj;
+      }
+      var _extends = Object.assign || function(target) {
+        for (var i = 1; i < arguments.length; i++) {
+          var source = arguments[i];
+          for (var key in source) {
+            if (Object.prototype.hasOwnProperty.call(source, key)) {
+              target[key] = source[key];
+            }
+          }
+        }
+        return target;
+      };
+      var updatedDiff2 = function updatedDiff3(lhs, rhs) {
+        if (lhs === rhs)
+          return {};
+        if (!(0, _utils.isObject)(lhs) || !(0, _utils.isObject)(rhs))
+          return rhs;
+        var l = (0, _utils.properObject)(lhs);
+        var r = (0, _utils.properObject)(rhs);
+        if ((0, _utils.isDate)(l) || (0, _utils.isDate)(r)) {
+          if (l.valueOf() == r.valueOf())
+            return {};
+          return r;
+        }
+        return Object.keys(r).reduce(function(acc, key) {
+          if (l.hasOwnProperty(key)) {
+            var difference3 = updatedDiff3(l[key], r[key]);
+            if ((0, _utils.isObject)(difference3) && (0, _utils.isEmpty)(difference3) && !(0, _utils.isDate)(difference3))
+              return acc;
+            return _extends({}, acc, _defineProperty({}, key, difference3));
+          }
+          return acc;
+        }, {});
+      };
+      exports2.default = updatedDiff2;
+      module2.exports = exports2["default"];
+    });
+  }
+});
+
+// node_modules/deep-object-diff/dist/detailed/index.js
+var require_detailed = __commonJS({
+  "node_modules/deep-object-diff/dist/detailed/index.js"(exports, module) {
+    (function(global3, factory2) {
+      if (typeof define === "function" && define.amd) {
+        define(["module", "exports", "../added", "../deleted", "../updated"], factory2);
+      } else if (typeof exports !== "undefined") {
+        factory2(module, exports, require_added(), require_deleted(), require_updated());
+      } else {
+        var mod = {
+          exports: {}
+        };
+        factory2(mod, mod.exports, global3.added, global3.deleted, global3.updated);
+        global3.index = mod.exports;
+      }
+    })(exports, function(module2, exports2, _added, _deleted, _updated) {
+      "use strict";
+      Object.defineProperty(exports2, "__esModule", {
+        value: true
+      });
+      var _added2 = _interopRequireDefault(_added);
+      var _deleted2 = _interopRequireDefault(_deleted);
+      var _updated2 = _interopRequireDefault(_updated);
+      function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : {
+          default: obj
+        };
+      }
+      var detailedDiff2 = function detailedDiff3(lhs, rhs) {
+        return {
+          added: (0, _added2.default)(lhs, rhs),
+          deleted: (0, _deleted2.default)(lhs, rhs),
+          updated: (0, _updated2.default)(lhs, rhs)
+        };
+      };
+      exports2.default = detailedDiff2;
+      module2.exports = exports2["default"];
+    });
+  }
+});
+
+// node_modules/deep-object-diff/dist/index.js
+var require_dist3 = __commonJS({
+  "node_modules/deep-object-diff/dist/index.js"(exports) {
+    (function(global3, factory2) {
+      if (typeof define === "function" && define.amd) {
+        define(["exports", "./diff", "./added", "./deleted", "./updated", "./detailed"], factory2);
+      } else if (typeof exports !== "undefined") {
+        factory2(exports, require_diff(), require_added(), require_deleted(), require_updated(), require_detailed());
+      } else {
+        var mod = {
+          exports: {}
+        };
+        factory2(mod.exports, global3.diff, global3.added, global3.deleted, global3.updated, global3.detailed);
+        global3.index = mod.exports;
+      }
+    })(exports, function(exports2, _diff, _added, _deleted, _updated, _detailed) {
+      "use strict";
+      Object.defineProperty(exports2, "__esModule", {
+        value: true
+      });
+      exports2.detailedDiff = exports2.updatedDiff = exports2.deletedDiff = exports2.diff = exports2.addedDiff = void 0;
+      var _diff2 = _interopRequireDefault(_diff);
+      var _added2 = _interopRequireDefault(_added);
+      var _deleted2 = _interopRequireDefault(_deleted);
+      var _updated2 = _interopRequireDefault(_updated);
+      var _detailed2 = _interopRequireDefault(_detailed);
+      function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : {
+          default: obj
+        };
+      }
+      exports2.addedDiff = _added2.default;
+      exports2.diff = _diff2.default;
+      exports2.deletedDiff = _deleted2.default;
+      exports2.updatedDiff = _updated2.default;
+      exports2.detailedDiff = _detailed2.default;
+    });
+  }
+});
+
 // fronts/main.js
 var import_polyfill = __toModule(require_polyfill());
 
@@ -14698,6 +15107,7 @@ function n(e2) {
 var esm_default = n;
 
 // fronts/main.js
+var import_deep_object_diff = __toModule(require_dist3());
 var global2 = (0, import_polyfill.default)();
 var uuid = v4_default;
 var _compareByValue = compare_default(Object);
@@ -14802,6 +15212,11 @@ _U.awaitAxios = async function(p) {
   };
 };
 var U = _U;
+var export_addedDiff = import_deep_object_diff.addedDiff;
+var export_deletedDiff = import_deep_object_diff.deletedDiff;
+var export_detailedDiff = import_deep_object_diff.detailedDiff;
+var export_diff = import_deep_object_diff.diff;
+var export_updatedDiff = import_deep_object_diff.updatedDiff;
 export {
   Interval,
   JSON5,
@@ -14812,12 +15227,16 @@ export {
   Time,
   Timeout,
   U,
+  export_addedDiff as addedDiff,
   awaitTo,
   buildAsyncpipe,
   camel2hyphen,
   camelNameToCls,
   comHelper,
   compareObj,
+  export_deletedDiff as deletedDiff,
+  export_detailedDiff as detailedDiff,
+  export_diff as diff,
   fetchContentV2,
   fetchContentV3,
   fetchreq,
@@ -14831,6 +15250,7 @@ export {
   qs,
   rid,
   sleep,
+  export_updatedDiff as updatedDiff,
   uuid
 };
 /**

@@ -73,7 +73,7 @@
 </template>
 
 <script type="module">
-  import { formModel, comHelper } from '{{ APP_CONFIG.server_origin }}/public/expose/main.js';
+  import { comHelper, formModel } from '{{ APP_CONFIG.server_origin }}/public/expose/main.js';
 
   export default {
     props: {
@@ -116,7 +116,7 @@
       this.comManager = comManager
     },
     beforeUnmount() {
-      const { ref, inject, watch, getCurrentInstance } = global.Vue;
+      const { ref, inject, watch, getCurrentInstance, toRaw } = global.Vue;
       let comManager = this.comManager
       // console.log(comManager)
       comManager.destory(this.comUUID)
@@ -130,7 +130,7 @@
 
 
       const config = ZY.JSON5.parse(`{{CONFIG_SOURCE_JSON5}}`);
-      const { ref, inject, watch, getCurrentInstance } = global.Vue;
+      const { ref, inject, watch, getCurrentInstance, toRaw } = global.Vue;
       const { useStore } = global.Vuex
       let store = useStore()
 
@@ -142,6 +142,7 @@
         let rowDef = partDef.def
         let computedLinks = {
         }
+        let reflectMap = new Map()
         // computed start
         let ret = {
         }
@@ -176,7 +177,13 @@
         // computed end
         let model = null
         const obj = formModel.createFormModel(rowDef);
-        formDefTravase(rowDef, computedLinks);
+        formDefTravase(rowDef, computedLinks, {
+          path: '',
+          reflectMap
+        });
+
+
+        // console.log('rowDef', rowDef, computedLinks)
         ret = globalStore.run(partDef.service, 'initModel', {
           plain: obj,
           computed,
@@ -186,11 +193,33 @@
               let findKeys = computedLinks[key]
               if (Array.isArray(findKeys)) {
                 findKeys.forEach(findKeyItem => {
+                  let target = ZY.lodash.get(model, findKeyItem.parentKey)
+                  // console.log(findKeyItem, target)
+                  if (findKeyItem.parentType === 'array') {
+                    // target是数组
+                    // const obj = formModel.createFormModel(findKeyItem.parentDef);
+                    // target.forEach(item => {
+                    //   for (let k in obj) {
+                    //     if (!item.hasOwnProperty(k)) {
+                    //       item[k] = obj[k]
+                    //     }
+                    //   }
+                    // })
+                  }
+                  // console.log(Array.isArray(target), model)
                   comHelper.autoVal({
                     obj: model,
                     key: findKeyItem.key,
                     base: model,
                     computedVal() {
+                      if (findKeyItem.valTpl) {
+                        // console.log(findKeyItem.valTpl)
+                        let context = {
+                          A: globalThis.getApp(),
+                          $VAL: newVal
+                        }
+                        return ZY_EXT.eval5(findKeyItem.valTpl, context)
+                      }
                       return newVal
                     }
                   })
@@ -244,7 +273,6 @@
                 })
               } else {
                 // console.log('model', tureKey,  ZY.lodash.get(model, tureKey))
-
                 watch(() => ZY.lodash.get(model, tureKey), watchHandler(tureKey));
               }
             }
@@ -253,13 +281,52 @@
 
         attachModelWatcher(model, '', model)
 
-        // watch(model, newVal => {
-        //   // console.log('model.content', newVal)
-        //   emit('model:update', newVal);
-        //   curFormCon.comManager.context.sendEvent('model:update', {
-        //     newVal
-        //   })
-        // });
+        let cachedModel = ''
+        watch(model, (newVal, oldVal) => {
+          let newObj = toRaw(newVal)
+          if (!cachedModel) {
+          //
+          } else {
+            let oldObj = ZY.JSON5.parse(cachedModel)
+            let diffed = ZY.diff(oldObj, newObj)
+            // console.log('model.content', reflectMap, newObj, oldObj, diffed)
+            reflectMap.forEach((arr, key) => {
+              // console.log(key, value)
+              // console.log(arr)
+              let hasDiffedChange = ZY.lodash.get(diffed, key)
+              if (hasDiffedChange) {
+                // for (let [diffedChangedKey, diffedChangedValue] of Object.entries(hasDiffedChange)) {
+                //
+                // }
+                ZY.lodash.each(hasDiffedChange, (svalue, skey) => {
+                  let fullPath = key + '.' + skey
+                  // console.log(`${fullPath} changed`, svalue)
+                  let modelTarget = ZY.lodash.get(model, fullPath)
+                  // let changed = {}
+                  arr.forEach((arrItem) => {
+                    let {key,reflect, valTpl}  = arrItem
+                    if (valTpl) {
+                      modelTarget[key] = ZY_EXT.eval5(valTpl, {
+                        $REFLECT_VAL: modelTarget[reflect]
+                      })
+                    }else {
+                      modelTarget[key] = modelTarget[reflect]
+                    }
+                  })
+
+                  // ZY.lodash.set(model, fullPath, modelTarget)
+                  // console.log(modelTarget)
+                })
+              }
+              // console.log(key, hasDiffedChange)
+            })
+          }
+          cachedModel = ZY.JSON5.stringify(newObj)
+          // emit('model:update', newVal);
+          // curFormCon.comManager.context.sendEvent('model:update', {
+          //   newVal
+          // })
+        });
         ret.el = ref(null)
         ret.initEl = function(ctx) {
           // console.log(ctx)
@@ -327,7 +394,7 @@
           if (Array.isArray(arr)) {
             arr.splice(index, deleteCount)
           }
-          console.log(arr)
+          // console.log(arr)
         }
 
         ret.getModel = function() {
@@ -344,22 +411,63 @@
         return ret
       }
 
-      function formDefTravase(formDef = {}, computedLinks) {
+      function formDefTravase(formDef = {}, computedLinks, ext = {path: '', reflectMap: {}}) {
+
         if (formDef.type === 'object') {
           Object.entries(formDef.properties)
                   .forEach(([ key, formDefProp ]) => {
+                    let truePath = ext.path ? `${ext.path}.${key}` : key
+
                     if (formDefProp.type !== 'array') {
-                      if (formDefProp.computedProp) {
-                        const linked = formDefProp.computedProp;
-                        if (!computedLinks[linked]) {
-                          computedLinks[linked] = [];
-                        }
-                        computedLinks[linked].push({
-                          key
+                      if (formDefProp.type === 'object') {
+                        // console.log('oh this is a big formDefTravase handle object', {
+                        //   truePath,
+                        //   formDef
+                        // })
+                        formDefTravase(formDefProp, computedLinks, {
+                          path: truePath,
+                          parentDef: formDef.properties[key],
+                          parentType: 'object',
+                          reflectMap: ext.reflectMap
                         });
+
+                      } else {
+                        if (formDefProp.computedProp) {
+                          const linked = formDefProp.computedProp;
+                          if (!computedLinks[linked]) {
+                            computedLinks[linked] = [];
+                          }
+                          computedLinks[linked].push({
+                            key,
+                            parentType: ext.parentType ?? '',
+                            parentKey: ext.path,
+                            parentDef: ext.parentDef ?? {},
+                            valTpl: formDefProp.computedTpl,
+                            reflectMap: ext.reflectMap
+                          });
+                        }
+                        if (formDefProp.reflect) {
+                          let target = []
+                          let spath = ext.path
+                          let obj = {
+                            key,
+                            reflect: formDefProp.reflect,
+                            valTpl: formDefProp.reflectTpl,
+                          }
+                          if (ext.reflectMap.has(spath)) {
+                            target = ext.reflectMap.get(spath)
+                          }
+                          target.push(obj)
+                          ext.reflectMap.set(spath, target)
+                        }
                       }
                     } else {
-                      formDefTravase(formDefProp.items, computedLinks);
+                      formDefTravase(formDefProp.items, computedLinks, {
+                        path: truePath,
+                        parentDef: formDef.properties[key].items,
+                        parentType: 'array',
+                        reflectMap: ext.reflectMap
+                      });
                     }
                   });
         }
