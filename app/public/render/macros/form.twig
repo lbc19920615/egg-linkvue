@@ -102,6 +102,7 @@
 {% macro custom(model) %}
   <custom-form-render
           :ui="ui"
+          :part_key="part_key"
           :context="context"
           v-model="{{ model }}"
           @change="onChange"

@@ -18,6 +18,7 @@ export default function(name) {
       formPath: String,
       parentModel: null,
       modelValue: null,
+      part_key: String,
       context: null,
       ui: {
         type: Object,
@@ -112,6 +113,7 @@ export default function(name) {
         onFchange,
         isArray,
         context,
+        part_key: props.part_key,
         // onUpdateModelValue,
         value,
         onChange,

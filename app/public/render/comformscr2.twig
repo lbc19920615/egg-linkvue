@@ -11,7 +11,9 @@
 <div class="http-com comformscr2">
   {% for part in CONFIG.parts %}
     {% set pathKey = "parts." ~ part.name %}
-<div v-if="{{pathKey}}" :hidden="!debug">
+<div v-if="{{pathKey}}"
+     :hidden="!debug"
+>
    <div>{% verbatim %}{{{% endverbatim %} {{pathKey}}.model {% verbatim %}}}{% endverbatim %}</div>
   <div>{% verbatim %}{{{% endverbatim %} {{pathKey}}.computedModel {% verbatim %}}}{% endverbatim %}</div>
 {#   <div>{{parts.form.computedModel}}</div>#}
@@ -145,9 +147,14 @@
         }
         let computed = {}
         for (let key in partDef.computed) {
+          /**
+           * 计算computed的function
+           * @type {Function}
+           */
           computed[key] = new Function('model', 'options', `
             let $root = options.context.ctx
             let $rootStore = options.context.store
+            let A = options.context.app
 
             ${commonFun}
 
@@ -193,6 +200,7 @@
           },
           context: {
             ctx: curFormCon,
+            app: globalThis.getApp(),
             store
           }
         })
@@ -405,10 +413,12 @@
 
       function dxEval(v, $root, context) {
         let trueContext = context ? context : this;
+        // console.log(trueContext)
         let fun = new Function('valueTemplate', 'options', `
           // let $config = $context.config
           let $root = options.$root
           let $rootStore = options.store
+          let A = options.app
 
          ${commonFun}
 
@@ -430,6 +440,7 @@
         return fun(v, {
           $root,
           context: trueContext,
+          app: globalThis.getApp(),
           store
         })
       }
