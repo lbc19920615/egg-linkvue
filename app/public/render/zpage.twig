@@ -24,6 +24,49 @@
   export default {
         setup() {
 
+          const 循环 = ZY.lodash.each;
+          const 获取 = ZY.lodash.get;
+          const 默认值 = ZY.lodash.defaultTo;
+
+          class 工具 {
+            static 设置函数(events = []) {
+              let obj = {}
+              events.forEach(event => {
+                obj[event.name] = new Function('e', event.code)
+              })
+              page.setEventHandler(obj)
+            }
+
+            /**
+             * 初始化
+             * @param eventModel
+             */
+            static 初始化(eventModel = {events: [], forms: []}) {
+              console.log(eventModel)
+              this.设置函数(eventModel.events);
+              let forms = eventModel.forms;
+
+              循环(forms, form=> {
+                let {value, name} = form
+                let obj = ZY.JSON5.parse(value)
+                let formDef = buildFormDep(obj, name);
+                setDefMap(formDef, name)
+              })
+            }
+
+            static 打开弹窗(refName = '') {
+              if (refName) {
+                let context = page.modalManRef.find(refName)
+
+                // console.log('sdsdsdsdsdsds', context)
+                if (context && context.toggle) {
+                  context.toggle(true)
+                }
+              }
+            }
+          }
+          globalThis.工具 = 工具
+
           let renderC = useRenderControl()
           {{ CONFIG.beforeScript }}
 
