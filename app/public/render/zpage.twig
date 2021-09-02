@@ -81,10 +81,10 @@
             page.defMap.set(name, obj)
           }
 
+          let stepMap = {
+            test: 'process-step1'
+          }
           function handleDefMap(partName) {
-            let stepMap = {
-              test: 'process-step1'
-            }
             let is = stepMap[partName]
             // console.log(partName)
             if (page.defMap.has(is)) {
@@ -98,6 +98,7 @@
           }
 
           return {
+            stepMap,
             handleDefMap,
             page,
             renderC
