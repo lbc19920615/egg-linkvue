@@ -24,6 +24,9 @@
   export default {
         setup() {
 
+          let stepMap = {
+          }
+
           const 循环 = ZY.lodash.each;
           const 获取 = ZY.lodash.get;
           const 默认值 = ZY.lodash.defaultTo;
@@ -42,7 +45,7 @@
              * @param eventModel
              */
             static 初始化(eventModel = {events: [], forms: []}) {
-              console.log(eventModel)
+              // console.log(eventModel)
               this.设置函数(eventModel.events);
               let forms = eventModel.forms;
 
@@ -64,6 +67,15 @@
                 }
               }
             }
+
+            static 设置步骤(){
+              let defMap = {
+                test: 'process-step1'
+              }
+              for (let [key, value] of Object.entries(defMap)) {
+                stepMap[key] = defMap[key]
+              }
+            }
           }
           globalThis.工具 = 工具
 
@@ -81,9 +93,6 @@
             page.defMap.set(name, obj)
           }
 
-          let stepMap = {
-            test: 'process-step1'
-          }
           function handleDefMap(partName) {
             let is = stepMap[partName]
             // console.log(partName)
