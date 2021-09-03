@@ -169,6 +169,16 @@ class HomeController extends Controller {
     // console.log(fileurl);
     return file;
   }
+  async cusStyle() {
+    const { ctx } = this;
+
+    ctx.set('Content-Type', 'text/css; charset=utf-8');
+    ctx.body = `
+    body {
+      color: red;
+    }
+    `;
+  }
   async parse(req) {
     return new Promise(resolve => {
       const form = new formidable.IncomingForm();
