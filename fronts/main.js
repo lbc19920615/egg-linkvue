@@ -300,7 +300,7 @@ _U.awaitAxios = async function(p) {
 _U.scrollToView = function(sel, options = {
   behavior: "smooth",
 }) {
-  document.querySelector(sel).scrollIntoView()
+  document.querySelector(sel).scrollIntoView(options)
 }
 
 export let U = _U

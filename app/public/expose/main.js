@@ -13866,7 +13866,7 @@ _U.awaitAxios = async function(p) {
 _U.scrollToView = function(sel, options = {
   behavior: "smooth"
 }) {
-  document.querySelector(sel).scrollIntoView();
+  document.querySelector(sel).scrollIntoView(options);
 };
 var U = _U;
 var export_addedDiff = import_deep_object_diff.addedDiff;
