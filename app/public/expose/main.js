@@ -13866,7 +13866,12 @@ _U.awaitAxios = async function(p) {
 _U.scrollToView = function(sel, options = {
   behavior: "smooth"
 }) {
-  document.querySelector(sel).scrollIntoView(options);
+  if (typeof sel === "string") {
+    document.querySelector(sel).scrollIntoView(options);
+  }
+  if (sel instanceof HTMLElement) {
+    sel.scrollIntoView(options);
+  }
 };
 var U = _U;
 var export_addedDiff = import_deep_object_diff.addedDiff;
