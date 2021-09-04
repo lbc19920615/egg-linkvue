@@ -26,8 +26,9 @@ function renderForm(p, basePath, configPath, append = {}) {
   };
   function render(p, key, context, level, basePath, configPath, ext) {
     if (p.type === 'object') {
+      const obj_tag = p.tag ? p.tag : 'el-row';
       context.tpl = context.tpl + `
-<el-row class="level_${level} z-form__object"
+<${obj_tag} class="level_${level} z-form__object" ${attrStr(p)}
 v-if="${basePath}"
 >`;
       for (const [ key, value ] of Object.entries(p.properties)) {
@@ -36,17 +37,19 @@ v-if="${basePath}"
           `${basePath}.${key}`, `${configPath}.properties.${key}`, ext);
       }
       context.tpl = context.tpl + `
-</el-row>`;
+</${obj_tag}>`;
     } else if (p.type === 'array') {
       const itemKey = 'item' + level;
       const indexKey = 'index' + level;
       const fromPath = getSelfPath(basePath, append.BASE_PATH);
+      const array_tag = p.tag ? p.tag : 'el-row';
+      const array_con_tag = p.con_tag ? p.con_tag : 'el-row';
       context.tpl = context.tpl + `
-<el-row class="level_${level} z-form__array" ${attrStr(p)}>
+<${array_tag} class="level_${level} z-form__array" ${attrStr(p)}>
  <slot-com :defs="slotContent" :attrs="{parts}"
            :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}', selfpath: '${fromPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
               name="array_before"></slot-com>
-<el-row v-for="(${itemKey}, ${indexKey}) in ${basePath}" class="z-form__array-con" >
+<${array_con_tag} v-for="(${itemKey}, ${indexKey}) in ${basePath}" class="z-form__array-con" >
 <slot-com :defs="slotContent" :attrs="{parts}"
          :binds="{key: '${key}', partName: '${append.part.name}', indexKey:${indexKey}, fromPath: '${fromPath}', selfpath: '${fromPath}['+ ${indexKey} +']', level:'${level}', parentlevel:'${level - 1}', basePath: '${basePath}', configPath: '${configPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
             name="array_item_before"></slot-com>
@@ -62,20 +65,22 @@ v-if="${basePath}"
 <slot-com :defs="slotContent" :attrs="{parts}"
          :binds="{key: '${key}', partName: '${append.part.name}', indexKey:${indexKey}, fromPath: '${fromPath}', selfpath: '${fromPath}['+ ${indexKey} +']', level:'${level}', parentlevel:'${level - 1}', basePath: '${basePath}', configPath: '${configPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
             name="array_item_after"></slot-com>
-</el-row>
+</${array_con_tag}>
 <slot-com :defs="slotContent" :attrs="{parts}"
          :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
             name="array_after"></slot-com>
-</el-row>`;
+</${array_tag}>`;
     } else {
       // console.log(p, key);
       if (!p.hidden) {
+        const col_tag = p.tag ? p.tag : 'el-col';
+        const field_tag = p.field_tag ? p.field_tag : 'cm-field';
         context.tpl = context.tpl + `
-<el-col class="level_${level} z-form__prop"
+<${col_tag} class="level_${level} z-form__prop" ${attrStr(p)}
 >`;
         context.tpl = context.tpl +
           `
-<cm-field
+<${field_tag}
 v-model="${basePath}"
 label="${key}" prop="${key}"
 form-path="${basePath}"
@@ -86,12 +91,12 @@ type="${p.type}"
 :context="${append.partKey}"
 part_key="${append.partKey}"
 >
-</cm-field>`;
+</${field_tag}>`;
         context.tpl = context.tpl + `
  <slot-com :defs="slotContent" :attrs="{parts}"
            :binds="{key: '${key}', type: '${p.type}', partName: '${append.part.name}', level:'${level}', parentlevel:'${level - 1}', basePath: '${basePath}', configPath: '${configPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
               name="prop_after"></slot-com>
-</el-col>`;
+</${col_tag}>`;
       } else {
       //
       }
