@@ -1,9 +1,23 @@
+const lodash = require('lodash');
+
 function getSelfPath(basePath, BASE_PATH) {
   let fromPath = basePath.replace(BASE_PATH, '');
   if (fromPath.startsWith('.')) {
     fromPath = fromPath.slice(1, fromPath.length);
   }
   return fromPath;
+}
+
+function attrStr(p) {
+  let str = '';
+  const attrs = lodash.get(p, 'ui.attrs');
+  if (Array.isArray(attrs)) {
+    attrs.forEach(attr => {
+      str = str + ` ${attr[0]}='${attr[1]}'`;
+    });
+    console.log('attrs', attrs, str);
+  }
+  return str;
 }
 
 function renderForm(p, basePath, configPath, append = {}) {
@@ -28,7 +42,7 @@ v-if="${basePath}"
       const indexKey = 'index' + level;
       const fromPath = getSelfPath(basePath, append.BASE_PATH);
       context.tpl = context.tpl + `
-<el-row class="level_${level} z-form__array">
+<el-row class="level_${level} z-form__array" ${attrStr(p)}>
  <slot-com :defs="slotContent" :attrs="{parts}"
            :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}', selfpath: '${fromPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
               name="array_before"></slot-com>
@@ -79,7 +93,7 @@ part_key="${append.partKey}"
               name="prop_after"></slot-com>
 </el-col>`;
       } else {
-      // 
+      //
       }
     }
   }
