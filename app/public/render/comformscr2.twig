@@ -34,11 +34,11 @@
 {#            {% verbatim %}{{ {% endverbatim %} {{ modelKey }} {% verbatim %} }} {% endverbatim %}#}
 
         <slot-com :defs="slotContent" :attrs="{parts}"
-                  :binds="{name: '{{ part.name }}', process: '{{ CONFIG.process}}' }"
+                  :binds="{name: '{{ part.name }}', partName: '{{ part.name }}', parts, process: '{{ CONFIG.process}}' }"
                   name="form_before"></slot-com>
         {{ partStr[part.name] }}
         <slot-com :defs="slotContent" :attrs="{parts}"
-                  :binds="{name: '{{ part.name }}', process: '{{ CONFIG.process}}' }"
+                  :binds="{name: '{{ part.name }}',  partName: '{{ part.name }}', parts, process: '{{ CONFIG.process}}' }"
                   name="form_after"></slot-com>
       </el-form>
     {% endif %}
@@ -46,7 +46,7 @@
       <el-table class="z-table  http-com-part http-com-part__{{ part.name }}" :ref="{{ pathKey }}.initEl" :data="{{ pathKey }}.model.records"  stripe="true" border="true" {{ attr.parseKeyValue(part.def.ui.attrs) }}>
         {% for key,record in part.def.properties.records.items.properties %}
           {% set configKey = partConfigKey ~ '.records.items.properties.' ~ key %}
-          <div v-html="get({{ configKey }}, 'ui.label', '')">1111</div>
+{#          <div v-html="get({{ configKey }}, 'ui.label', '')">1111</div>#}
           <el-table-column prop="{{ key }}"
                            :label="get({{ configKey }}, 'ui.label', '')"
                   {{ attr.parseUIAttrs(record.ui, configKey) }}
@@ -382,8 +382,9 @@
         /**
          * arr自动添加
          * @param path
+         * @param initData
          */
-        ret.arrAppend = function(path) {
+        ret.arrAppend = function(path, initData = {}) {
           let arr = ZY.lodash.get(ret.model, path)
           if (Array.isArray(arr)) {
             // if (arr[0]) {
@@ -392,7 +393,7 @@
             //     arr.push({})
             //   }
             // }
-            arr.push({})
+            arr.push(initData)
           }
           return arr[arr.length - 1]
         }
