@@ -292,4 +292,15 @@ _U.awaitAxios = async function(p) {
   }
 }
 
+/**
+ * scrollToView
+ * @param sel
+ * @param options
+ */
+_U.scrollToView = function(sel, options = {
+  behavior: "smooth",
+}) {
+  document.querySelector(sel).scrollIntoView()
+}
+
 export let U = _U

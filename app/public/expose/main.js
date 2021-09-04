@@ -13863,6 +13863,11 @@ _U.awaitAxios = async function(p) {
     response
   };
 };
+_U.scrollToView = function(sel, options = {
+  behavior: "smooth"
+}) {
+  document.querySelector(sel).scrollIntoView();
+};
 var U = _U;
 var export_addedDiff = import_deep_object_diff.addedDiff;
 var export_deletedDiff = import_deep_object_diff.deletedDiff;
