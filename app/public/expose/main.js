@@ -1,9 +1,11 @@
 import {
+  require_dist
+} from "./chunks/chunk-MMWUQFIH.js";
+import {
   __commonJS,
   __export,
-  __toModule,
-  require_dist
-} from "./chunks/chunk-S53E2ZYA.js";
+  __toModule
+} from "./chunks/chunk-WGBKWIX4.js";
 
 // node_modules/globalthis/implementation.browser.js
 var require_implementation_browser = __commonJS({
