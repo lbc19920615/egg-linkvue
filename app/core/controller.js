@@ -8,12 +8,33 @@ function getSelfPath(basePath, BASE_PATH) {
   return fromPath;
 }
 
-function attrStr(p) {
+/**
+ * attrStr
+ * @param p {{}}  config
+ * @param k {string} key
+ * @param context
+ * @return {string}
+ */
+function attrStr(p, k = 'ui.attrs', context = {}) {
+  const c = Object.assign({
+    $: lodash,
+  }, context);
   let str = '';
-  const attrs = lodash.get(p, 'ui.attrs');
+  const attrs = lodash.get(p, k);
   if (Array.isArray(attrs)) {
     attrs.forEach(attr => {
-      str = str + ` ${attr[0]}='${attr[1]}'`;
+      if (Array.isArray(attr)) {
+        str = str + ` ${attr[0]}='${attr[1]}'`;
+      } else if (typeof attr === 'string') {
+        str = str + ` ${attr}`;
+      } else if (lodash.isObject(attr) && Array.isArray(attr.handler)) {
+        // eslint-disable-next-line no-new-func
+        const fun = new Function(attr.handler[0], attr.handler[1]);
+        const ret = fun(c);
+        if (Array.isArray(ret)) {
+          str = str + ` ${ret[0]}='${attr.prefixValue ? attr.prefixValue : ''}${ret[1]}${attr.suffixValue ? attr.suffixValue : ''}'`;
+        }
+      }
     });
     console.log('attrs', attrs, str);
   }
@@ -44,12 +65,19 @@ v-if="${basePath}"
       const fromPath = getSelfPath(basePath, append.BASE_PATH);
       const array_tag = p.tag ? p.tag : 'el-row';
       const array_con_tag = p.con_tag ? p.con_tag : 'el-row';
+      const con_attr = attrStr(p, 'ui.conAttrs', {
+        itemKey,
+        indexKey,
+      });
       context.tpl = context.tpl + `
+ <slot-com :defs="slotContent" :attrs="{parts}"
+           :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}', selfpath: '${fromPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
+              name="array_prev"></slot-com>
 <${array_tag} class="level_${level} z-form__array" ${attrStr(p)}>
  <slot-com :defs="slotContent" :attrs="{parts}"
            :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}', selfpath: '${fromPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
               name="array_before"></slot-com>
-<${array_con_tag} v-for="(${itemKey}, ${indexKey}) in ${basePath}" class="z-form__array-con" >
+<${array_con_tag} v-for="(${itemKey}, ${indexKey}) in ${basePath}" class="z-form__array-con" ${con_attr}>
 <slot-com :defs="slotContent" :attrs="{parts}"
          :binds="{key: '${key}', partName: '${append.part.name}', indexKey:${indexKey}, fromPath: '${fromPath}', selfpath: '${fromPath}['+ ${indexKey} +']', level:'${level}', parentlevel:'${level - 1}', basePath: '${basePath}', configPath: '${configPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
             name="array_item_before"></slot-com>

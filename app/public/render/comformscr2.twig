@@ -577,6 +577,10 @@
         return dxEval(v, partContext, this)
       }
 
+      function valTpl(v) {
+        return dxEval(v, {}, this)
+      }
+
 
       let parts = {}
       config.parts.forEach(part => {
@@ -602,6 +606,7 @@
       defaultTo: ZY.lodash.defaultTo,
       get: ZY.lodash.get,
       dxValue,
+      valTpl,
       // dxEval,
     };
 
