@@ -35,7 +35,7 @@
             static 设置函数(events = []) {
               let obj = {}
               events.forEach(event => {
-                obj[event.name] = new Function('e', event.code)
+                obj[event.name] = new ZY.AsyncFunction('e', event.code)
               })
               page.setEventHandler(obj)
             }
