@@ -214,7 +214,13 @@ class HomeController extends Controller {
         // });
         const modelKey = 'parts.' + part.name + '.model';
         const partConfigKey = 'config.parts[' + index + '].def';
-        partStr[part.name] = this.BASE_renderForm(part.def, modelKey, partConfigKey, { part, CONFIG, partKey: `parts.${part.name}` });
+        if (part.type === 'form') {
+
+          partStr[part.name] = this.BASE_renderForm(part.def, modelKey, partConfigKey, { part, CONFIG, partKey: `parts.${part.name}` });
+        } else if (part.type === 'table') {
+
+          partStr[part.name] = this.BASE_renderTable(part.def, modelKey, partConfigKey, { part, CONFIG, partKey: `parts.${part.name}` });
+        }
       });
     }
 

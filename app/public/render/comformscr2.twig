@@ -43,34 +43,47 @@
       </el-form>
     {% endif %}
     {% if part.type == 'table' %}
-      <el-table class="z-table  http-com-part http-com-part__{{ part.name }}" :ref="{{ pathKey }}.initEl" :data="{{ pathKey }}.model.records"  stripe="true" border="true" {{ attr.parseKeyValue(part.def.ui.attrs) }}>
-        {% for key,record in part.def.properties.records.items.properties %}
-          {% set configKey = partConfigKey ~ '.records.items.properties.' ~ key %}
-          <div v-html="get({{ configKey }}, 'ui.label', '')">1111</div>
-          <el-table-column prop="{{ key }}"
-                           :label="get({{ configKey }}, 'ui.label', '')"
-                  {{ attr.parseUIAttrs(record.ui, configKey) }}
-          >
-            {% if record.useSlotTemplate %}
-              <template  #default="scope">
+      {% verbatim %}{{ {% endverbatim %} {{ pathKey }}.model {% verbatim %} }} {% endverbatim %}
+
+      <slot-com :defs="slotContent" :attrs="{parts}"
+                :binds="{name: '{{ part.name }}', process: '{{ CONFIG.process}}' }"
+                name="table_prev"></slot-com>
+      {{ partStr[part.name] }}
+
+{#      <el-form class="z-form http-com-part http-com-part__{{ part.name }}"#}
+{#           :ref="{{ pathKey }}.initEl" :model="{{ pathKey }}.model" {{ attr.parseKeyValue(part.def.ui.attrs) }}>#}
+{#      {{ partStr[part.name] }}#}
+{#  </el-form>#}
+{#      <el-table class="z-table  http-com-part http-com-part__{{ part.name }}"#}
+{#                :ref="{{ pathKey }}.initEl" :data="{{ pathKey }}.model.records"  stripe="true"#}
+{#                border="true" {{ attr.parseKeyValue(part.def.ui.attrs) }}>#}
+{#        {% for key,record in part.def.properties.records.items.properties %}#}
+{#          {% set configKey = partConfigKey ~ '.records.items.properties.' ~ key %}#}
+{#          <div v-html="get({{ configKey }}, 'ui.label', '')">1111</div>#}
+{#          <el-table-column prop="{{ key }}"#}
+{#                           :label="get({{ configKey }}, 'ui.label', '')"#}
+{#                  {{ attr.parseUIAttrs(record.ui, configKey) }}#}
+{#          >#}
+{#            {% if record.useSlotTemplate %}#}
+{#              <template  #default="scope">#}
 {#                {{ formGroup.tag(record.template) }}#}
-                <slot-com :defs="slotContent" :attrs="{parts, scope}" name="actions"></slot-com>
-              </template>
-            {% else %}
-              <template #default="scope">
-                {% verbatim %}{{ {% endverbatim %} scope.row[scope.column.property] {% verbatim %}}}{% endverbatim %}
-              </template>
-            {% endif %}
-          </el-table-column>
-        {% endfor %}
-      </el-table>
-      <el-pagination
-              background
-              layout="prev, pager, next"
-              :current-page="{{ pathKey }}.model.page"
-              :page-size="{{ pathKey }}.model.limit"
-              :total="{{ pathKey }}.model.total">
-      </el-pagination>
+{#                <slot-com :defs="slotContent" :attrs="{parts, scope}" name="actions"></slot-com>#}
+{#              </template>#}
+{#            {% else %}#}
+{#              <template #default="scope">#}
+{#                {% verbatim %}{{ {% endverbatim %} scope.row[scope.column.property] {% verbatim %}}}{% endverbatim %}#}
+{#              </template>#}
+{#            {% endif %}#}
+{#          </el-table-column>#}
+{#        {% endfor %}#}
+{#      </el-table>#}
+{#      <el-pagination#}
+{#              background#}
+{#              layout="prev, pager, next"#}
+{#              :current-page="{{ pathKey }}.model.page"#}
+{#              :page-size="{{ pathKey }}.model.limit"#}
+{#              :total="{{ pathKey }}.model.total">#}
+{#      </el-pagination>#}
     {% endif %}
   {% endfor %}
 </div>
@@ -595,10 +608,19 @@
     //   return await ZY.awaitTo(elRef[methodName](...args))
     // }
 
+    function z_get(obj, p, defaultVal) {
+      let ret = ZY.lodash.get(obj, p, defaultVal)
+      if (ret === '') {
+        return defaultVal
+      }
+      return ret
+    }
+
     let instanse = {
       config,
       parts,
       defaultTo: ZY.lodash.defaultTo,
+      z_get,
       get: ZY.lodash.get,
       dxValue,
       // dxEval,

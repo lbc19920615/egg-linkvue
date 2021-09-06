@@ -79,12 +79,39 @@ part_key="${append.partKey}"
               name="prop_after"></slot-com>
 </el-col>`;
       } else {
-      // 
+      //
       }
     }
   }
 
   render(p, '', context, 1, basePath, configPath, { arrIndexes: {} });
+  return context.tpl;
+}
+
+function buildTableColumns(p, basePath, configPath, append = {}) {
+  const context = {
+    tpl: '',
+  };
+
+  const { records, page, limit } = p.properties;
+
+  if (records && records.type === 'array') {
+    const recordModelPath = `${basePath}.records`;
+
+
+    const recordConfigPath = `${configPath}.properties.records.items.properties`
+    const recordProperties = records.items.properties;
+    // console.log('properties', recordProperties);
+    for (const [ recordKey, recordValue ] of Object.entries(recordProperties)) {
+      const columnConfigPath = `${recordConfigPath}.${recordKey}`
+      context.tpl = context.tpl + `<el-table-column prop="${recordKey}" 
+:label="z_get(${columnConfigPath}, 'ui.label', '${recordKey}')" 
+v-bind="get(${columnConfigPath}, 'ui.widgetConfig')"
+></el-table-column>`;
+    }
+  }
+
+
   return context.tpl;
 }
 
@@ -97,6 +124,28 @@ class BaseController extends Controller {
   BASE_renderForm(config, basePath, configPath, append) {
     append.BASE_PATH = basePath;
     return renderForm(config, basePath, configPath, append);
+  }
+  BASE_renderTable(config, basePath, configPath, append) {
+    append.BASE_PATH = basePath;
+
+    // <el-table
+    // :data="${basePath}"
+    //   >${buildTableColumns(config, basePath, configPath, append)}</el-table>
+    // console.log('config', config)
+    const configStr = `
+    <section>${configPath}</section>
+    `;
+    // ${basePath}
+    // {{${basePath}}}
+    // ${configStr}
+    // {{${configPath}}}
+
+    return `
+
+    <el-table
+    :data="get(${basePath}, 'records', [])"
+      >${buildTableColumns(config, basePath, configPath, append)}</el-table>
+    `.trim();
   }
 }
 
