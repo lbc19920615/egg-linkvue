@@ -13840,6 +13840,8 @@ function importJsStr(content) {
   const objectURL = URL.createObjectURL(new Blob([content], { type: "text/javascript" }));
   return import(objectURL);
 }
+var AsyncFunction = Object.getPrototypeOf(async function() {
+}).constructor;
 var _U = {};
 _U.objArr2OptionsManager = function(arrObj = [], labelKey, valueKey) {
   let ret = {};
@@ -13880,6 +13882,7 @@ var export_detailedDiff = import_deep_object_diff.detailedDiff;
 var export_diff = import_deep_object_diff.diff;
 var export_updatedDiff = import_deep_object_diff.updatedDiff;
 export {
+  AsyncFunction,
   Interval,
   JSON5,
   Lock2 as Lock,

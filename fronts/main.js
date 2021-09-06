@@ -253,6 +253,10 @@ export function importJsStr(content) {
 
 export { diff, addedDiff, deletedDiff, updatedDiff, detailedDiff } from 'deep-object-diff';
 
+/**
+ * AsyncFunction
+ */
+export const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
 
 let _U = {}
 /**
