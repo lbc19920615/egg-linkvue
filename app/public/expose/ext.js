@@ -8407,17 +8407,18 @@ function saveObjAsJson5File(obj = {}, fileName) {
 }
 var FS = dist_exports;
 async function fileOpenJSON5() {
-  const text = "";
+  let text = "";
   try {
     const blob = await FS.fileOpen({
       mimeTypes: ["text/*"]
     });
     if (blob) {
+      text = await blob.text();
       try {
         const obj = import_json5.default.parse(text);
         return obj;
       } catch (e2) {
-        return Promise.reject(new Error("fileOpenJSON5 parse err", {
+        return Promise.reject(new Error(`fileOpenJSON5 parse err ${e2.message}`, {
           cause: e2
         }));
       }

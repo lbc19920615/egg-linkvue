@@ -79,18 +79,19 @@ export const FS = _FS;
  * @return {Promise<any>}
  */
 export async function fileOpenJSON5() {
-  const text = '';
+  let text = '';
   try {
     const blob = await FS.fileOpen({
       mimeTypes: [ 'text/*' ],
     });
     if (blob) {
+      text = await blob.text();
       try {
         const obj = _JSON5.parse(text);
         return obj;
       } catch (e) {
         return Promise.reject(
-          new Error('fileOpenJSON5 parse err', {
+          new Error(`fileOpenJSON5 parse err ${e.message}`, {
             cause: e,
           })
         );
