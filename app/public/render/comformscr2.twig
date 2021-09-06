@@ -49,24 +49,15 @@
       {{ partStr[part.name] }}
                   {% verbatim %}{{ {% endverbatim %} typeof {{ pathKey }}.model.page {% verbatim %} }} {% endverbatim %}
 
-      <div v-text="{{ pathKey }}.model.page"></div>
-      <el-pagination
-              background
-              layout="prev, pager, next"
-              v-model="{{ pathKey }}.model.page"
-{#              :current-page="{{ pathKey }}.model.page"#}
-              :page-size="{{ pathKey }}.model.limit"
-{#              :total="{{ pathKey }}.model.total"#}
-              :total="50"
-      >
-      </el-pagination>
+                  {% verbatim %}{{ {% endverbatim %} {{ pathKey }}.model {% verbatim %} }} {% endverbatim %}
 
       <z-pagination
           :page="{{ pathKey }}.model.page"
           {#              :current-page="{{ pathKey }}.model.page"#}
-          :limlit="{{ pathKey }}.model.limit"
+          :limit="{{ pathKey }}.model.limit"
           {#              :total="{{ pathKey }}.model.total"#}
           :total="50"
+          @pagination="callPageEvent('table:pagination', {name: '{{ part.name }}', partName: '{{ part.name }}', parts, process: '{{ CONFIG.process}}' }, $event)"
       ></z-pagination>
     {% endif %}
   {% endfor %}
@@ -605,11 +596,22 @@
       return ret
     }
 
-    let instanse = {
+
+      function callPageEvent(name, scope, e) {
+        console.log('callPageEvent', name, scope, e)
+        curFormCon.comManager.context.sendEvent(name, {
+          scope,
+          originEvent: e,
+        })
+      }
+
+
+      let instanse = {
       config,
       parts,
       defaultTo: ZY.lodash.defaultTo,
       z_get,
+      callPageEvent,
       get: ZY.lodash.get,
       dxValue,
       valTpl,

@@ -143,22 +143,52 @@ function buildTableColumns(p, basePath, configPath, append = {}) {
   const { records, page, limit } = p.properties;
 
   if (records && records.type === 'array') {
-    const recordModelPath = `${basePath}.records`;
-
-
-    const recordConfigPath = `${configPath}.properties.records.items.properties`
+    // const recordModelPath = `${basePath}.records`;
+    const recordConfigPath = `${configPath}.properties.records.items.properties`;
     const recordProperties = records.items.properties;
     // console.log('properties', recordProperties);
     for (const [ recordKey, recordValue ] of Object.entries(recordProperties)) {
-      const columnConfigPath = `${recordConfigPath}.${recordKey}`
+      const columnConfigPath = `${recordConfigPath}.${recordKey}`;
       context.tpl = context.tpl + `<el-table-column prop="${recordKey}" 
 :label="z_get(${columnConfigPath}, 'ui.label', '${recordKey}')" 
 v-bind="get(${columnConfigPath}, 'ui.widgetConfig')"
 ></el-table-column>`;
     }
   }
+  return context.tpl;
+}
 
+function buildTableActions(p, basePath, configPath, append = {}) {
+  const context = {
+    tpl: '',
+  };
 
+  const { actions = {} } = p.properties;
+  console.log('actions', p.properties, actions);
+  if (actions && actions.type === 'object') {
+    // const recordModelPath = `${basePath}.actions`;
+    const recordConfigPath = `${configPath}.properties.actions.properties`;
+    const recordProperties = actions.properties;
+    // console.log('properties', recordProperties);
+    const actionsChildren = Object.entries(recordProperties);
+    if (actionsChildren.length > 0) {
+      context.tpl = context.tpl + `
+      <el-table-column label="操作"><template #default="scope">
+`;
+      for (const [ recordKey, recordValue ] of Object.entries(recordProperties)) {
+        const columnConfigPath = `${recordConfigPath}.${recordKey}`;
+        context.tpl = context.tpl + `
+        <el-button v-bind="get(${columnConfigPath}, 'ui.widgetConfig')" @click="callPageEvent(get(${columnConfigPath}, 'ui.widgetConfig.eventName'), { key: '${recordKey}', partName: '${append.part.name}', parts, process: '${append.CONFIG.process}' }, $event)">
+${recordKey} </el-button>
+        `;
+      }
+      context.tpl = context.tpl + '</template></el-table-column>';
+    }
+
+    // for (const [ recordKey ] of Object.entries(recordProperties)) {
+    //   const columnConfigPath = `${recordConfigPath}.${recordKey}`;
+    // }
+  }
   return context.tpl;
 }
 
@@ -188,10 +218,9 @@ class BaseController extends Controller {
     // {{${configPath}}}
 
     return `
-
     <el-table
     :data="get(${basePath}, 'records', [])"
-      >${buildTableColumns(config, basePath, configPath, append)}</el-table>
+      >${buildTableColumns(config, basePath, configPath, append)}${buildTableActions(config, basePath, configPath, append)}</el-table>
     `.trim();
   }
 }
