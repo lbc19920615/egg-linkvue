@@ -47,13 +47,27 @@
                 :binds="{name: '{{ part.name }}', partName: '{{ part.name }}', parts, process: '{{ CONFIG.process}}' }"
                 name="table_prev"></slot-com>
       {{ partStr[part.name] }}
+                  {% verbatim %}{{ {% endverbatim %} typeof {{ pathKey }}.model.page {% verbatim %} }} {% endverbatim %}
+
+      <div v-text="{{ pathKey }}.model.page"></div>
       <el-pagination
               background
               layout="prev, pager, next"
-              :current-page="{{ pathKey }}.model.page"
+              v-model="{{ pathKey }}.model.page"
+{#              :current-page="{{ pathKey }}.model.page"#}
               :page-size="{{ pathKey }}.model.limit"
-              :total="{{ pathKey }}.model.total">
+{#              :total="{{ pathKey }}.model.total"#}
+              :total="50"
+      >
       </el-pagination>
+
+      <z-pagination
+          :page="{{ pathKey }}.model.page"
+          {#              :current-page="{{ pathKey }}.model.page"#}
+          :limlit="{{ pathKey }}.model.limit"
+          {#              :total="{{ pathKey }}.model.total"#}
+          :total="50"
+      ></z-pagination>
     {% endif %}
   {% endfor %}
 </div>
