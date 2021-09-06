@@ -8406,9 +8406,32 @@ function saveObjAsJson5File(obj = {}, fileName) {
   });
 }
 var FS = dist_exports;
+async function fileOpenJSON5() {
+  const text = "";
+  try {
+    const blob = await FS.fileOpen({
+      mimeTypes: ["text/*"]
+    });
+    if (blob) {
+      try {
+        const obj = import_json5.default.parse(text);
+        return obj;
+      } catch (e2) {
+        return Promise.reject(new Error("fileOpenJSON5 parse err", {
+          cause: e2
+        }));
+      }
+    }
+  } catch (e2) {
+    return Promise.reject(new Error("fileOpenJSON5 select err", {
+      cause: e2
+    }));
+  }
+}
 export {
   FS,
   eval5,
+  fileOpenJSON5,
   run,
   saveAs,
   saveObjAsJson5File,

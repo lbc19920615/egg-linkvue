@@ -73,3 +73,34 @@ import * as _FS from 'browser-fs-access';
  * @type {{FileWithDirectoryHandle: FileWithDirectoryHandle, FirstCoreFileOptions: FirstCoreFileOptions, FileWithHandle: FileWithHandle, CoreFileOptions: CoreFileOptions, FileSystemHandle: FileSystemHandle, FirstFileOpenOptions: FirstFileOpenOptions, supported: boolean, imageToBlob: (img: HTMLImageElement) => Promise<Blob>, FirstFileSaveOptions: FirstFileSaveOptions, FileSystemHandlePermissionDescriptor: FileSystemHandlePermissionDescriptor, directoryOpen: (options?: {recursive: boolean, startIn?: WellKnownDirectory | FileSystemHandle, id?: string, setupLegacyCleanupAndRejection?: (rejectionHandler?: () => void) => (reject: (reason?: any) => void) => void}) => Promise<FileWithDirectoryHandle[]>, fileSave: (blob: Blob, options?: ([FirstFileSaveOptions, ...CoreFileOptions[]] | FirstFileSaveOptions), existingHandle?: (FileSystemHandle | null), throwIfExistingHandleNotGood?: boolean) => Promise<FileSystemHandle>, WellKnownDirectory: "desktop" | "documents" | "downloads" | "music" | "pictures" | "videos", fileOpen: <M=false extends boolean | undefined>(options?: ([FirstFileOpenOptions<M>, ...CoreFileOptions[]] | FirstFileOpenOptions<M>)) => M extends (false | undefined) ? Promise<FileWithHandle> : Promise<FileWithHandle[]>}}
  */
 export const FS = _FS;
+
+/**
+ * 读取JSON5文件
+ * @return {Promise<any>}
+ */
+export async function fileOpenJSON5() {
+  const text = '';
+  try {
+    const blob = await FS.fileOpen({
+      mimeTypes: [ 'text/*' ],
+    });
+    if (blob) {
+      try {
+        const obj = _JSON5.parse(text);
+        return obj;
+      } catch (e) {
+        return Promise.reject(
+          new Error('fileOpenJSON5 parse err', {
+            cause: e,
+          })
+        );
+      }
+    }
+  } catch (e) {
+    return Promise.reject(
+      new Error('fileOpenJSON5 select err', {
+        cause: e,
+      })
+    );
+  }
+}
