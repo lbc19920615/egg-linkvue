@@ -1,9 +1,12 @@
 import {
-  __commonJS,
-  __require,
-  __toModule,
   require_dist
-} from "./chunks/chunk-S53E2ZYA.js";
+} from "./chunks/chunk-MMWUQFIH.js";
+import {
+  __commonJS,
+  __export,
+  __require,
+  __toModule
+} from "./chunks/chunk-WGBKWIX4.js";
 
 // node_modules/localforage/dist/localforage.js
 var require_localforage = __commonJS({
@@ -28,30 +31,30 @@ var require_localforage = __commonJS({
       }
     })(function() {
       var define2, module2, exports2;
-      return function e(t, n, r) {
-        function s(o2, u) {
-          if (!n[o2]) {
-            if (!t[o2]) {
+      return function e2(t, n, r) {
+        function s2(o4, u) {
+          if (!n[o4]) {
+            if (!t[o4]) {
               var a = typeof __require == "function" && __require;
               if (!u && a)
-                return a(o2, true);
+                return a(o4, true);
               if (i)
-                return i(o2, true);
-              var f = new Error("Cannot find module '" + o2 + "'");
+                return i(o4, true);
+              var f = new Error("Cannot find module '" + o4 + "'");
               throw f.code = "MODULE_NOT_FOUND", f;
             }
-            var l = n[o2] = { exports: {} };
-            t[o2][0].call(l.exports, function(e2) {
-              var n2 = t[o2][1][e2];
-              return s(n2 ? n2 : e2);
-            }, l, l.exports, e, t, n, r);
+            var l = n[o4] = { exports: {} };
+            t[o4][0].call(l.exports, function(e3) {
+              var n2 = t[o4][1][e3];
+              return s2(n2 ? n2 : e3);
+            }, l, l.exports, e2, t, n, r);
           }
-          return n[o2].exports;
+          return n[o4].exports;
         }
         var i = typeof __require == "function" && __require;
-        for (var o = 0; o < r.length; o++)
-          s(r[o]);
-        return s;
+        for (var o3 = 0; o3 < r.length; o3++)
+          s2(r[o3]);
+        return s2;
       }({ 1: [function(_dereq_, module3, exports3) {
         (function(global2) {
           "use strict";
@@ -180,8 +183,8 @@ var require_localforage = __commonJS({
             var returnValue;
             try {
               returnValue = func(value);
-            } catch (e) {
-              return handlers.reject(promise, e);
+            } catch (e2) {
+              return handlers.reject(promise, e2);
             }
             if (returnValue === promise) {
               handlers.reject(promise, new TypeError("Cannot resolve promise with itself"));
@@ -256,9 +259,9 @@ var require_localforage = __commonJS({
           try {
             out.value = func(value);
             out.status = "success";
-          } catch (e) {
+          } catch (e2) {
             out.status = "error";
-            out.value = e;
+            out.value = e2;
           }
           return out;
         }
@@ -376,7 +379,7 @@ var require_localforage = __commonJS({
             if (typeof msIndexedDB !== "undefined") {
               return msIndexedDB;
             }
-          } catch (e) {
+          } catch (e2) {
             return;
           }
         }
@@ -389,7 +392,7 @@ var require_localforage = __commonJS({
             var isSafari = typeof openDatabase !== "undefined" && /(Safari|iPhone|iPad|iPod)/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent) && !/BlackBerry/.test(navigator.platform);
             var hasFetch = typeof fetch === "function" && fetch.toString().indexOf("[native code") !== -1;
             return (!isSafari || hasFetch) && typeof indexedDB !== "undefined" && typeof IDBKeyRange !== "undefined";
-          } catch (e) {
+          } catch (e2) {
             return false;
           }
         }
@@ -398,9 +401,9 @@ var require_localforage = __commonJS({
           properties = properties || {};
           try {
             return new Blob(parts, properties);
-          } catch (e) {
-            if (e.name !== "TypeError") {
-              throw e;
+          } catch (e2) {
+            if (e2.name !== "TypeError") {
+              throw e2;
             }
             var Builder = typeof BlobBuilder !== "undefined" ? BlobBuilder : typeof MSBlobBuilder !== "undefined" ? MSBlobBuilder : typeof MozBlobBuilder !== "undefined" ? MozBlobBuilder : WebKitBlobBuilder;
             var builder = new Builder();
@@ -463,9 +466,9 @@ var require_localforage = __commonJS({
             var txn = idb2.transaction(DETECT_BLOB_SUPPORT_STORE, READ_WRITE);
             var blob = createBlob([""]);
             txn.objectStore(DETECT_BLOB_SUPPORT_STORE).put(blob, "key");
-            txn.onabort = function(e) {
-              e.preventDefault();
-              e.stopPropagation();
+            txn.onabort = function(e2) {
+              e2.preventDefault();
+              e2.stopPropagation();
               resolve(false);
             };
             txn.oncomplete = function() {
@@ -535,30 +538,30 @@ var require_localforage = __commonJS({
             }
             var openreq = idb.open.apply(idb, dbArgs);
             if (upgradeNeeded) {
-              openreq.onupgradeneeded = function(e) {
+              openreq.onupgradeneeded = function(e2) {
                 var db = openreq.result;
                 try {
                   db.createObjectStore(dbInfo.storeName);
-                  if (e.oldVersion <= 1) {
+                  if (e2.oldVersion <= 1) {
                     db.createObjectStore(DETECT_BLOB_SUPPORT_STORE);
                   }
                 } catch (ex) {
                   if (ex.name === "ConstraintError") {
-                    console.warn('The database "' + dbInfo.name + '" has been upgraded from version ' + e.oldVersion + " to version " + e.newVersion + ', but the storage "' + dbInfo.storeName + '" already exists.');
+                    console.warn('The database "' + dbInfo.name + '" has been upgraded from version ' + e2.oldVersion + " to version " + e2.newVersion + ', but the storage "' + dbInfo.storeName + '" already exists.');
                   } else {
                     throw ex;
                   }
                 }
               };
             }
-            openreq.onerror = function(e) {
-              e.preventDefault();
+            openreq.onerror = function(e2) {
+              e2.preventDefault();
               reject(openreq.error);
             };
             openreq.onsuccess = function() {
               var db = openreq.result;
-              db.onversionchange = function(e) {
-                e.target.close();
+              db.onversionchange = function(e2) {
+                e2.target.close();
               };
               resolve(db);
               _advanceReadiness(dbInfo);
@@ -599,8 +602,8 @@ var require_localforage = __commonJS({
           return new Promise$1(function(resolve, reject) {
             var reader = new FileReader();
             reader.onerror = reject;
-            reader.onloadend = function(e) {
-              var base64 = btoa(e.target.result || "");
+            reader.onloadend = function(e2) {
+              var base64 = btoa(e2.target.result || "");
               resolve({
                 __local_forage_encoded_blob: true,
                 data: base64,
@@ -766,8 +769,8 @@ var require_localforage = __commonJS({
                   req.onerror = function() {
                     reject(req.error);
                   };
-                } catch (e) {
-                  reject(e);
+                } catch (e2) {
+                  reject(e2);
                 }
               });
             })["catch"](reject);
@@ -807,8 +810,8 @@ var require_localforage = __commonJS({
                   req.onerror = function() {
                     reject(req.error);
                   };
-                } catch (e) {
-                  reject(e);
+                } catch (e2) {
+                  reject(e2);
                 }
               });
             })["catch"](reject);
@@ -853,8 +856,8 @@ var require_localforage = __commonJS({
                     var err2 = req.error ? req.error : req.transaction.error;
                     reject(err2);
                   };
-                } catch (e) {
-                  reject(e);
+                } catch (e2) {
+                  reject(e2);
                 }
               });
             })["catch"](reject);
@@ -884,8 +887,8 @@ var require_localforage = __commonJS({
                     var err2 = req.error ? req.error : req.transaction.error;
                     reject(err2);
                   };
-                } catch (e) {
-                  reject(e);
+                } catch (e2) {
+                  reject(e2);
                 }
               });
             })["catch"](reject);
@@ -911,8 +914,8 @@ var require_localforage = __commonJS({
                     var err2 = req.error ? req.error : req.transaction.error;
                     reject(err2);
                   };
-                } catch (e) {
-                  reject(e);
+                } catch (e2) {
+                  reject(e2);
                 }
               });
             })["catch"](reject);
@@ -937,8 +940,8 @@ var require_localforage = __commonJS({
                   req.onerror = function() {
                     reject(req.error);
                   };
-                } catch (e) {
-                  reject(e);
+                } catch (e2) {
+                  reject(e2);
                 }
               });
             })["catch"](reject);
@@ -982,8 +985,8 @@ var require_localforage = __commonJS({
                   req.onerror = function() {
                     reject(req.error);
                   };
-                } catch (e) {
-                  reject(e);
+                } catch (e2) {
+                  reject(e2);
                 }
               });
             })["catch"](reject);
@@ -1015,8 +1018,8 @@ var require_localforage = __commonJS({
                   req.onerror = function() {
                     reject(req.error);
                   };
-                } catch (e) {
-                  reject(e);
+                } catch (e2) {
+                  reject(e2);
                 }
               });
             })["catch"](reject);
@@ -1262,9 +1265,9 @@ var require_localforage = __commonJS({
           } else {
             try {
               callback(JSON.stringify(value));
-            } catch (e) {
+            } catch (e2) {
               console.error("Couldn't convert value into a JSON string: ", value);
-              callback(null, e);
+              callback(null, e2);
             }
           }
         }
@@ -1330,8 +1333,8 @@ var require_localforage = __commonJS({
           var dbInfoPromise = new Promise$1(function(resolve, reject) {
             try {
               dbInfo.db = openDatabase(dbInfo.name, String(dbInfo.version), dbInfo.description, dbInfo.size);
-            } catch (e) {
-              return reject(e);
+            } catch (e2) {
+              return reject(e2);
             }
             dbInfo.db.transaction(function(t) {
               createDbTable(t, dbInfo, function() {
@@ -1612,8 +1615,8 @@ var require_localforage = __commonJS({
                   }
                   Promise$1.all(operations).then(function() {
                     resolve();
-                  })["catch"](function(e) {
-                    reject(e);
+                  })["catch"](function(e2) {
+                    reject(e2);
                   });
                 }, function(sqlError) {
                   reject(sqlError);
@@ -1641,7 +1644,7 @@ var require_localforage = __commonJS({
         function isLocalStorageValid() {
           try {
             return typeof localStorage !== "undefined" && "setItem" in localStorage && !!localStorage.setItem;
-          } catch (e) {
+          } catch (e2) {
             return false;
           }
         }
@@ -1658,7 +1661,7 @@ var require_localforage = __commonJS({
             localStorage.setItem(localStorageTestKey, true);
             localStorage.removeItem(localStorageTestKey);
             return false;
-          } catch (e) {
+          } catch (e2) {
             return true;
           }
         }
@@ -1805,11 +1808,11 @@ var require_localforage = __commonJS({
                   try {
                     localStorage.setItem(dbInfo.keyPrefix + key2, value2);
                     resolve(originalValue);
-                  } catch (e) {
-                    if (e.name === "QuotaExceededError" || e.name === "NS_ERROR_DOM_QUOTA_REACHED") {
-                      reject(e);
+                  } catch (e2) {
+                    if (e2.name === "QuotaExceededError" || e2.name === "NS_ERROR_DOM_QUOTA_REACHED") {
+                      reject(e2);
                     }
-                    reject(e);
+                    reject(e2);
                   }
                 }
               });
@@ -2022,8 +2025,8 @@ var require_localforage = __commonJS({
                 } else {
                   setDriverSupport(true);
                 }
-              } catch (e) {
-                reject(e);
+              } catch (e2) {
+                reject(e2);
               }
             });
             executeTwoCallbacks(promise, callback, errorCallback);
@@ -2175,7 +2178,7 @@ var require_FileSaver_min = __commonJS({
         }
         return 200 <= b2.status && 299 >= b2.status;
       }
-      function e(a2) {
+      function e2(a2) {
         try {
           a2.dispatchEvent(new MouseEvent("click"));
         } catch (c2) {
@@ -2186,10 +2189,10 @@ var require_FileSaver_min = __commonJS({
       var f = typeof window == "object" && window.window === window ? window : typeof self == "object" && self.self === self ? self : typeof global == "object" && global.global === global ? global : void 0, a = f.navigator && /Macintosh/.test(navigator.userAgent) && /AppleWebKit/.test(navigator.userAgent) && !/Safari/.test(navigator.userAgent), g = f.saveAs || (typeof window != "object" || window !== f ? function() {
       } : "download" in HTMLAnchorElement.prototype && !a ? function(b2, g2, h) {
         var i = f.URL || f.webkitURL, j = document.createElement("a");
-        g2 = g2 || b2.name || "download", j.download = g2, j.rel = "noopener", typeof b2 == "string" ? (j.href = b2, j.origin === location.origin ? e(j) : d(j.href) ? c(b2, g2, h) : e(j, j.target = "_blank")) : (j.href = i.createObjectURL(b2), setTimeout(function() {
+        g2 = g2 || b2.name || "download", j.download = g2, j.rel = "noopener", typeof b2 == "string" ? (j.href = b2, j.origin === location.origin ? e2(j) : d(j.href) ? c(b2, g2, h) : e2(j, j.target = "_blank")) : (j.href = i.createObjectURL(b2), setTimeout(function() {
           i.revokeObjectURL(j.href);
         }, 4e4), setTimeout(function() {
-          e(j);
+          e2(j);
         }, 0));
       } : "msSaveOrOpenBlob" in navigator ? function(f2, g2, h) {
         if (g2 = g2 || f2.name || "download", typeof f2 != "string")
@@ -2199,12 +2202,12 @@ var require_FileSaver_min = __commonJS({
         else {
           var i = document.createElement("a");
           i.href = f2, i.target = "_blank", setTimeout(function() {
-            e(i);
+            e2(i);
           });
         }
-      } : function(b2, d2, e2, g2) {
+      } : function(b2, d2, e3, g2) {
         if (g2 = g2 || open("", "_blank"), g2 && (g2.document.title = g2.document.body.innerText = "downloading..."), typeof b2 == "string")
-          return c(b2, d2, e2);
+          return c(b2, d2, e3);
         var h = b2.type === "application/octet-stream", i = /constructor/i.test(f.HTMLElement) || f.safari, j = /CriOS\/[\d]+/.test(navigator.userAgent);
         if ((j || h && i || a) && typeof FileReader != "undefined") {
           var k = new FileReader();
@@ -5093,28 +5096,28 @@ RegExpValidationState.prototype.raise = function raise(message) {
 RegExpValidationState.prototype.at = function at(i, forceU) {
   if (forceU === void 0)
     forceU = false;
-  var s = this.source;
-  var l = s.length;
+  var s2 = this.source;
+  var l = s2.length;
   if (i >= l) {
     return -1;
   }
-  var c = s.charCodeAt(i);
+  var c = s2.charCodeAt(i);
   if (!(forceU || this.switchU) || c <= 55295 || c >= 57344 || i + 1 >= l) {
     return c;
   }
-  var next = s.charCodeAt(i + 1);
+  var next = s2.charCodeAt(i + 1);
   return next >= 56320 && next <= 57343 ? (c << 10) + next - 56613888 : c;
 };
 RegExpValidationState.prototype.nextIndex = function nextIndex(i, forceU) {
   if (forceU === void 0)
     forceU = false;
-  var s = this.source;
-  var l = s.length;
+  var s2 = this.source;
+  var l = s2.length;
   if (i >= l) {
     return l;
   }
-  var c = s.charCodeAt(i), next;
-  if (!(forceU || this.switchU) || c <= 55295 || c >= 57344 || i + 1 >= l || (next = s.charCodeAt(i + 1)) < 56320 || next > 57343) {
+  var c = s2.charCodeAt(i), next;
+  if (!(forceU || this.switchU) || c <= 55295 || c >= 57344 || i + 1 >= l || (next = s2.charCodeAt(i + 1)) < 56320 || next > 57343) {
     return i + 1;
   }
   return i + 2;
@@ -6278,7 +6281,7 @@ pp$9.readRegexp = function() {
   var value = null;
   try {
     value = new RegExp(pattern, flags);
-  } catch (e) {
+  } catch (e2) {
   }
   return this.finishToken(types.regexp, { pattern, flags, value });
 };
@@ -6286,7 +6289,7 @@ pp$9.readInt = function(radix, len, maybeLegacyOctalNumericLiteral) {
   var allowSeparators = this.options.ecmaVersion >= 12 && len === void 0;
   var isLegacyOctalNumericLiteral = maybeLegacyOctalNumericLiteral && this.input.charCodeAt(this.pos) === 48;
   var start = this.pos, total = 0, lastCode = 0;
-  for (var i = 0, e = len == null ? Infinity : len; i < e; ++i, ++this.pos) {
+  for (var i = 0, e2 = len == null ? Infinity : len; i < e2; ++i, ++this.pos) {
     var code = this.input.charCodeAt(this.pos), val = void 0;
     if (allowSeparators && code === 95) {
       if (isLegacyOctalNumericLiteral) {
@@ -6693,7 +6696,7 @@ function isNativeReflectConstruct() {
     Date.prototype.toString.call(Reflect.construct(Date, [], function() {
     }));
     return true;
-  } catch (e) {
+  } catch (e2) {
     return false;
   }
 }
@@ -6716,18 +6719,18 @@ function _construct(Parent, args, Class) {
 function _isNativeFunction(fn) {
   return Function.toString.call(fn).indexOf("[native code]") !== -1;
 }
-function _setPrototypeOf(o, p) {
-  _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf3(o2, p2) {
-    o2.__proto__ = p2;
-    return o2;
+function _setPrototypeOf(o3, p) {
+  _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf3(o4, p2) {
+    o4.__proto__ = p2;
+    return o4;
   };
-  return _setPrototypeOf(o, p);
+  return _setPrototypeOf(o3, p);
 }
-function _getPrototypeOf(o) {
-  _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf2(o2) {
-    return o2.__proto__ || Object.getPrototypeOf(o2);
+function _getPrototypeOf(o3) {
+  _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf2(o4) {
+    return o4.__proto__ || Object.getPrototypeOf(o4);
   };
-  return _getPrototypeOf(o);
+  return _getPrototypeOf(o3);
 }
 var ThrowError = /* @__PURE__ */ function(_Error) {
   _inheritsLoose(ThrowError2, _Error);
@@ -6808,7 +6811,7 @@ function isNativeReflectConstruct2() {
     Date.prototype.toString.call(Reflect.construct(Date, [], function() {
     }));
     return true;
-  } catch (e) {
+  } catch (e2) {
     return false;
   }
 }
@@ -6828,12 +6831,12 @@ function _construct2(Parent, args, Class) {
   }
   return _construct2.apply(null, arguments);
 }
-function _setPrototypeOf2(o, p) {
-  _setPrototypeOf2 = Object.setPrototypeOf || function _setPrototypeOf3(o2, p2) {
-    o2.__proto__ = p2;
-    return o2;
+function _setPrototypeOf2(o3, p) {
+  _setPrototypeOf2 = Object.setPrototypeOf || function _setPrototypeOf3(o4, p2) {
+    o4.__proto__ = p2;
+    return o4;
   };
-  return _setPrototypeOf2(o, p);
+  return _setPrototypeOf2(o3, p);
 }
 var version2 = "1.4.6";
 function defineFunctionName(func, name) {
@@ -7159,8 +7162,8 @@ var Interpreter = /* @__PURE__ */ function() {
       var bodyClosure = this.createClosure(node);
       this.addDeclarationsToScope(this.collectDeclVars, this.collectDeclFuncs, this.getCurrentScope());
       bodyClosure();
-    } catch (e) {
-      throw e;
+    } catch (e2) {
+      throw e2;
     } finally {
       reset2();
       this.execEndTime = Date.now();
@@ -8103,14 +8106,14 @@ var Interpreter = /* @__PURE__ */ function() {
     var _this24 = this;
     var paramNameGetter = this.createParamNameGetter(node.param);
     var bodyClosure = this.createClosure(node.body);
-    return function(e) {
+    return function(e2) {
       var result;
       var currentScope = _this24.getCurrentScope();
       var scopeData = currentScope.data;
       var paramName = paramNameGetter();
       var isInScope = hasOwnProperty2.call(scopeData, paramName);
       var oldValue = scopeData[paramName];
-      scopeData[paramName] = e;
+      scopeData[paramName] = e2;
       result = bodyClosure();
       if (isInScope) {
         scopeData[paramName] = oldValue;
@@ -8333,6 +8336,51 @@ var esm_default = evaluate_default;
 var import_json5 = __toModule(require_dist());
 var import_localforage = __toModule(require_localforage());
 var import_file_saver = __toModule(require_FileSaver_min());
+
+// node_modules/browser-fs-access/dist/index.js
+var dist_exports = {};
+__export(dist_exports, {
+  directoryOpen: () => directoryOpen,
+  fileOpen: () => fileOpen,
+  fileSave: () => fileSave,
+  supported: () => supported_default
+});
+
+// node_modules/browser-fs-access/dist/supported.mjs
+var e = (() => {
+  if (typeof self == "undefined")
+    return false;
+  if ("top" in self && self !== top)
+    try {
+      top.location;
+    } catch {
+      return false;
+    }
+  else if ("showOpenFilePicker" in self)
+    return "showOpenFilePicker";
+  return false;
+})();
+var supported_default = e;
+
+// node_modules/browser-fs-access/dist/file-open.mjs
+var o = supported_default ? import("./chunks/file-open-LQGQ7V2P.js") : import("./chunks/file-open-NHN7QHZS.js");
+async function fileOpen(...e2) {
+  return (await o).default(...e2);
+}
+
+// node_modules/browser-fs-access/dist/directory-open.mjs
+var o2 = supported_default ? import("./chunks/directory-open-QO7TSNV6.js") : import("./chunks/directory-open-DXRFQSIW.js");
+async function directoryOpen(...r) {
+  return (await o2).default(...r);
+}
+
+// node_modules/browser-fs-access/dist/file-save.mjs
+var s = supported_default ? import("./chunks/file-save-ACG7OU4Q.js") : import("./chunks/file-save-YW4SSEHB.js");
+async function fileSave(...e2) {
+  return (await s).default(...e2);
+}
+
+// fronts/ext.js
 var eval5 = esm_default;
 function run(code = "", ctx = {}) {
   return eval5(`
@@ -8357,7 +8405,9 @@ function saveObjAsJson5File(obj = {}, fileName) {
     file: fileName + ".json5"
   });
 }
+var FS = dist_exports;
 export {
+  FS,
   eval5,
   run,
   saveAs,
@@ -8371,3 +8421,4 @@ export {
     https://localforage.github.io/localForage
     (c) 2013-2017 Mozilla, Apache License 2.0
 */
+// @license © 2020 Google LLC. Licensed under the Apache License, Version 2.0.

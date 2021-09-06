@@ -34,56 +34,26 @@
 {#            {% verbatim %}{{ {% endverbatim %} {{ modelKey }} {% verbatim %} }} {% endverbatim %}#}
 
         <slot-com :defs="slotContent" :attrs="{parts}"
-                  :binds="{name: '{{ part.name }}', process: '{{ CONFIG.process}}' }"
+                  :binds="{name: '{{ part.name }}', partName: '{{ part.name }}', parts, process: '{{ CONFIG.process}}' }"
                   name="form_before"></slot-com>
         {{ partStr[part.name] }}
         <slot-com :defs="slotContent" :attrs="{parts}"
-                  :binds="{name: '{{ part.name }}', process: '{{ CONFIG.process}}' }"
+                  :binds="{name: '{{ part.name }}',  partName: '{{ part.name }}', parts, process: '{{ CONFIG.process}}' }"
                   name="form_after"></slot-com>
       </el-form>
     {% endif %}
     {% if part.type == 'table' %}
-      {% verbatim %}{{ {% endverbatim %} {{ pathKey }}.model {% verbatim %} }} {% endverbatim %}
-
       <slot-com :defs="slotContent" :attrs="{parts}"
-                :binds="{name: '{{ part.name }}', process: '{{ CONFIG.process}}' }"
+                :binds="{name: '{{ part.name }}', partName: '{{ part.name }}', parts, process: '{{ CONFIG.process}}' }"
                 name="table_prev"></slot-com>
       {{ partStr[part.name] }}
-
-{#      <el-form class="z-form http-com-part http-com-part__{{ part.name }}"#}
-{#           :ref="{{ pathKey }}.initEl" :model="{{ pathKey }}.model" {{ attr.parseKeyValue(part.def.ui.attrs) }}>#}
-{#      {{ partStr[part.name] }}#}
-{#  </el-form>#}
-{#      <el-table class="z-table  http-com-part http-com-part__{{ part.name }}"#}
-{#                :ref="{{ pathKey }}.initEl" :data="{{ pathKey }}.model.records"  stripe="true"#}
-{#                border="true" {{ attr.parseKeyValue(part.def.ui.attrs) }}>#}
-{#        {% for key,record in part.def.properties.records.items.properties %}#}
-{#          {% set configKey = partConfigKey ~ '.records.items.properties.' ~ key %}#}
-{#          <div v-html="get({{ configKey }}, 'ui.label', '')">1111</div>#}
-{#          <el-table-column prop="{{ key }}"#}
-{#                           :label="get({{ configKey }}, 'ui.label', '')"#}
-{#                  {{ attr.parseUIAttrs(record.ui, configKey) }}#}
-{#          >#}
-{#            {% if record.useSlotTemplate %}#}
-{#              <template  #default="scope">#}
-{#                {{ formGroup.tag(record.template) }}#}
-{#                <slot-com :defs="slotContent" :attrs="{parts, scope}" name="actions"></slot-com>#}
-{#              </template>#}
-{#            {% else %}#}
-{#              <template #default="scope">#}
-{#                {% verbatim %}{{ {% endverbatim %} scope.row[scope.column.property] {% verbatim %}}}{% endverbatim %}#}
-{#              </template>#}
-{#            {% endif %}#}
-{#          </el-table-column>#}
-{#        {% endfor %}#}
-{#      </el-table>#}
-{#      <el-pagination#}
-{#              background#}
-{#              layout="prev, pager, next"#}
-{#              :current-page="{{ pathKey }}.model.page"#}
-{#              :page-size="{{ pathKey }}.model.limit"#}
-{#              :total="{{ pathKey }}.model.total">#}
-{#      </el-pagination>#}
+      <el-pagination
+              background
+              layout="prev, pager, next"
+              :current-page="{{ pathKey }}.model.page"
+              :page-size="{{ pathKey }}.model.limit"
+              :total="{{ pathKey }}.model.total">
+      </el-pagination>
     {% endif %}
   {% endfor %}
 </div>
@@ -395,8 +365,9 @@
         /**
          * arr自动添加
          * @param path
+         * @param initData
          */
-        ret.arrAppend = function(path) {
+        ret.arrAppend = function(path, initData = {}) {
           let arr = ZY.lodash.get(ret.model, path)
           if (Array.isArray(arr)) {
             // if (arr[0]) {
@@ -405,7 +376,7 @@
             //     arr.push({})
             //   }
             // }
-            arr.push({})
+            arr.push(initData)
           }
           return arr[arr.length - 1]
         }
@@ -589,6 +560,10 @@
         return dxEval(v, partContext, this)
       }
 
+      function valTpl(v) {
+        return dxEval(v, {}, this)
+      }
+
 
       let parts = {}
       config.parts.forEach(part => {
@@ -623,6 +598,7 @@
       z_get,
       get: ZY.lodash.get,
       dxValue,
+      valTpl,
       // dxEval,
     };
 

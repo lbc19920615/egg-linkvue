@@ -1,9 +1,11 @@
 import {
+  require_dist
+} from "./chunks/chunk-MMWUQFIH.js";
+import {
   __commonJS,
   __export,
-  __toModule,
-  require_dist
-} from "./chunks/chunk-S53E2ZYA.js";
+  __toModule
+} from "./chunks/chunk-WGBKWIX4.js";
 
 // node_modules/globalthis/implementation.browser.js
 var require_implementation_browser = __commonJS({
@@ -13860,6 +13862,16 @@ _U.awaitAxios = async function(p) {
     err,
     response
   };
+};
+_U.scrollToView = function(sel, options = {
+  behavior: "smooth"
+}) {
+  if (typeof sel === "string") {
+    document.querySelector(sel).scrollIntoView(options);
+  }
+  if (sel instanceof HTMLElement) {
+    sel.scrollIntoView(options);
+  }
 };
 var U = _U;
 var export_addedDiff = import_deep_object_diff.addedDiff;

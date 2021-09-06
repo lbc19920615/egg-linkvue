@@ -292,4 +292,20 @@ _U.awaitAxios = async function(p) {
   }
 }
 
+/**
+ * scrollToView
+ * @param sel {string|HTMLElement}
+ * @param options
+ */
+_U.scrollToView = function(sel, options = {
+  behavior: "smooth",
+}) {
+  if (typeof sel === 'string') {
+    document.querySelector(sel).scrollIntoView(options)
+  }
+  if (sel instanceof HTMLElement) {
+    sel.scrollIntoView(options)
+  }
+}
+
 export let U = _U

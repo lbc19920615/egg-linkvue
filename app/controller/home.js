@@ -203,7 +203,7 @@ class HomeController extends Controller {
     const { fields } = await this.parse(ctx.req);
     const CONFIG = JSON.parse(fields.source);
 
-    console.dir(CONFIG);
+    // console.dir(CONFIG);
 
     const partStr = {};
 

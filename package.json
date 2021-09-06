@@ -9,6 +9,7 @@
   "dependencies": {
     "await-to-js": "^3.0.0",
     "axios": "^0.21.1",
+    "browser-fs-access": "^0.20.4",
     "date-timeout-interval": "^1.3.0",
     "dayjs": "^1.10.6",
     "deep-object-diff": "^1.1.0",
