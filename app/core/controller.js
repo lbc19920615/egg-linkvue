@@ -41,6 +41,20 @@ function attrStr(p, k = 'ui.attrs', context = {}) {
   return str;
 }
 
+/**
+ *
+ * @param p
+ * @param k
+ */
+function buildCls(p, k = 'ui.class') {
+  const cls = lodash.get(p, k);
+  let str = '';
+  if (Array.isArray(cls)) {
+    str = cls.join(' ');
+  }
+  return str;
+}
+
 function renderForm(p, basePath, configPath, append = {}) {
   const context = {
     tpl: '',
@@ -69,15 +83,16 @@ v-if="${basePath}"
         itemKey,
         indexKey,
       });
+      const con_cls = buildCls(p, 'ui.conClass');
       context.tpl = context.tpl + `
  <slot-com :defs="slotContent" :attrs="{parts}"
            :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}', selfpath: '${fromPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
               name="array_prev"></slot-com>
-<${array_tag} class="level_${level} z-form__array" ${attrStr(p)}>
+<${array_tag} class="level_${level} z-form__array ${buildCls(p)}" ${attrStr(p)}>
  <slot-com :defs="slotContent" :attrs="{parts}"
            :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}', selfpath: '${fromPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
               name="array_before"></slot-com>
-<${array_con_tag} v-for="(${itemKey}, ${indexKey}) in ${basePath}" class="z-form__array-con" ${con_attr}>
+<${array_con_tag} v-for="(${itemKey}, ${indexKey}) in ${basePath}" class="z-form__array-con ${con_cls}" ${con_attr}>
 <slot-com :defs="slotContent" :attrs="{parts}"
          :binds="{key: '${key}', partName: '${append.part.name}', indexKey:${indexKey}, fromPath: '${fromPath}', selfpath: '${fromPath}['+ ${indexKey} +']', level:'${level}', parentlevel:'${level - 1}', basePath: '${basePath}', configPath: '${configPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
             name="array_item_before"></slot-com>

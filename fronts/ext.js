@@ -105,3 +105,11 @@ export async function fileOpenJSON5() {
     );
   }
 }
+
+import _cssObj from 'cssobj';
+
+/**
+ * cssObj
+ * @type {CssObj.Static}
+ */
+export const cssObj = _cssObj;

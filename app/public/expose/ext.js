@@ -2227,6 +2227,770 @@ var require_FileSaver_min = __commonJS({
   }
 });
 
+// node_modules/cssobj/dist/cssobj.umd.js
+var require_cssobj_umd = __commonJS({
+  "node_modules/cssobj/dist/cssobj.umd.js"(exports, module) {
+    (function(global2, factory) {
+      typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory() : typeof define === "function" && define.amd ? define("cssobj", factory) : global2.cssobj = factory();
+    })(exports, function() {
+      "use strict";
+      function isNumeric(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
+      }
+      function isPrimitive(val) {
+        return val == null || typeof val !== "function" && typeof val !== "object";
+      }
+      function own(o3, k) {
+        return {}.hasOwnProperty.call(o3, k);
+      }
+      function defaults(options, defaultOption) {
+        options = options || {};
+        for (var i in defaultOption) {
+          if (own(defaultOption, i) && !(i in options))
+            options[i] = defaultOption[i];
+        }
+        return options;
+      }
+      function _assign(target, source) {
+        var s2, from, key;
+        var to = Object(target);
+        for (s2 = 1; s2 < arguments.length; s2++) {
+          from = Object(arguments[s2]);
+          for (key in from) {
+            if (own(from, key)) {
+              to[key] = from[key];
+            }
+          }
+        }
+        return to;
+      }
+      var assign = Object.assign || _assign;
+      function dashify(str) {
+        return str.replace(/[A-Z]/g, function(m) {
+          return "-" + m.toLowerCase();
+        });
+      }
+      function capitalize(str) {
+        return str.charAt(0).toUpperCase() + str.substr(1);
+      }
+      var random = function() {
+        var count = 0;
+        return function(prefix) {
+          count++;
+          return "_" + (prefix || "") + Math.floor(Math.random() * Math.pow(2, 32)).toString(36) + count + "_";
+        };
+      }();
+      function isString(value) {
+        return typeof value === "string";
+      }
+      function objGetObj(obj, _key) {
+        var key = Array.isArray(_key) ? _key : String(_key).split(".");
+        var p, n, ok = 1;
+        var ret = { ok, path: key, obj };
+        for (p = 0; p < key.length; p++) {
+          n = key[p];
+          if (!obj.hasOwnProperty(n) || isPrimitive(obj[n])) {
+            ok = 0;
+            break;
+          }
+          obj = obj[n];
+        }
+        ret.ok = ok;
+        ret.path = key.slice(0, p);
+        ret.obj = obj;
+        return ret;
+      }
+      function extendObj(obj, key, source) {
+        obj[key] = obj[key] || {};
+        for (var args = arguments, i = 2; i < args.length; i++) {
+          source = args[i];
+          for (var k in source)
+            if (own(source, k))
+              obj[key][k] = source[k];
+        }
+        return obj[key];
+      }
+      function arrayKV(obj, k, v, reverse, unique) {
+        var d = obj[k];
+        d = obj[k] = k in obj ? Array.isArray(d) ? d : [d] : [];
+        if (unique && d.indexOf(v) > -1)
+          return;
+        reverse ? d.unshift(v) : d.push(v);
+      }
+      function getParents(node, test, key, childrenKey, parentKey) {
+        var i, v, p = node, path = [];
+        while (p) {
+          if (test(p)) {
+            if (childrenKey) {
+              for (i = 0; i < path.length; i++) {
+                arrayKV(p, childrenKey, path[i], false, true);
+              }
+            }
+            if (path[0] && parentKey) {
+              path[0][parentKey] = p;
+            }
+            path.unshift(p);
+          }
+          p = p.parent;
+        }
+        for (i = 0; i < path.length; i++) {
+          v = path[i];
+          path[i] = key ? v[key] : v;
+        }
+        return path;
+      }
+      function splitSelector(sel, splitter, inBracket) {
+        if (sel.indexOf(splitter) < 0)
+          return [sel];
+        for (var c, i = 0, n = 0, instr = "", prev = 0, d = []; c = sel.charAt(i); i++) {
+          if (instr) {
+            if (c == instr && sel.charAt(i - 1) != "\\")
+              instr = "";
+            continue;
+          }
+          if (c == '"' || c == "'")
+            instr = c;
+          if (!inBracket) {
+            if (c == "(" || c == "[")
+              n++;
+            if (c == ")" || c == "]")
+              n--;
+          }
+          if (!n && c == splitter)
+            d.push(sel.substring(prev, i)), prev = i + 1;
+        }
+        return d.concat(sel.substring(prev));
+      }
+      function isValidCSSValue(val) {
+        return typeof val == "string" && val || typeof val == "number" && isFinite(val);
+      }
+      var KEY_ID = "$id";
+      var KEY_ORDER = "$order";
+      var KEY_TEST = "$test";
+      var TYPE_GROUP = "group";
+      var keys = Object.keys;
+      var type = {}.toString;
+      var ARRAY = type.call([]);
+      var OBJECT = type.call({});
+      function isIterable(v) {
+        return type.call(v) == OBJECT || type.call(v) == ARRAY;
+      }
+      function isFunction2(v) {
+        return typeof v == "function";
+      }
+      var reGroupRule = /^@(media|document|supports|page|[\w-]*keyframes)/i;
+      var reAtRule = /^\s*@/i;
+      function parseObj(d, result, node, init) {
+        if (init) {
+          result.nodes = [];
+          result.ref = {};
+          if (node)
+            result.diff = {};
+        }
+        node = node || {};
+        node.obj = d;
+        if (type.call(d) == ARRAY) {
+          var nodes = [];
+          node.at = reAtRule.exec(node.key);
+          for (var i = 0; i < d.length; i++) {
+            var prev = node[i];
+            var n = parseObj(d[i], result, node[i] || { parent: node, src: d, parentNode: nodes, index: i });
+            if (result.diff && prev != n)
+              arrayKV(result.diff, n ? "added" : "removed", n || prev);
+            nodes.push(n);
+          }
+          return nodes;
+        } else {
+          if (d[KEY_ID])
+            result.ref[d[KEY_ID]] = node;
+          var prevVal = node.prevVal = node.lastVal;
+          if (KEY_TEST in d) {
+            var test = isFunction2(d[KEY_TEST]) ? d[KEY_TEST](!node.disabled, node, result) : d[KEY_TEST];
+            if (!test) {
+              return;
+            }
+            node.test = test;
+          }
+          var children = node.children = node.children || {};
+          node.lastRaw = node.rawVal || {};
+          node.lastVal = {};
+          node.rawVal = {};
+          node.prop = {};
+          node.diff = {};
+          var order = d[KEY_ORDER] | 0;
+          var funcArr = [];
+          var processObj = function(obj, k2, nodeObj) {
+            var haveOldChild = k2 in children;
+            var newNode = extendObj(children, k2, nodeObj);
+            newNode.selPart = newNode.selPart || splitSelector(k2, ",");
+            var n2 = parseObj(obj, result, newNode);
+            if (n2)
+              children[k2] = n2;
+            if (prevVal)
+              !haveOldChild ? n2 && arrayKV(result.diff, "added", n2) : !n2 && arrayKV(result.diff, "removed", children[k2]);
+            if (!n2)
+              delete nodeObj.parent.children[k2];
+          };
+          if (!("selText" in node))
+            getSel(node, result);
+          for (var k in d) {
+            if (!own(d, k))
+              continue;
+            if (!isIterable(d[k]) || type.call(d[k]) == ARRAY && !isIterable(d[k][0])) {
+              if (k[0] == "@") {
+                processObj([].concat(d[k]).reduce(function(prev2, cur) {
+                  prev2[cur] = ";";
+                  return prev2;
+                }, {}), k, { parent: node, src: d, key: k, inline: true });
+                continue;
+              }
+              var r = function(_k) {
+                if (_k != KEY_TEST)
+                  parseProp(node, d, _k, result);
+              };
+              order ? funcArr.push([r, k]) : r(k);
+            } else {
+              processObj(d[k], k, { parent: node, src: d, key: k });
+            }
+          }
+          if (prevVal) {
+            for (k in children) {
+              if (!(k in d)) {
+                arrayKV(result.diff, "removed", children[k]);
+                delete children[k];
+              }
+            }
+            var diffProp = function() {
+              var newKeys = keys(node.lastVal);
+              var removed = keys(prevVal).filter(function(x) {
+                return newKeys.indexOf(x) < 0;
+              });
+              if (removed.length)
+                node.diff.removed = removed;
+              if (keys(node.diff).length)
+                arrayKV(result.diff, "changed", node);
+            };
+            order ? funcArr.push([diffProp, null]) : diffProp();
+          }
+          if (order)
+            arrayKV(result, "_order", { order, func: funcArr });
+          result.nodes.push(node);
+          return node;
+        }
+      }
+      function getSel(node, result) {
+        var opt = result.config;
+        var ruleNode = getParents(node, function(v) {
+          return v.key;
+        }).pop();
+        node.parentRule = getParents(node.parent, function(n) {
+          return n.type == TYPE_GROUP;
+        }).pop() || null;
+        if (ruleNode) {
+          var isMedia, sel = ruleNode.key;
+          var groupRule = sel.match(reGroupRule);
+          if (groupRule) {
+            node.type = TYPE_GROUP;
+            node.at = groupRule.pop();
+            isMedia = node.at == "media";
+            if (isMedia)
+              node.selPart = splitSelector(sel.replace(reGroupRule, ""), ",");
+            node.groupText = isMedia ? "@" + node.at + combinePath(getParents(node, function(v) {
+              return v.type == TYPE_GROUP;
+            }, "selPart", "selChild", "selParent"), "", " and") : sel;
+            node.selText = getParents(node, function(v) {
+              return v.selText && !v.at;
+            }, "selText").pop() || "";
+          } else if (reAtRule.test(sel)) {
+            node.type = "at";
+            node.selText = sel;
+          } else {
+            node.selText = "" + combinePath(getParents(ruleNode, function(v) {
+              return v.selPart && !v.at;
+            }, "selPart", "selChild", "selParent"), "", " ", true), opt;
+          }
+          node.selText = applyPlugins(opt, "selector", node.selText, node, result);
+          if (node.selText)
+            node.selTextPart = splitSelector(node.selText, ",");
+          if (node !== ruleNode)
+            node.ruleNode = ruleNode;
+        }
+      }
+      function parseProp(node, d, key, result, propKey) {
+        var prevVal = node.prevVal;
+        var lastVal = node.lastVal;
+        var propName = isNumeric(key) ? propKey : key;
+        var raw = node.lastRaw[propName], prev = prevVal && prevVal[propName], argObj = { node, result };
+        if (raw)
+          argObj.raw = raw[0];
+        ![].concat(d[key]).forEach(function(v) {
+          argObj.cooked = prev;
+          argObj.raw = raw = isFunction2(v) ? v(argObj) : v;
+          var val = applyPlugins(result.config, "value", raw, propName, node, result, propKey);
+          if (isIterable(val)) {
+            for (var k in val) {
+              if (own(val, k))
+                parseProp(node, val, k, result, propName);
+            }
+          } else {
+            arrayKV(node.rawVal, propName, raw, true);
+            if (isValidCSSValue(val)) {
+              arrayKV(node.prop, propName, val, true);
+              prev = lastVal[propName] = val;
+            }
+          }
+        });
+        if (prevVal) {
+          if (!(propName in prevVal)) {
+            arrayKV(node.diff, "added", propName);
+          } else if (prevVal[propName] != lastVal[propName]) {
+            arrayKV(node.diff, "changed", propName);
+          }
+        }
+      }
+      function combinePath(array, parentSel, seperator, replaceAmpersand) {
+        return !array.length ? parentSel : array[0].reduce(function(result, value) {
+          var part, str = parentSel ? parentSel + seperator : parentSel;
+          if (replaceAmpersand) {
+            part = splitSelector(value, "&");
+            str = part.length > 1 ? part.join(parentSel) : str + value;
+          } else {
+            str += value;
+          }
+          return result.concat(combinePath(array.slice(1), str, seperator, replaceAmpersand));
+        }, []);
+      }
+      function applyPlugins(opt, type2) {
+        var args = [].slice.call(arguments, 2);
+        var plugin = opt.plugins;
+        return [].concat(plugin).reduce(function(pre, plugin2) {
+          return plugin2[type2] ? plugin2[type2].apply(null, [pre].concat(args)) : pre;
+        }, args.shift());
+      }
+      function applyOrder(opt) {
+        if (opt._order == null)
+          return;
+        opt._order.sort(function(a, b) {
+          return a.order - b.order;
+        }).forEach(function(v) {
+          v.func.forEach(function(f) {
+            f[0](f[1]);
+          });
+        });
+        opt._order = [];
+      }
+      function cssobj(config) {
+        config = defaults(config, {
+          plugins: [],
+          intros: []
+        });
+        return function(initObj, initState) {
+          var updater = function(obj, state) {
+            if (arguments.length > 1)
+              result.state = state || {};
+            if (obj)
+              result.obj = isFunction2(obj) ? obj() : obj;
+            result.root = parseObj(extendObj({}, "", result.intro, result.obj), result, result.root, true);
+            applyOrder(result);
+            result = applyPlugins(config, "post", result);
+            isFunction2(config.onUpdate) && config.onUpdate(result);
+            return result;
+          };
+          var result = {
+            intro: {},
+            update: updater,
+            config
+          };
+          ![].concat(config.intros).forEach(function(v) {
+            extendObj(result, "intro", isFunction2(v) ? v(result) : v);
+          });
+          updater(initObj, initState || config.state);
+          return result;
+        };
+      }
+      function createDOM(rootDoc, id, option) {
+        var el = rootDoc.getElementById(id);
+        var head = rootDoc.getElementsByTagName("head")[0];
+        if (el) {
+          if (option.append)
+            return el;
+          el.parentNode && el.parentNode.removeChild(el);
+        }
+        el = rootDoc.createElement("style");
+        head.appendChild(el);
+        el.setAttribute("id", id);
+        if (option.attrs)
+          for (var i in option.attrs) {
+            el.setAttribute(i, option.attrs[i]);
+          }
+        return el;
+      }
+      var addCSSRule = function(parent, selector, body, node) {
+        var isImportRule = /@import/i.test(node.selText);
+        var rules = parent.cssRules || parent.rules;
+        var index = 0;
+        var omArr = [];
+        var str = node.inline ? body.map(function(v) {
+          return [node.selText, " ", v];
+        }) : [[selector, "{", body.join(""), "}"]];
+        str.forEach(function(text) {
+          if (parent.cssRules) {
+            try {
+              index = isImportRule ? 0 : rules.length;
+              parent.appendRule ? parent.appendRule(text.join("")) : parent.insertRule(text.join(""), index);
+              omArr.push(rules[index]);
+            } catch (e2) {
+            }
+          } else if (parent.addRule) {
+            [].concat(selector).forEach(function(sel) {
+              try {
+                if (isImportRule) {
+                  index = parent.addImport(text[2]);
+                  omArr.push(parent.imports[index]);
+                } else if (!/^\s*@/.test(sel)) {
+                  parent.addRule(sel, text[2], rules.length);
+                  omArr.push(rules[rules.length - 1]);
+                }
+              } catch (e2) {
+              }
+            });
+          }
+        });
+        return omArr;
+      };
+      function getBodyCss(node) {
+        var prop = node.prop;
+        return Object.keys(prop).map(function(k) {
+          if (k[0] == "$")
+            return "";
+          for (var v, ret = "", i = prop[k].length; i--; ) {
+            v = prop[k][i];
+            ret += node.inline ? k : prefixProp(k, true) + ":" + v + ";";
+          }
+          return ret;
+        });
+      }
+      var cssPrefixes = ["Webkit", "Moz", "ms", "O"];
+      var cssPrefixesReg = new RegExp("^(?:" + cssPrefixes.join("|") + ")[A-Z]");
+      var emptyStyle = document.createElement("div").style;
+      var testProp = function(list) {
+        for (var i = list.length; i--; ) {
+          if (list[i] in emptyStyle)
+            return list[i];
+        }
+      };
+      var cssProps = {
+        "float": testProp(["styleFloat", "cssFloat", "float"])
+      };
+      function vendorPropName(name) {
+        if (name in emptyStyle || name[0] == "-")
+          return;
+        var preName, capName = capitalize(name);
+        var i = cssPrefixes.length;
+        while (i--) {
+          preName = cssPrefixes[i] + capName;
+          if (preName in emptyStyle)
+            return preName;
+        }
+      }
+      function prefixProp(name, inCSS) {
+        if (name[0] == "$")
+          return "";
+        var retName = cssProps[name] || (cssProps[name] = vendorPropName(name) || name);
+        return inCSS ? dashify(cssPrefixesReg.test(retName) ? capitalize(retName) : name == "float" && name || retName) : retName;
+      }
+      function setCSSProperty(styleObj, prop, val) {
+        var value;
+        var important = /^(.*)!(important)\s*$/i.exec(val);
+        var propCamel = prefixProp(prop);
+        var propDash = prefixProp(prop, true);
+        if (important) {
+          value = important[1];
+          important = important[2];
+          if (styleObj.setProperty)
+            styleObj.setProperty(propDash, value, important);
+          else {
+            styleObj[propDash.toUpperCase()] = val;
+            styleObj.cssText = styleObj.cssText;
+          }
+        } else {
+          styleObj[propCamel] = val;
+        }
+      }
+      function cssobj_plugin_post_cssom(option) {
+        option = option || {};
+        if (option.vendors)
+          cssPrefixes = option.vendors;
+        var id = option.id || "cssobj" + random();
+        var frame = option.frame;
+        var rootDoc = frame ? frame.contentDocument || frame.contentWindow.document : document;
+        var dom = createDOM(rootDoc, id, option);
+        var sheet = dom.sheet || dom.styleSheet;
+        var reWholeRule = /page/i;
+        var atomGroupRule = function(node) {
+          return !node ? false : reWholeRule.test(node.at) || node.parentRule && reWholeRule.test(node.parentRule.at);
+        };
+        var getParent = function(node) {
+          var p = "omGroup" in node ? node : node.parentRule;
+          return p && p.omGroup || sheet;
+        };
+        var validParent = function(node) {
+          return !node.parentRule || node.parentRule.omGroup !== null;
+        };
+        var removeRule = function(parent, rule, index) {
+          return parent.deleteRule ? parent.deleteRule(rule.keyText || index) : parent.removeRule(index);
+        };
+        var clearRoot = function(root) {
+          var rules = root.cssRules || root.rules;
+          for (var i = rules.length; i--; ) {
+            removeRule(root, rules[i], i);
+          }
+        };
+        var removeOneRule = function(rule) {
+          if (!rule)
+            return;
+          var parent = rule.parentRule || sheet;
+          var rules = parent.cssRules || parent.rules;
+          var removeFunc = function(v, i) {
+            if (v === rule) {
+              removeRule(parent, rule, i);
+              return true;
+            }
+          };
+          [].some.call(rules, removeFunc);
+        };
+        function removeNode(node) {
+          var groupIdx = mediaStore.indexOf(node);
+          if (groupIdx > -1) {
+            node.mediaEnabled = false;
+            walk(node);
+            mediaStore.splice(groupIdx, 1);
+          }
+          [node.omGroup].concat(node.omRule).forEach(removeOneRule);
+        }
+        var addNormalRule = function(node, selText, cssText) {
+          if (!cssText)
+            return;
+          var parent = getParent(node);
+          var parentRule = node.parentRule;
+          if (validParent(node))
+            return node.omRule = addCSSRule(parent, selText, cssText, node);
+          else if (parentRule) {
+            if (parentRule.mediaEnabled) {
+              [].concat(node.omRule).forEach(removeOneRule);
+              return node.omRule = addCSSRule(parent, selText, cssText, node);
+            } else if (node.omRule) {
+              node.omRule.forEach(removeOneRule);
+              delete node.omRule;
+            }
+          }
+        };
+        var mediaStore = [];
+        var checkMediaList = function() {
+          mediaStore.forEach(function(v) {
+            v.mediaEnabled = v.mediaTest(rootDoc);
+            walk(v);
+          });
+        };
+        if (window.attachEvent) {
+          window.attachEvent("onresize", checkMediaList);
+        } else if (window.addEventListener) {
+          window.addEventListener("resize", checkMediaList, true);
+        }
+        var walk = function(node, store2) {
+          if (!node)
+            return;
+          if (node.constructor === Array)
+            return node.map(function(v) {
+              walk(v, store2);
+            });
+          if (node.key && node.key[0] == "$" || !node.prop)
+            return;
+          if (node.at == "media" && node.selParent && node.selParent.postArr) {
+            return node.selParent.postArr.push(node);
+          }
+          node.postArr = [];
+          var children = node.children;
+          var isGroup = node.type == "group";
+          if (atomGroupRule(node))
+            store2 = store2 || [];
+          if (isGroup) {
+            if (!atomGroupRule(node)) {
+              var $groupTest = node.obj.$groupTest;
+              var presetMedia = node.at == "media" && option.media;
+              if ($groupTest || presetMedia) {
+                node.omGroup = null;
+                var mediaTest = $groupTest || presetMedia && function(doc) {
+                  var media = option.media;
+                  return media ? node.selPart.some(function(part) {
+                    return new RegExp(media, "i").test(part.trim());
+                  }) : true;
+                } || function() {
+                  return true;
+                };
+                try {
+                  var mediaEnabled = mediaTest(rootDoc);
+                  node.mediaTest = mediaTest;
+                  node.mediaEnabled = mediaEnabled;
+                  mediaStore.push(node);
+                } catch (e2) {
+                }
+              } else {
+                [""].concat(cssPrefixes).some(function(v) {
+                  return node.omGroup = addCSSRule(sheet, "@" + (v ? "-" + v.toLowerCase() + "-" : v) + node.groupText.slice(1), [], node).pop() || null;
+                });
+              }
+            }
+          }
+          var selText = node.selTextPart;
+          var cssText = getBodyCss(node);
+          if (cssText.join("")) {
+            if (!atomGroupRule(node)) {
+              addNormalRule(node, selText, cssText);
+            }
+            store2 && store2.push(selText ? selText + " {" + cssText.join("") + "}" : cssText);
+          }
+          for (var c in children) {
+            if (c === "")
+              node.postArr.push(children[c]);
+            else
+              walk(children[c], store2);
+          }
+          if (isGroup) {
+            if (atomGroupRule(node) && validParent(node)) {
+              addNormalRule(node, node.groupText, store2);
+              store2 = null;
+            }
+          }
+          var postArr = node.postArr;
+          delete node.postArr;
+          postArr.map(function(v) {
+            walk(v, store2);
+          });
+        };
+        var prevMedia = option.media;
+        return {
+          post: function(result) {
+            var mediaChanged = prevMedia != option.media;
+            prevMedia = option.media;
+            checkMediaList();
+            result.set = function(cssPath, newObj) {
+              var path = Array.isArray(cssPath) ? cssPath : [cssPath];
+              var srcObj = result.obj;
+              if (isString(path[0]) && path[0][0] === "$") {
+                srcObj = result.ref[path.shift().slice(1)].obj;
+              }
+              var ret = objGetObj(srcObj, path);
+              if (ret.ok) {
+                assign(ret.obj, newObj);
+              }
+              result.update();
+            };
+            result.cssdom = dom;
+            if (!result.diff || mediaChanged) {
+              if (mediaChanged) {
+                mediaStore = [];
+                clearRoot(sheet);
+              }
+              walk(result.root);
+            } else {
+              var diff = result.diff;
+              if (diff.added)
+                diff.added.forEach(function(node) {
+                  walk(node);
+                });
+              if (diff.removed)
+                diff.removed.forEach(function(node) {
+                  node.selChild && node.selChild.forEach(removeNode);
+                  removeNode(node);
+                });
+              if (diff.changed)
+                diff.changed.forEach(function(node) {
+                  var om = node.omRule;
+                  var diff2 = node.diff;
+                  if (!om)
+                    om = addNormalRule(node, node.selTextPart, getBodyCss(node));
+                  [].concat(diff2.added, diff2.changed).forEach(function(v) {
+                    v && om && om.forEach(function(rule) {
+                      try {
+                        setCSSProperty(rule.style, v, node.prop[v][0]);
+                      } catch (e2) {
+                      }
+                    });
+                  });
+                  diff2.removed && diff2.removed.forEach(function(v) {
+                    var prefixV = prefixProp(v, true);
+                    prefixV && om && om.forEach(function(rule) {
+                      try {
+                        rule.style.removeProperty ? rule.style.removeProperty(prefixV) : rule.style.removeAttribute(prefixV);
+                      } catch (e2) {
+                      }
+                    });
+                  });
+                });
+            }
+            return result;
+          }
+        };
+      }
+      var classNameRe = /[ \~\\@$%^&\*\(\)\+\=,/';\:"?><[\]\\{}|`]/;
+      function cssobj_plugin_selector_localize(option) {
+        option = option || {};
+        var space = option.space = typeof option.space !== "string" ? typeof option.random == "function" ? option.random() : random() : option.space;
+        var localNames = option.localNames = option.localNames || {};
+        var localize = function(name) {
+          return name[0] == "!" ? name.substr(1) : name in localNames ? localNames[name] : name + space;
+        };
+        var parseSel = function(str) {
+          if (!isString(str))
+            return str;
+          var part = splitSelector(str, ".", true);
+          var sel = part[0];
+          for (var i = 1, p, pos, len = part.length; i < len; i++) {
+            p = part[i];
+            if (!p) {
+              sel += ".";
+              continue;
+            }
+            pos = p.search(classNameRe);
+            sel += "." + (pos < 0 ? localize(p) : localize(p.substr(0, pos)) + p.substr(pos));
+          }
+          return sel;
+        };
+        var mapClass = function(str) {
+          return isString(str) ? parseSel(str.replace(/\s+\.?/g, ".").replace(/^([^:\s.])/i, ".$1")).replace(/\./g, " ").trim() : str;
+        };
+        var setResult = function(result) {
+          result.space = space;
+          result.localNames = localNames;
+          result.mapSel = parseSel;
+          result.mapClass = mapClass;
+          return result;
+        };
+        return {
+          selector: function localizeName(sel, node, result) {
+            if (node.at)
+              return sel;
+            if (!result.mapSel)
+              setResult(result);
+            return parseSel(sel);
+          },
+          post: setResult
+        };
+      }
+      function cssobj$1(obj, config, state) {
+        config = config || {};
+        var local = config.local;
+        config.local = !local ? { space: "" } : local && typeof local === "object" ? local : {};
+        config.plugins = [].concat(config.plugins || [], cssobj_plugin_selector_localize(config.local), cssobj_plugin_post_cssom(config.cssom));
+        return cssobj(config)(obj, state);
+      }
+      cssobj$1.version = "1.3.6";
+      return cssobj$1;
+    });
+  }
+});
+
 // node_modules/eval5/node_modules/acorn/dist/acorn.mjs
 var reservedWords = {
   3: "abstract boolean byte char class double enum export extends final float goto implements import int interface long native package private protected public short static super synchronized throws transient volatile",
@@ -8381,6 +9145,7 @@ async function fileSave(...e2) {
 }
 
 // fronts/ext.js
+var import_cssobj = __toModule(require_cssobj_umd());
 var eval5 = esm_default;
 function run(code = "", ctx = {}) {
   return eval5(`
@@ -8429,8 +9194,10 @@ async function fileOpenJSON5() {
     }));
   }
 }
+var cssObj = import_cssobj.default;
 export {
   FS,
+  cssObj,
   eval5,
   fileOpenJSON5,
   run,
