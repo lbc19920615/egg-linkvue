@@ -21,11 +21,13 @@
 
 <script>
 
+
   export default {
         setup() {
+          const { reactive } = global.Vue;
+          let stepMap = reactive({
 
-          let stepMap = {
-          }
+          })
 
           const 循环 = ZY.lodash.each;
           const 获取 = ZY.lodash.get;
@@ -68,16 +70,29 @@
               }
             }
 
-            static 设置步骤(){
-              let defMap = {
-                test: 'process-step1'
-              }
+            static 设置步骤(defMap = {}){
+              // let defMap = {
+              //   test: 'process-step1'
+              // }
+              console.log(defMap)
               for (let [key, value] of Object.entries(defMap)) {
                 stepMap[key] = defMap[key]
               }
             }
           }
           globalThis.工具 = 工具
+
+          class G {
+            static 设置步骤(...args) {
+              if (args.length === 2) {
+                工具.设置步骤({
+                  [args[0]]: args[1]
+                })
+              }
+            }
+          }
+          globalThis.G = G
+
 
           let renderC = useRenderControl()
           {{ CONFIG.pageProperties }}
@@ -106,6 +121,8 @@
           async function onInited({storeControl}) {
             {{ CONFIG.onInited }}
           }
+
+          page.stepMap = stepMap
 
           return {
             stepMap,
