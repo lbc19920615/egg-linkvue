@@ -2,7 +2,7 @@
 <el-form-item :prop="prop"
               :x-path="formPath"
                 v-bind="ui"
-              :label="ui && ui.label ? ui.label : label"
+              :label="getLabel()"
               :rules="rules"
 >
 {#{% verbatim %}{{ {% endverbatim %} modelPath {% verbatim %} }} {% endverbatim %}#}

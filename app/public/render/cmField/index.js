@@ -37,9 +37,9 @@ export default function(name) {
       const { ref, watch, nextTick, inject } = global.Vue;
       // let curFormCon = inject('curFormCon')
       // console.log(curFormCon, props)
-      let context = props.context
+      const context = props.context;
 
-      let lock = new ZY.Lock(/* optional lock name, should be unique */)
+      const lock = new ZY.Lock(/* optional lock name, should be unique */);
 
       const commonCom = useCommonComponent({ name });
 
@@ -104,11 +104,22 @@ export default function(name) {
       // function onUpdateModelValue(v) {
       //   console.log('onUpdateModelValue', v)
       // }
+      function replaceNbsps(str) {
+        const re = new RegExp('&nbsp;', 'gi');
+        return str.replace(re, ' ');
+      }
+
+      function getLabel() {
+        const ret = props.ui && props.ui.label ? props.ui.label : props.label;
+        console.log('ui label', ret);
+        return replaceNbsps(ret);
+      }
 
       return {
         onInput,
         ...commonCom,
         getOpt,
+        getLabel,
         getUIOpt,
         onFchange,
         isArray,
