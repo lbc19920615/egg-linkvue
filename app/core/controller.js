@@ -118,11 +118,15 @@ v-if="${basePath}"
       if (!p.hidden) {
         const col_tag = p.tag ? p.tag : 'el-col';
         const field_tag = p.field_tag ? p.field_tag : 'cm-field';
+        const fromPath = getSelfPath(basePath, append.BASE_PATH);
         context.tpl = context.tpl + `
 <${col_tag} class="level_${level} z-form__prop" ${attrStr(p)}
 >`;
         context.tpl = context.tpl +
           `
+ <slot-com :defs="slotContent" :attrs="{parts}"
+           :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}', selfpath: '${fromPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
+              name="prop_before"></slot-com>
 <${field_tag}
 v-model="${basePath}"
 label="${key}" prop="${key}"
