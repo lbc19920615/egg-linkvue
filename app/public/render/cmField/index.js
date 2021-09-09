@@ -105,13 +105,18 @@ export default function(name) {
       //   console.log('onUpdateModelValue', v)
       // }
       function replaceNbsps(str) {
-        const re = new RegExp('&nbsp;', 'gi');
-        return str.replace(re, ' ');
+        // eslint-disable-next-line no-undef
+        const text = document.createElement('div');
+        text.innerHTML = str;
+        return text.textContent;
+        // console.log(text.textContent)
+        // const re = new RegExp('&nbsp;', 'gi');
+        // return str.replace(re, ' ');
       }
 
       function getLabel() {
         const ret = props.ui && props.ui.label ? props.ui.label : props.label;
-        console.log('ui label', ret);
+        // console.log('ui label', ret);
         return replaceNbsps(ret);
       }
 
