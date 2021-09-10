@@ -118,6 +118,8 @@
             return '{}'
           }
 
+          let callEvent = page.callEvent
+
           async function onInited({storeControl}) {
             {{ CONFIG.onInited }}
           }
@@ -126,6 +128,7 @@
 
           return {
             stepMap,
+            callEvent,
             handleDefMap,
             page,
             renderC
