@@ -78,7 +78,7 @@ v-if="${basePath}"
       const indexKey = 'index' + level;
       const fromPath = getSelfPath(basePath, append.BASE_PATH);
       const array_tag = p.tag ? p.tag : 'el-row';
-      const array_con_tag = p.con_tag ? p.con_tag : 'el-row';
+      const array_con_tag = p.con_tag ? p.con_tag : 'el-col';
       const con_attr = attrStr(p, 'ui.conAttrs', {
         itemKey,
         indexKey,
@@ -116,7 +116,7 @@ v-if="${basePath}"
     } else {
       // console.log(p, key);
       if (!p.hidden) {
-        const col_tag = p.tag ? p.tag : 'el-col';
+        const col_tag = p.tag ? p.tag : 'div';
         const field_tag = p.field_tag ? p.field_tag : 'cm-field';
         const fromPath = getSelfPath(basePath, append.BASE_PATH);
         context.tpl = context.tpl + `
