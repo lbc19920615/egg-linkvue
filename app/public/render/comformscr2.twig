@@ -204,6 +204,7 @@
                     key: findKeyItem.key,
                     base: model,
                     computedVal() {
+                      // console.log('findKeyItem', findKeyItem)
                       if (findKeyItem.valTpl) {
                         // console.log(findKeyItem.valTpl)
                         let context = {
@@ -304,8 +305,11 @@
                     if (valTpl) {
                       modelTarget[key] = ZY_EXT.eval5(valTpl, {
                         A: globalThis.getApp(),
+                        $R: reflect,
                         $VAL: modelTarget[reflect],
+                        $M: modelTarget,
                         L: ZY.lodash,
+                        v: Date.now()
                       })
                     }else {
                       modelTarget[key] = modelTarget[reflect]
