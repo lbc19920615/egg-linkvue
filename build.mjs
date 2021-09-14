@@ -17,7 +17,7 @@ import s from 'esbuild-plugin-vue-iii';
   try {
     const res = await esbuild.build({
       // entryPoints: [ './fronts/main.js', './fronts/sds.js' ],
-      entryPoints: [ './fronts/main.js', './fronts/ext.js' ],
+      entryPoints: [ './fronts/main.js', './fronts/ext.js', './fronts/weapp.js'  ],
       // outfile: './app/public/expose.js',
       splitting: true,
       outdir: './app/public/expose',
