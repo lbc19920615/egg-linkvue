@@ -42,6 +42,9 @@
                   name="form_after"></slot-com>
       </el-form>
     {% endif %}
+    {% if part.type == 'form2' %}
+      {{ partStr[part.name] }}
+    {% endif %}
     {% if part.type == 'table' %}
       <slot-com :defs="slotContent" :attrs="{parts}"
                 :binds="{name: '{{ part.name }}', partName: '{{ part.name }}', parts, process: '{{ CONFIG.process}}' }"

@@ -36,7 +36,7 @@ function attrStr(p, k = 'ui.attrs', context = {}) {
         }
       }
     });
-    console.log('attrs', attrs, str);
+    // console.log('attrs', attrs, str);
   }
   return str;
 }
@@ -166,7 +166,7 @@ function buildTableColumns(p, basePath, configPath, append = {}) {
     const recordConfigPath = `${configPath}.properties.records.items.properties`;
     const recordProperties = records.items.properties;
     // console.log('properties', recordProperties);
-    for (const [ recordKey, recordValue ] of Object.entries(recordProperties)) {
+    for (const [ recordKey] of Object.entries(recordProperties)) {
       const columnConfigPath = `${recordConfigPath}.${recordKey}`;
       context.tpl = context.tpl + `<el-table-column prop="${recordKey}" 
 :label="z_get(${columnConfigPath}, 'ui.label', '${recordKey}')" 
@@ -194,7 +194,7 @@ function buildTableActions(p, basePath, configPath, append = {}) {
       context.tpl = context.tpl + `
       <el-table-column label="操作"><template #default="scope">
 `;
-      for (const [ recordKey, recordValue ] of Object.entries(recordProperties)) {
+      for (const [ recordKey ] of Object.entries(recordProperties)) {
         const columnConfigPath = `${recordConfigPath}.${recordKey}`;
         context.tpl = context.tpl + `
         <el-button v-bind="get(${columnConfigPath}, 'ui.widgetConfig')" @click="callPageEvent(get(${columnConfigPath}, 'ui.widgetConfig.eventName'), { key: '${recordKey}', partName: '${append.part.name}', parts, process: '${append.CONFIG.process}' }, $event)">
@@ -211,6 +211,91 @@ ${recordKey} </el-button>
   return context.tpl;
 }
 
+function renderForm2(p, basePath, configPath, append = {}) {
+  const context = {
+    tpl: '',
+  };
+  function render(p, key, context, level, basePath, configPath, pathArrStr, ext) {
+    if (p.type === 'object') {
+      const obj_tag = p.tag ? p.tag : 'view';
+      context.tpl = context.tpl + `
+<${obj_tag} class="level_${level} z-form__object" ${attrStr(p)}
+v-if="${basePath}" 
+>`;
+      for (const [ key, value ] of Object.entries(p.properties)) {
+        ext.parentModel = `${basePath}`;
+        render(value, key, context, level + 1,
+          `${basePath}.${key}`, `${configPath}.properties.${key}`, `${pathArrStr},'${key}'`, ext);
+      }
+      context.tpl = context.tpl + `
+</${obj_tag}>`;
+    } else if (p.type === 'array') {
+      const itemKey = 'item' + level;
+      const indexKey = 'index' + level;
+      // const fromPath = getSelfPath(basePath, append.BASE_PATH);
+      const array_tag = p.tag ? p.tag : 'z-collection';
+      const array_con_tag = p.con_tag ? p.con_tag : 'block';
+      const con_attr = attrStr(p, 'ui.conAttrs', {
+        itemKey,
+        indexKey,
+      });
+      const con_cls = buildCls(p, 'ui.conClass');
+      context.tpl = context.tpl + `
+<${array_tag} class="level_${level} z-form__array ${buildCls(p)}" ${attrStr(p)}
+  @add="onAdd([${append.BASE_FORM_KEY} ${pathArrStr}], $event)"
+>
+    <${array_con_tag} v-for="(${itemKey}, ${indexKey}) in ${basePath}" 
+    class="z-form__array-con ${con_cls}" ${con_attr}
+>`;
+      if (p.items.type === 'object') {
+        for (const [ key, value ] of Object.entries(p.items.properties)) {
+          ext.parentModel = `${basePath}[${indexKey}]`;
+          render(value, key, context, level + 1,
+            `${basePath}[${indexKey}].${key}`, `${configPath}.items.properties.${key}`,
+            `${pathArrStr}, ${indexKey}, '${key}'`, ext);
+        }
+      }
+      context.tpl = context.tpl + `
+    </${array_con_tag}>
+</${array_tag}>`;
+    } else {
+      // console.log(p, key);
+      if (!p.hidden) {
+        const col_tag = p.tag ? p.tag : 'view';
+        const field_tag = lodash.get(p, 'ui.widget', 'van-field');
+        // const fromPath = getSelfPath(basePath, append.BASE_PATH);
+        // console.log(pathArrStr, append.BASE_FORM_KEY);
+        context.tpl = context.tpl + `
+<${col_tag} class="level_${level} z-form__prop" ${attrStr(p)}
+>`;
+
+        //   prop="${key}"
+        //   form-path="${basePath}"
+        // :parent-model="${ext.parentModel}"
+        //   type="${p.type}"
+        // :ui="${configPath}.ui"
+        // :rules="${configPath}.rules"
+        // :context="${append.partKey}"
+        //   part_key="${append.partKey}"
+        context.tpl = context.tpl +
+          `
+<${field_tag}
+v-model="${basePath}"
+label="${key}" 
+@change="onSetProp([${append.BASE_FORM_KEY} ${pathArrStr}], $event)">
+</${field_tag}>`;
+        context.tpl = context.tpl + `
+</${col_tag}>`;
+      } else {
+        //
+      }
+    }
+  }
+
+  render(p, '', context, 1, basePath, configPath, '', { arrIndexes: {} });
+  return context.tpl;
+}
+
 const { Controller } = require('egg');
 class BaseController extends Controller {
   // eslint-disable-next-line no-useless-constructor
@@ -220,6 +305,10 @@ class BaseController extends Controller {
   BASE_renderForm(config, basePath, configPath, append) {
     append.BASE_PATH = basePath;
     return renderForm(config, basePath, configPath, append);
+  }
+  BASE_renderForm2(config, basePath, configPath, append) {
+    append.BASE_PATH = basePath;
+    return renderForm2(config, basePath, configPath, append);
   }
   BASE_renderTable(config, basePath, configPath, append) {
     append.BASE_PATH = basePath;
