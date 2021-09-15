@@ -1,6 +1,7 @@
 import {
+  formatDateTime,
   require_dist
-} from "./chunks/chunk-MMWUQFIH.js";
+} from "./chunks/chunk-QIXAT34B.js";
 import {
   __commonJS,
   __export,
@@ -9194,14 +9195,32 @@ async function fileOpenJSON5() {
     }));
   }
 }
+function saveDesignFile({ data: data2 = null, fileName = "", version: version3 = "v1" }) {
+  const d = new Date();
+  const time = formatDateTime(d, "YYYY-MM-DD__HH");
+  const saved = {
+    data: data2,
+    date: Date.now()
+  };
+  saveObjAsJson5File(saved, `${fileName}_${time}_${d.getTime()}`);
+}
+async function openDesignFile({ version: version3 = "v1" }) {
+  const obj = await fileOpenJSON5();
+  if (obj && obj.data) {
+    return obj.data;
+  }
+  return Promise.reject(new Error("\u6587\u4EF6\u683C\u5F0F\u4E0D\u5BF9"));
+}
 var cssObj = import_cssobj.default;
 export {
   FS,
   cssObj,
   eval5,
   fileOpenJSON5,
+  openDesignFile,
   run,
   saveAs,
+  saveDesignFile,
   saveObjAsJson5File,
   saveStrAs,
   store

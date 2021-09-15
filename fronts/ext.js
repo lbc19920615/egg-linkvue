@@ -1,6 +1,9 @@
 import _eval5 from 'eval5';
 import _JSON5 from 'json5';
 
+import { formatDateTime } from './time';
+
+
 /**
  * eval5
  * @type {(code: string, ctx?: (VMContext | undefined), options?: (ScriptOptions | undefined)) => any}
@@ -106,8 +109,36 @@ export async function fileOpenJSON5() {
   }
 }
 
-import _cssObj from 'cssobj';
+/**
+ * 保存v1版本design file
+ * @param data
+ * @param fileName
+ * @param version
+ */
+export function saveDesignFile({ data = null, fileName = '', version = 'v1' }) {
+  const d = new Date();
+  const time = formatDateTime(d, 'YYYY-MM-DD__HH');
+  const saved = {
+    data,
+    date: Date.now(),
+  };
+  saveObjAsJson5File(saved, `${fileName}_${time}_${d.getTime()}`);
+}
 
+/**
+ * 读取v1版本design file
+ * @param version
+ * @return {Promise<*>}
+ */
+export async function openDesignFile({ version = 'v1' }) {
+  const obj = await fileOpenJSON5();
+  if (obj && obj.data) {
+    return obj.data;
+  }
+  return Promise.reject(new Error('文件格式不对'));
+}
+
+import _cssObj from 'cssobj';
 /**
  * cssObj
  * @type {CssObj.Static}
