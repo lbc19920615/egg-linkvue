@@ -407,6 +407,20 @@
           // console.log(arr)
         }
 
+        /**
+         * arr删除
+         * @param path
+         * @param index
+         * @param deleteCount
+         */
+        ret.arrSplice = function(path, index, deleteCount = 1) {
+          let arr = ZY.lodash.get(ret.model, path)
+          if (Array.isArray(arr)) {
+            arr.splice(index, deleteCount)
+          }
+          // console.log(arr)
+        }
+
         ret.getModel = function() {
           let res = {}
           for (let k in ret.model) {
