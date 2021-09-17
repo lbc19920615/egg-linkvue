@@ -89,11 +89,21 @@
 </el-select>
 {% endmacro %}
 
+{% macro datetime(model) %}
+  <el-date-picker
+      type="datetime"
+      v-model="{{ model }}"
+      @change="onChange"
+      v-bind="ui ? ui.widgetConfig : null"
+  >
+  </el-date-picker >
+{% endmacro %}
 
 {% macro time(model) %}
   <el-time-picker
           arrow-control
           v-model="{{ model }}" @change="onChange"
+          v-bind="ui ? ui.widgetConfig : null"
           {{ _self.fieldAttr(commonInputAttrs) }}
   >
   </el-time-picker>

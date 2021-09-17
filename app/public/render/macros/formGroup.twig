@@ -87,6 +87,14 @@
     <template v-if="ui && ui.widget">
         {{forms.custom(modelPath)}}
     </template>
+    <template v-else-if="ui && ui.widgetFormat">
+{#              {% verbatim %}#}
+{#              {{ui}}#}
+{#              {% endverbatim %}#}
+      <template v-if="ui.widgetFormat === 'datetime'">
+        {{forms.datetime(modelPath)}}
+      </template>
+    </template>
     <template v-else>
 {#        {% verbatim %}#}
 {#        {{ui}}#}
