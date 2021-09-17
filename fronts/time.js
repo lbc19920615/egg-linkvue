@@ -3,9 +3,15 @@
  * @module Time
  */
 
-import dayjs from 'dayjs';
+import _dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-dayjs.extend(duration);
+
+_dayjs.extend(duration);
+
+/**
+ * dayjs
+ */
+export const dayjs = _dayjs;
 
 /**
  * formatDateTime
@@ -13,7 +19,7 @@ dayjs.extend(duration);
  * @param format {string}
  */
 export function formatDateTime(date, format = 'YYYY-MM-DD HH:mm:ss') {
-  return dayjs().format(format);
+  return _dayjs(date).format(format);
 }
 
 /**
@@ -23,8 +29,8 @@ export function formatDateTime(date, format = 'YYYY-MM-DD HH:mm:ss') {
  * @return {plugin.Duration}
  */
 export function subtract2Date(date1, date2) {
-  const x = dayjs(date1);
-  const y = dayjs(date2);
-  const duration = dayjs.duration(x.diff(y));
+  const x = _dayjs(date1);
+  const y = _dayjs(date2);
+  const duration = _dayjs.duration(x.diff(y));
   return duration;
 }

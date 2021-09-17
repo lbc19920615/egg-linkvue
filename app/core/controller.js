@@ -1,5 +1,8 @@
 const lodash = require('lodash');
 
+const { Controller } = require('egg');
+const { getPropField } = require('./form2');
+
 function getStrIfIsNotEmpty(obj, path, defaultVal) {
   const v = lodash.get(obj, path);
   if (!v) {
@@ -289,13 +292,18 @@ v-if="${basePath}"
         // :rules="${configPath}.rules"
         // :context="${append.partKey}"
         //   part_key="${append.partKey}"
-        context.tpl = context.tpl +
-          `
-<${field_tag}
-v-model="${basePath}"
-label="${key}" 
-@change="onSetProp([${append.BASE_FORM_KEY} ${pathArrStr}], $event)">
-</${field_tag}>`;
+        //         context.tpl = context.tpl +
+        //           `
+        // <${field_tag}
+        // v-model="${basePath}"
+        // label="${key}"
+        // @change="onSetProp([${append.BASE_FORM_KEY} ${pathArrStr}], $event)">
+        // </${field_tag}>`;
+
+        const propFieldStr = getPropField(p, basePath, key, pathArrStr, append);
+
+        context.tpl = context.tpl + propFieldStr;
+
         context.tpl = context.tpl + `
 </${col_tag}>`;
       } else {
@@ -308,7 +316,6 @@ label="${key}"
   return context.tpl;
 }
 
-const { Controller } = require('egg');
 class BaseController extends Controller {
   // eslint-disable-next-line no-useless-constructor
   constructor(ctx) {
