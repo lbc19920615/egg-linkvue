@@ -370,7 +370,25 @@
           }
         }
 
+        /**
+         *
+         * @param path { string }
+         * @param value { any }
+         */
         ret.setModel = function(path, value) {
+          ZY.lodash.set(ret.model, path, value)
+        }
+
+        /**
+         * getModelByPath
+         * @param path { string }
+         * @returns {*}
+         */
+        ret.getModelByPath = function(path = '') {
+          return ZY.lodash.get(ret.model, path)
+        }
+
+        ret.setModelByPath = function(path, value) {
           ZY.lodash.set(ret.model, path, value)
         }
 
