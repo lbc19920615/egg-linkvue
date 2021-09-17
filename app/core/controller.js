@@ -62,7 +62,11 @@ function renderForm(p, basePath, configPath, append = {}) {
   function render(p, key, context, level, basePath, configPath, ext) {
     if (p.type === 'object') {
       const obj_tag = p.tag ? p.tag : 'el-row';
+      const fromPath = getSelfPath(basePath, append.BASE_PATH);
       context.tpl = context.tpl + `
+ <slot-com :defs="slotContent" :attrs="{parts}"
+           :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}', selfpath: '${fromPath}',  process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
+            name="object_prev"></slot-com>
 <${obj_tag} class="level_${level} z-form__object" ${attrStr(p)}
 v-if="${basePath}"
 >`;
