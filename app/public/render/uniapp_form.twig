@@ -1,0 +1,62 @@
+{% import "./macros/formGroup.twig" as formGroup %}
+{% import "./macros/attr.twig" as attr %}
+
+<template>
+  <view class="z-form">
+{% for part in CONFIG.parts %}
+{% set partConfigKey = 'config.parts[' ~ loop.index0 ~ '].def' %}
+{% set pathKey = "parts." ~ part.name %}
+{% set pathSKey = "'parts." ~ part.name ~ "'" %}
+{% set modelKey = pathKey ~ ".model"  %}
+{% if part.type == 'form' or part.type == 'form2' %}
+{{ partStr[part.name] }}
+{% endif %}
+{% endfor %}
+  </view>
+</template>
+
+<script>
+import {computed, reactive} from 'vue';
+import { JSON5 } from '@/plugins/z-frame/index';
+import { initPart, useModelHandler } from '@/plugins/z-frame/components/ZForm';
+
+export default {
+  setup() {
+    const config = JSON5.parse(`{{CONFIG_SOURCE_JSON5}}`);
+
+    const partControl = {};
+    const obj = {};
+    const computedModel = {}
+
+    config.parts.forEach((part) => {
+      partControl[part.name] = initPart(part, config);
+      // console.log(partControl[part.name])
+
+      obj[part.name] = {
+        model: partControl[part.name].model,
+      };
+      // computedModel[part.name] = partControl[part.name].computedModel
+    });
+
+    const parts = reactive(obj);
+
+    // console.log(parts)
+    for (const key in partControl) {
+      partControl[key].detect(
+        parts[key].model,
+      );
+    }
+
+    const handlers = useModelHandler({
+      parts,
+    });
+
+    return {
+      // doubled: partControl.form2.computedModel.layoutSlotArrComputed,
+      // doubled,
+      parts,
+      ...handlers,
+    };
+  },
+};
+</script>

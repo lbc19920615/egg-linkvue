@@ -72,6 +72,29 @@ export function saveObjAsJson5File(obj = {}, fileName) {
 import * as _FS from 'browser-fs-access';
 
 /**
+ * saveStrUseFS
+ * @param str
+ * @param fileName
+ * @param cls
+ * @param extensions
+ * @return {Promise<FileSystemHandle>}
+ */
+export function saveStrUseFS(str = '', {
+  fileName = '',
+  cls = Blob,
+  extensions = [],
+  type = '',
+  options = {},
+} = {}) {
+  const blob = new cls([ str ], { type });
+  return _FS.fileSave(blob, {
+    fileName,
+    extensions,
+    ...options,
+  });
+}
+
+/**
  * FS
  * @type {{FileWithDirectoryHandle: FileWithDirectoryHandle, FirstCoreFileOptions: FirstCoreFileOptions, FileWithHandle: FileWithHandle, CoreFileOptions: CoreFileOptions, FileSystemHandle: FileSystemHandle, FirstFileOpenOptions: FirstFileOpenOptions, supported: boolean, imageToBlob: (img: HTMLImageElement) => Promise<Blob>, FirstFileSaveOptions: FirstFileSaveOptions, FileSystemHandlePermissionDescriptor: FileSystemHandlePermissionDescriptor, directoryOpen: (options?: {recursive: boolean, startIn?: WellKnownDirectory | FileSystemHandle, id?: string, setupLegacyCleanupAndRejection?: (rejectionHandler?: () => void) => (reject: (reason?: any) => void) => void}) => Promise<FileWithDirectoryHandle[]>, fileSave: (blob: Blob, options?: ([FirstFileSaveOptions, ...CoreFileOptions[]] | FirstFileSaveOptions), existingHandle?: (FileSystemHandle | null), throwIfExistingHandleNotGood?: boolean) => Promise<FileSystemHandle>, WellKnownDirectory: "desktop" | "documents" | "downloads" | "music" | "pictures" | "videos", fileOpen: <M=false extends boolean | undefined>(options?: ([FirstFileOpenOptions<M>, ...CoreFileOptions[]] | FirstFileOpenOptions<M>)) => M extends (false | undefined) ? Promise<FileWithHandle> : Promise<FileWithHandle[]>}}
  */

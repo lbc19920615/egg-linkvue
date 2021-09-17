@@ -1,5 +1,13 @@
 const lodash = require('lodash');
 
+function getStrIfIsNotEmpty(obj, path, defaultVal) {
+  const v = lodash.get(obj, path);
+  if (!v) {
+    return defaultVal;
+  }
+  return v;
+}
+
 function getSelfPath(basePath, BASE_PATH) {
   let fromPath = basePath.replace(BASE_PATH, '');
   if (fromPath.startsWith('.')) {
@@ -170,7 +178,7 @@ function buildTableColumns(p, basePath, configPath, append = {}) {
     const recordConfigPath = `${configPath}.properties.records.items.properties`;
     const recordProperties = records.items.properties;
     // console.log('properties', recordProperties);
-    for (const [ recordKey] of Object.entries(recordProperties)) {
+    for (const [ recordKey ] of Object.entries(recordProperties)) {
       const columnConfigPath = `${recordConfigPath}.${recordKey}`;
       context.tpl = context.tpl + `<el-table-column prop="${recordKey}" 
 :label="z_get(${columnConfigPath}, 'ui.label', '${recordKey}')" 
@@ -266,7 +274,7 @@ v-if="${basePath}"
       // console.log(p, key);
       if (!p.hidden) {
         const col_tag = p.tag ? p.tag : 'view';
-        const field_tag = lodash.get(p, 'ui.widget', 'van-field');
+        const field_tag = getStrIfIsNotEmpty(p, 'ui.widget', 'van-field');
         // const fromPath = getSelfPath(basePath, append.BASE_PATH);
         // console.log(pathArrStr, append.BASE_FORM_KEY);
         context.tpl = context.tpl + `

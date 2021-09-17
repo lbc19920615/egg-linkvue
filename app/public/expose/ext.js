@@ -9171,6 +9171,20 @@ function saveObjAsJson5File(obj = {}, fileName) {
     file: fileName + ".json5"
   });
 }
+function saveStrUseFS(str = "", {
+  fileName = "",
+  cls = Blob,
+  extensions = [],
+  type = "",
+  options = {}
+} = {}) {
+  const blob = new cls([str], { type });
+  return fileSave(blob, {
+    fileName,
+    extensions,
+    ...options
+  });
+}
 var FS = dist_exports;
 async function fileOpenJSON5() {
   let text = "";
@@ -9223,6 +9237,7 @@ export {
   saveDesignFile,
   saveObjAsJson5File,
   saveStrAs,
+  saveStrUseFS,
   store
 };
 /*!
