@@ -119,6 +119,34 @@ import _lodash from 'lodash';
  */
 export let lodash = _lodash
 
+/**
+ * getStrFromObj
+ * @param obj
+ * @param path
+ * @param defaultVal
+ * @returns {*}
+ */
+export function getStrFromObj(obj, path, defaultVal) {
+  let v = lodash.get(obj, path)
+  if (!v) {
+    return defaultVal
+  }
+  return v
+}
+
+/**
+ * defaultStr
+ * @param v
+ * @param defaultVal
+ * @returns {*}
+ */
+export function defaultStr(v, defaultVal) {
+  if (!v) {
+    return defaultVal
+  }
+  return v
+}
+
 import _qs from 'qs';
 /**
  * qs

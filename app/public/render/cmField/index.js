@@ -20,6 +20,8 @@ export default function(name) {
       modelValue: null,
       part_key: String,
       context: null,
+      selfpath: String,
+      pathArr: Array,
       ui: {
         type: Object,
         default() {
@@ -34,7 +36,7 @@ export default function(name) {
       },
     },
     setup(props, { emit }) {
-      const { ref, watch, nextTick, inject } = global.Vue;
+      const { ref, watch } = global.Vue;
       // let curFormCon = inject('curFormCon')
       // console.log(curFormCon, props)
       const context = props.context;
@@ -120,7 +122,32 @@ export default function(name) {
         return replaceNbsps(ret);
       }
 
+
+      function getProp(pathArr = []) {
+        let path = '';
+        pathArr.forEach((item, index) => {
+          if (index < 1) {
+            path = item;
+          } else {
+            // console.log(item, typeof item)
+            if (typeof item === 'number') {
+              path = `${path}[${item}]`;
+            } else {
+              path = `${path}.${item}`;
+            }
+          }
+        });
+        return path;
+      }
+
+      function onBlur(e) {
+        // console.log('onBlur', context)
+        context.fireEvent('blur', e);
+      }
+
+
       return {
+        onBlur,
         onInput,
         ...commonCom,
         getOpt,
@@ -129,6 +156,7 @@ export default function(name) {
         onFchange,
         isArray,
         context,
+        getProp,
         part_key: props.part_key,
         // onUpdateModelValue,
         value,

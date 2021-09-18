@@ -8026,6 +8026,19 @@ function rid(...args) {
 var PubSub = import_pubsub_js.default;
 var Lock2 = Lock;
 var lodash = import_lodash.default;
+function getStrFromObj(obj, path3, defaultVal) {
+  let v = lodash.get(obj, path3);
+  if (!v) {
+    return defaultVal;
+  }
+  return v;
+}
+function defaultStr(v, defaultVal) {
+  if (!v) {
+    return defaultVal;
+  }
+  return v;
+}
 var qs = import_qs.default;
 var fetchreq = fetchio_default;
 var Time = time_exports;
@@ -8135,6 +8148,7 @@ export {
   camelNameToCls,
   comHelper,
   compareObj,
+  defaultStr,
   export_deletedDiff as deletedDiff,
   export_detailedDiff as detailedDiff,
   export_diff as diff,
@@ -8143,6 +8157,7 @@ export {
   fetchreq,
   formModel,
   getImportURL,
+  getStrFromObj,
   global2 as global,
   importJsStr,
   isNumeric,

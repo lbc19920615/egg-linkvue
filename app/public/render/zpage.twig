@@ -54,7 +54,9 @@
               循环(forms, form=> {
                 let {value, name} = form
                 let obj = ZY.JSON5.parse(value)
-                let formDef = buildFormDep(obj, name);
+                let formDef = buildFormDep(obj, name, {
+                  src: 'comformscr2.twig'
+                });
                 setDefMap(formDef, name)
               })
             }

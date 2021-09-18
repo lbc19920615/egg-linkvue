@@ -392,6 +392,16 @@
           ZY.lodash.set(ret.model, path, value)
         }
 
+        ret.fireEvent = function(name, event) {
+          // console.log('curFormCon', name, event, curFormCon)
+          curFormCon.callPageEvent('form:input:blur', {
+            config,
+            process: config.process,
+            part: ret,
+            partDef,
+
+          }, event)
+        }
 
         function getParentPath(path) {
           let arr = path.split('.')
@@ -655,7 +665,7 @@
 
 
       function callPageEvent(name, scope, e) {
-        console.log('callPageEvent', name, scope, e)
+        // console.log('callPageEvent', name, scope, e)
         curFormCon.comManager.context.sendEvent(name, {
           scope,
           originEvent: e,

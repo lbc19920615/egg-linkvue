@@ -3,13 +3,7 @@ const lodash = require('lodash');
 const { Controller } = require('egg');
 const { getPropField } = require('./form2');
 
-function getStrIfIsNotEmpty(obj, path, defaultVal) {
-  const v = lodash.get(obj, path);
-  if (!v) {
-    return defaultVal;
-  }
-  return v;
-}
+const { getStrIfIsNotEmpty } = require('./utils');
 
 function getSelfPath(basePath, BASE_PATH) {
   let fromPath = basePath.replace(BASE_PATH, '');
@@ -70,7 +64,7 @@ function renderForm(p, basePath, configPath, append = {}) {
   const context = {
     tpl: '',
   };
-  function render(p, key, context, level, basePath, configPath, ext) {
+  function render(p, key, context, level, basePath, configPath, pathArrStr, ext) {
     if (p.type === 'object') {
       const obj_tag = p.tag ? p.tag : 'el-row';
       const fromPath = getSelfPath(basePath, append.BASE_PATH);
@@ -84,7 +78,7 @@ v-if="${basePath}"
       for (const [ key, value ] of Object.entries(p.properties)) {
         ext.parentModel = `${basePath}`;
         render(value, key, context, level + 1,
-          `${basePath}.${key}`, `${configPath}.properties.${key}`, ext);
+          `${basePath}.${key}`, `${configPath}.properties.${key}`, `${pathArrStr},'${key}'`, ext);
       }
       context.tpl = context.tpl + `
 </${obj_tag}>`;
@@ -116,7 +110,7 @@ v-if="${basePath}"
         for (const [ key, value ] of Object.entries(p.items.properties)) {
           ext.parentModel = `${basePath}[${indexKey}]`;
           render(value, key, context, level + 1,
-            `${basePath}[${indexKey}].${key}`, `${configPath}.items.properties.${key}`, ext);
+            `${basePath}[${indexKey}].${key}`, `${configPath}.items.properties.${key}`, `${pathArrStr}, ${indexKey}, '${key}'`, ext);
         }
       }
       context.tpl = context.tpl + `
@@ -137,6 +131,7 @@ v-if="${basePath}"
         context.tpl = context.tpl + `
 <${col_tag} class="level_${level} z-form__prop" ${attrStr(p)}
 >`;
+        console.log(pathArrStr)
         context.tpl = context.tpl +
           `
  <slot-com :defs="slotContent" :attrs="{parts}"
@@ -144,10 +139,12 @@ v-if="${basePath}"
               name="prop_before"></slot-com>
 <${field_tag}
 v-model="${basePath}"
-label="${key}" prop="${key}"
+label="${key}" prop="${key}" 
+selfpath="${fromPath}"
 form-path="${basePath}"
 :parent-model="${ext.parentModel}"
 type="${p.type}"
+:path-arr="[${pathArrStr.slice(1)}]"
 :ui="${configPath}.ui"
 :rules="${configPath}.rules"
 :context="${append.partKey}"
@@ -165,7 +162,7 @@ part_key="${append.partKey}"
     }
   }
 
-  render(p, '', context, 1, basePath, configPath, { arrIndexes: {} });
+  render(p, '', context, 1, basePath, configPath, '', { arrIndexes: {} });
   return context.tpl;
 }
 

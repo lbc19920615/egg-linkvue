@@ -12,6 +12,7 @@
 {% macro input(model, type = "text") %}
   <el-input v-model="{{model}}"
             @input="onInput"
+            @blur="onBlur"
             v-bind="ui ? ui.widgetConfig : null"
           {{ _self.fieldAttr([]) }}
   ></el-input>
@@ -20,6 +21,7 @@
 {% macro inputNumber(model, type = "number") %}
   <el-input v-model.number="{{model}}" type="{{ type }}"
             @input="onInput"
+            @blur="onBlur"
           {{ _self.fieldAttr(commonInputAttrs) }}
   ></el-input>
 {% endmacro %}
