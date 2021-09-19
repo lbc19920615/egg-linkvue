@@ -114,6 +114,9 @@
         <template v-if="type === 'radioBoolean'">
             {{forms.radioBoolean(modelPath)}}
         </template>
+        <template v-if="type === 'boolean'">
+            {{forms.Boolean(modelPath)}}
+        </template>
         <template v-if="type === 'checkbox'">
             {{forms.checkbox(modelPath)}}
         </template>
