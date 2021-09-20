@@ -131,7 +131,7 @@ v-if="${basePath}"
         context.tpl = context.tpl + `
 <${col_tag} class="level_${level} z-form__prop" ${attrStr(p)}
 >`;
-        console.log(pathArrStr)
+        // console.log(pathArrStr)
         context.tpl = context.tpl +
           `
  <slot-com :defs="slotContent" :attrs="{parts}"

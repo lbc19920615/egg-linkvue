@@ -122,8 +122,15 @@
 
           let callEvent = page.callEvent
 
+
           async function onInited({storeControl}) {
-            {{ CONFIG.onInited }}
+            renderC.detectLayout()
+            renderC.detectEvent((events, PAGE_CONTEXT = {}) => {
+              const CURRENT_DATA = PAGE_CONTEXT.currentData
+              const IS_FIRST_RENDER = PAGE_CONTEXT.isFirst
+                {{ CONFIG.onInited }}
+              console.log('sdsds', PAGE_CONTEXT)
+            })
           }
 
           page.stepMap = stepMap
