@@ -3,7 +3,7 @@ const lodash = require('lodash');
 const { Controller } = require('egg');
 const { getPropField } = require('./form2');
 
-const { getStrIfIsNotEmpty } = require('./utils');
+const { getStrIfIsNotEmpty, buildCls } = require('./utils');
 
 function getSelfPath(basePath, BASE_PATH) {
   let fromPath = basePath.replace(BASE_PATH, '');
@@ -46,18 +46,17 @@ function attrStr(p, k = 'ui.attrs', context = {}) {
   return str;
 }
 
-/**
- *
- * @param p
- * @param k
- */
-function buildCls(p, k = 'ui.class') {
-  const cls = lodash.get(p, k);
-  let str = '';
-  if (Array.isArray(cls)) {
-    str = cls.join(' ');
+function getLabel(CONFIG, configPath, key) {
+  const def = lodash.get({
+    config: CONFIG,
+  }, configPath);
+  // console.log(def, part);
+  if (def) {
+    const ret = lodash.get(def, 'ui.label', key);
+    console.log(ret);
+    return ret;
   }
-  return str;
+  return key;
 }
 
 function renderForm(p, basePath, configPath, append = {}) {
@@ -101,14 +100,23 @@ v-if="${basePath}"
  <slot-com :defs="slotContent" :attrs="{parts}"
            :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}', selfpath: '${fromPath}', CONFIG: '${append.CONFIG}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
               name="array_prev"></slot-com>
+ <slot-com :defs="slotContent" :attrs="{parts}"
+           :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}', label: '${getLabel(append.CONFIG, configPath, key)}', selfpath: '${fromPath}',  CONFIG: '${append.CONFIG}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
+              name="array_beforebegin"></slot-com>                   
 <${array_tag} class="level_${level} z-form__array ${buildCls(p)}" ${attrStr(p)}>
  <slot-com :defs="slotContent" :attrs="{parts}"
            :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}', selfpath: '${fromPath}',  CONFIG: '${append.CONFIG}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
               name="array_before"></slot-com>
+ <slot-com :defs="slotContent" :attrs="{parts}"
+           :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}', label: '${getLabel(append.CONFIG, configPath, key)}', selfpath: '${fromPath}',  CONFIG: '${append.CONFIG}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
+              name="array_afterbegin"></slot-com>              
 <${array_con_tag} v-for="(${itemKey}, ${indexKey}) in ${basePath}" class="z-form__array-con ${con_cls}" ${con_attr}>
 <slot-com :defs="slotContent" :attrs="{parts}"
          :binds="{key: '${key}', partName: '${append.part.name}', indexKey:${indexKey}, fromPath: '${fromPath}',  CONFIG: '${append.CONFIG}', selfpath: '${fromPath}['+ ${indexKey} +']', level:'${level}', parentlevel:'${level - 1}', basePath: '${basePath}', configPath: '${configPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
             name="array_item_before"></slot-com>
+<slot-com :defs="slotContent" :attrs="{parts}"
+         :binds="{key: '${key}', partName: '${append.part.name}', indexKey:${indexKey}, fromPath: '${fromPath}', label: '${getLabel(append.CONFIG, configPath, key)}',  CONFIG: '${append.CONFIG}', selfpath: '${fromPath}['+ ${indexKey} +']', level:'${level}', parentlevel:'${level - 1}', basePath: '${basePath}', configPath: '${configPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
+            name="array_con_afterbegin"></slot-com>           
 `;
       if (p.items.type === 'object') {
         for (const [ key, value ] of Object.entries(p.items.properties)) {
@@ -121,10 +129,16 @@ v-if="${basePath}"
 <slot-com :defs="slotContent" :attrs="{parts}"
          :binds="{key: '${key}', partName: '${append.part.name}', indexKey:${indexKey}, fromPath: '${fromPath}', selfpath: '${fromPath}['+ ${indexKey} +']', level:'${level}', parentlevel:'${level - 1}', basePath: '${basePath}', configPath: '${configPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
             name="array_item_after"></slot-com>
+<slot-com :defs="slotContent" :attrs="{parts}"
+         :binds="{key: '${key}', partName: '${append.part.name}', indexKey:${indexKey}, fromPath: '${fromPath}',  label: '${getLabel(append.CONFIG, configPath, key)}', selfpath: '${fromPath}['+ ${indexKey} +']', level:'${level}', parentlevel:'${level - 1}', basePath: '${basePath}', configPath: '${configPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
+            name="array_con_beforeend"></slot-com>            
 </${array_con_tag}>
 <slot-com :defs="slotContent" :attrs="{parts}"
          :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
             name="array_after"></slot-com>
+<slot-com :defs="slotContent" :attrs="{parts}"
+         :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}',  label: '${getLabel(append.CONFIG, configPath, key)}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
+            name="array_beforeend"></slot-com>            
 </${array_tag}>`;
     } else {
       // console.log(p, key);
@@ -141,6 +155,9 @@ v-if="${basePath}"
  <slot-com :defs="slotContent" :attrs="{parts}"
            :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}', selfpath: '${fromPath}',  process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
               name="prop_before"></slot-com>
+ <slot-com :defs="slotContent" :attrs="{parts}"
+           :binds="{key: '${key}', partName: '${append.part.name}', label: '${getLabel(append.CONFIG, configPath, key)}', configPath: '${configPath}', selfpath: '${fromPath}',  process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
+              name="prop_beforebegin"></slot-com>              
 <${field_tag}
 v-model="${basePath}"
 label="${key}" prop="${key}" 
@@ -157,8 +174,11 @@ part_key="${append.partKey}"
 </${field_tag}>`;
         context.tpl = context.tpl + `
  <slot-com :defs="slotContent" :attrs="{parts}"
-           :binds="{key: '${key}', type: '${p.type}', partName: '${append.part.name}', level:'${level}', parentlevel:'${level - 1}', basePath: '${basePath}', configPath: '${configPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
+           :binds="{key: '${key}', type: '${p.type}', partName: '${append.part.name}', label: '${getLabel(append.CONFIG, configPath, key)}', level:'${level}', parentlevel:'${level - 1}', basePath: '${basePath}', configPath: '${configPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
               name="prop_after"></slot-com>
+ <slot-com :defs="slotContent" :attrs="{parts}"
+           :binds="{key: '${key}', type: '${p.type}', partName: '${append.part.name}', label: '${getLabel(append.CONFIG, configPath, key)}', level:'${level}', parentlevel:'${level - 1}', basePath: '${basePath}', configPath: '${configPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
+              name="prop_beforeend"></slot-com>              
 </${col_tag}>`;
       } else {
       //
@@ -199,7 +219,7 @@ function buildTableActions(p, basePath, configPath, append = {}) {
   };
 
   const { actions = {} } = p.properties;
-  console.log('actions', p.properties, actions);
+  // console.log('actions', p.properties, actions);
   if (actions && actions.type === 'object') {
     // const recordModelPath = `${basePath}.actions`;
     const recordConfigPath = `${configPath}.properties.actions.properties`;
