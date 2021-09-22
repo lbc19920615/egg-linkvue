@@ -36,10 +36,11 @@ export default function(name) {
       },
     },
     setup(props, { emit }) {
-      const { ref, watch } = global.Vue;
+      const { ref, watch, provide, onBeforeUnmount } = global.Vue;
       // let curFormCon = inject('curFormCon')
       // console.log(curFormCon, props)
       const context = props.context;
+      const uuid = 'cm-field-' + ZY.rid()
 
       const lock = new ZY.Lock(/* optional lock name, should be unique */);
 
@@ -146,22 +147,58 @@ export default function(name) {
       }
 
 
-      return {
+      let cachedConfig = {}
+      try {
+        cachedConfig = ZY.JSON5.parse(ZY.JSON5.stringify(
+          context.get_SELF_CONFIG()
+        ));
+        // console.log(cachedConfig)
+      } catch (e) {
+      //
+      }
+
+      function getContextCONFIG(path) {
+        if (!path) {
+          return cachedConfig
+        }
+        // console.log(cachedConfig, path)
+        return ZY.lodash.get(cachedConfig, path);
+      }
+
+      const ret = {
         onBlur,
         onInput,
         ...commonCom,
         getOpt,
+        getContextCONFIG,
         getLabel,
+        cachedConfig,
         getUIOpt,
         onFchange,
         isArray,
         context,
+        cmFieldUUID: uuid,
         getProp,
         part_key: props.part_key,
         // onUpdateModelValue,
         value,
         onChange,
       };
+
+      provide('CurCmField', ret);
+
+      if (!globalThis.cmFieldContext) {
+        globalThis.cmFieldContext = new Map()
+      }
+
+      globalThis.cmFieldContext.set(uuid, ret)
+
+
+      onBeforeUnmount(()=> {
+        globalThis.cmFieldContext.delete(uuid)
+      })
+
+      return ret;
     },
   };
 }
