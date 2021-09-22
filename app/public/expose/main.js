@@ -7686,12 +7686,13 @@ function findPathsToKey(options) {
                 pathToKey: `${oldPath}${k}[${j}]`
               });
             }
-          }
-          if (obj[k] !== null && typeof obj[k] === "object") {
+          } else if (obj[k] !== null && typeof obj[k] === "object") {
             findKey({
+              obj: obj[k],
               key,
               pathToKey: `${oldPath}${k}`
             });
+          } else {
           }
         }
       }
