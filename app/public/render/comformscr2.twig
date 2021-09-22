@@ -190,7 +190,7 @@
                 findKeys.forEach(findKeyItem => {
                   let target = ZY.lodash.get(model, findKeyItem.parentKey)
                   // console.log(findKeyItem, target)
-                  if (findKeyItem.parentType === 'array') {
+                  // if (findKeyItem.parentType === 'array') {
                     // target是数组
                     // const obj = formModel.createFormModel(findKeyItem.parentDef);
                     // target.forEach(item => {
@@ -200,7 +200,8 @@
                     //     }
                     //   }
                     // })
-                  }
+                  // }
+                  // console.log(target, findKeyItem)
                   // console.log(Array.isArray(target), model)
                   comHelper.autoVal({
                     obj: model,
@@ -453,6 +454,16 @@
           // console.log(arr)
         }
 
+        ret.get_SELF_CONFIG = function(path) {
+          // console.log(rowDef)
+          if (!path) {
+            return rowDef
+          }
+          return ZY.lodash.get(rowDef, path)
+        }
+
+        ret.rowDef = rowDef
+
         /**
          * arr删除
          * @param path
@@ -672,6 +683,10 @@
         })
       }
 
+      function getCONFIG(path) {
+        return ZY.lodash.get(config, path)
+      }
+
 
       let instanse = {
       config,
@@ -679,6 +694,7 @@
       defaultTo: ZY.lodash.defaultTo,
       z_get,
       callPageEvent,
+        getCONFIG,
       get: ZY.lodash.get,
       dxValue,
       valTpl,
