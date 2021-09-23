@@ -14,7 +14,7 @@
 <div v-if="{{pathKey}}"
      :hidden="!debug"
 >
-   <div hidden>{% verbatim %}{{{% endverbatim %} {{pathKey}}.model {% verbatim %}}}{% endverbatim %}</div>
+   <div>{% verbatim %}{{{% endverbatim %} {{pathKey}}.model {% verbatim %}}}{% endverbatim %}</div>
   <div>{% verbatim %}{{{% endverbatim %} {{pathKey}}.computedModel {% verbatim %}}}{% endverbatim %}</div>
 {#   <div>{{parts.form.computedModel}}</div>#}
 </div>
@@ -312,17 +312,17 @@
                   let fullPath = [key, skey].filter(v => v).join('.')
                   // console.log(`${fullPath} changed`, svalue)
                   let modelTarget = ZY.lodash.get(model, fullPath)
+                  if (typeof modelTarget === 'object') {
+
+                  }
+                  else {
+                    modelTarget = model
+                  }
                   // console.log(modelTarget)
                   // let changed = {}
                   arr.forEach((arrItem) => {
                     let {key,reflect, valTpl}  = arrItem
                     let calcedVal = undefined
-                    if (typeof modelTarget === 'object') {
-
-                    }
-                    else {
-                      modelTarget = model
-                    }
 
                     if (valTpl) {
                       calcedVal = ZY_EXT.eval5(valTpl, {
@@ -330,8 +330,9 @@
                         $R: reflect,
                         $VAL: modelTarget[reflect],
                         $M: modelTarget,
-                        L: ZY.lodash,
-                        v: Date.now()
+                        $L: ZY.lodash,
+                        $DEFAULT: ZY.lodash.defaultTo,
+                        $NOW: Date.now()
                       })
                     } else {
                       calcedVal = modelTarget[reflect]
@@ -551,6 +552,8 @@
                           let spath = ext.path
                           let obj = {
                             key,
+                            // reflectArr: formDefProp.reflectArr,
+                            // reflectArr: ['firstName', 'lastName'],
                             reflect: formDefProp.reflect,
                             valTpl: formDefProp.reflectTpl,
                           }
