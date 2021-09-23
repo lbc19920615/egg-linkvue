@@ -285,6 +285,8 @@
 
         attachModelWatcher(model, '', model)
 
+
+
         let cachedModel = ''
         watch(model, (newVal, oldVal) => {
           let newObj = toRaw(newVal)
@@ -297,23 +299,33 @@
           let diffed = ZY.diff(oldObj, newObj)
           // console.log('model.content', reflectMap, newObj, oldObj, diffed)
           reflectMap.forEach((arr, key) => {
-            // console.log(key, value)
             // console.log(arr)
-            let hasDiffedChange = ZY.lodash.get(diffed, key)
+            let hasDiffedChange = ZY.deepGet(diffed, key.trim())
+            // console.log(key, arr, diffed, hasDiffedChange)
             if (hasDiffedChange) {
               // for (let [diffedChangedKey, diffedChangedValue] of Object.entries(hasDiffedChange)) {
               //
               // }
               ZY.lodash.each(hasDiffedChange, (svalue, skey) => {
                 if (typeof svalue !== 'undefined') {
-                  let fullPath = key + '.' + skey
+                  // let fullPath = key + '.' + skey
+                  let fullPath = [key, skey].filter(v => v).join('.')
                   // console.log(`${fullPath} changed`, svalue)
                   let modelTarget = ZY.lodash.get(model, fullPath)
+                  // console.log(modelTarget)
                   // let changed = {}
                   arr.forEach((arrItem) => {
                     let {key,reflect, valTpl}  = arrItem
+                    let calcedVal = undefined
+                    if (typeof modelTarget === 'object') {
+
+                    }
+                    else {
+                      modelTarget = model
+                    }
+
                     if (valTpl) {
-                      modelTarget[key] = ZY_EXT.eval5(valTpl, {
+                      calcedVal = ZY_EXT.eval5(valTpl, {
                         A: globalThis.getApp(),
                         $R: reflect,
                         $VAL: modelTarget[reflect],
@@ -321,9 +333,10 @@
                         L: ZY.lodash,
                         v: Date.now()
                       })
-                    }else {
-                      modelTarget[key] = modelTarget[reflect]
+                    } else {
+                      calcedVal = modelTarget[reflect]
                     }
+                    modelTarget[key]  = calcedVal
                   })
                 }
               })

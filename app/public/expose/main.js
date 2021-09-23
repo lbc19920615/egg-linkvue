@@ -8027,6 +8027,12 @@ function rid(...args) {
 var PubSub = import_pubsub_js.default;
 var Lock2 = Lock;
 var lodash = import_lodash.default;
+function deepGet(target, path3 = "", defaultVal) {
+  if (!path3) {
+    return target;
+  }
+  return lodash.get(target, path3, defaultVal);
+}
 function getStrFromObj(obj, path3, defaultVal) {
   let v = lodash.get(obj, path3);
   if (!v) {
@@ -8149,6 +8155,7 @@ export {
   camelNameToCls,
   comHelper,
   compareObj,
+  deepGet,
   defaultStr,
   export_deletedDiff as deletedDiff,
   export_detailedDiff as detailedDiff,

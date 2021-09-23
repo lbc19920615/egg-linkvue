@@ -120,6 +120,19 @@ import _lodash from 'lodash';
 export let lodash = _lodash
 
 /**
+ * deepGet
+ * @param target
+ * @param path
+ * @param defaultVal
+ */
+export function deepGet(target, path = '', defaultVal) {
+  if (!path) {
+    return target
+  }
+  return lodash.get(target, path, defaultVal)
+}
+
+/**
  * getStrFromObj
  * @param obj
  * @param path
