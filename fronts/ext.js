@@ -167,3 +167,11 @@ import _cssObj from 'cssobj';
  * @type {CssObj.Static}
  */
 export const cssObj = _cssObj;
+
+import _marked from 'marked';
+
+/**
+ * marked
+ * @type {(function(*=, *=, *=): (*|undefined|string))|*}
+ */
+export const marked = _marked;
