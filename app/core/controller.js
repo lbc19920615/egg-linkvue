@@ -50,10 +50,10 @@ function getLabel(CONFIG, configPath, key) {
   const def = lodash.get({
     config: CONFIG,
   }, configPath);
-  // console.log(def, part);
+  console.log(def, configPath);
   if (def) {
     const ret = lodash.get(def, 'ui.label', key);
-    console.log(ret);
+    // console.log(ret);
     return ret;
   }
   return key;
@@ -68,9 +68,9 @@ function renderForm(p, basePath, configPath, append = {}) {
       const obj_tag = p.tag ? p.tag : 'el-row';
       const fromPath = getSelfPath(basePath, append.BASE_PATH);
       context.tpl = context.tpl + `
- <slot-com :defs="slotContent" :attrs="{parts}"
-           :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}', selfpath: '${fromPath}',  process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
-            name="object_prev"></slot-com>
+<slot-com :defs="slotContent" :attrs="{parts}"
+           :binds="{key: '${key}', partName: '${append.part.name}', config: getUI_CONFIG('${configPath}'), configPath: '${configPath}', label: '${getLabel(append.CONFIG, configPath, key)}', selfpath: '${fromPath}',  process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
+            name="object_beforebegin"></slot-com>            
 <${obj_tag} class="level_${level} z-form__object" ${attrStr(p)}
 v-if="${basePath}"
 >`;
