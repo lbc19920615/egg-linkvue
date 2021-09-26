@@ -128,9 +128,13 @@
     },
     setup(props, { emit }) {
 
+      function heredoc(fn) {
+        return fn.toString().match(/\/\*\s*([\s\S]*?)\s*\*\//m)[1];
+      }
+      var txt = heredoc(function () {/*{{CONFIG_SOURCE_JSON5}}*/});
+      // console.log(txt)
 
-
-      const config = ZY.JSON5.parse(`{{CONFIG_SOURCE_JSON5}}`);
+      const config = ZY.JSON5.parse(txt);
       const { ref, inject, watch, getCurrentInstance, toRaw } = global.Vue;
       const { useStore } = global.Vuex
       let store = useStore()
@@ -722,13 +726,13 @@
       }
 
       function getCONFIG(path) {
-        console.log('getCONFIG', config, path)
+        // console.log('getCONFIG', config, path)
         return ZY.lodash.get(config, path)
       }
 
 
       function getUI_CONFIG(path) {
-        console.log('getCONFIG', config, path)
+        // console.log('getCONFIG', config, path)
         return ZY.lodash.get({
           config
         }, path)

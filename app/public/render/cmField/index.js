@@ -165,6 +165,17 @@ export default function(name) {
         return ZY.lodash.get(cachedConfig, path);
       }
 
+      if (props.ui.widget2) {
+        let obj = {}
+        try {
+          let def = ZY.JSON5.parse(props.ui.widget2)
+          props.ui = Object.assign(props.ui, def.data)
+          console.log(props.ui)
+        } catch (e) {
+
+        }
+      }
+
       const ret = {
         onBlur,
         p_selfpath: props.selfpath,
