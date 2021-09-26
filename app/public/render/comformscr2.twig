@@ -722,7 +722,16 @@
       }
 
       function getCONFIG(path) {
+        console.log('getCONFIG', config, path)
         return ZY.lodash.get(config, path)
+      }
+
+
+      function getUI_CONFIG(path) {
+        // console.log('getCONFIG', config, path)
+        return ZY.lodash.get({
+          config
+        }, path)
       }
 
 
@@ -732,6 +741,7 @@
       defaultTo: ZY.lodash.defaultTo,
       z_get,
       callPageEvent,
+        getUI_CONFIG,
         getCONFIG,
       get: ZY.lodash.get,
       dxValue,
