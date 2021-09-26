@@ -124,6 +124,9 @@
 {% macro custom(model) %}
   <custom-form-render
           :ui="ui"
+          :selfpath="p_selfpath"
+          :formpath="p_formpath"
+          :path-arr="p_pathArr"
           :part_key="part_key"
           :context="context"
           :field_uuid="cmFieldUUID"

@@ -93,14 +93,30 @@ export function rid(...args) {
   return v.replace(/-/g, '_')
 }
 
-import _PubSub from 'pubsub-js'
+// import _PubSub from 'pubsub-js'
 /**
  * PubSub
  * @description 文件发布订阅
  * @link https://www.npmjs.com/package/PubSub
  * @type {{}}
  */
-export let PubSub = _PubSub
+// export let PubSub = _PubSub
+
+export function getObjPathFromPathArr(pathArr = []) {
+  let path = '';
+  pathArr.forEach((item, index) => {
+    if (index < 1) {
+      path = item;
+    } else {
+      if (typeof item === 'string') {
+        path = `${path}['${item}']`;
+      } else {
+        path = `${path}[${item}]`;
+      }
+    }
+  });
+  return path;
+}
 
 import _Lock from 'js-lock'
 /**

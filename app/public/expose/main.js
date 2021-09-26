@@ -1013,202 +1013,6 @@ var require_get = __commonJS({
   }
 });
 
-// node_modules/pubsub-js/src/pubsub.js
-var require_pubsub = __commonJS({
-  "node_modules/pubsub-js/src/pubsub.js"(exports, module) {
-    (function(root, factory2) {
-      "use strict";
-      var PubSub2 = {};
-      root.PubSub = PubSub2;
-      factory2(PubSub2);
-      if (typeof exports === "object") {
-        if (module !== void 0 && module.exports) {
-          exports = module.exports = PubSub2;
-        }
-        exports.PubSub = PubSub2;
-        module.exports = exports = PubSub2;
-      } else if (typeof define === "function" && define.amd) {
-        define(function() {
-          return PubSub2;
-        });
-      }
-    })(typeof window === "object" && window || exports, function(PubSub2) {
-      "use strict";
-      var messages = {}, lastUid = -1, ALL_SUBSCRIBING_MSG = "*";
-      function hasKeys(obj) {
-        var key;
-        for (key in obj) {
-          if (Object.prototype.hasOwnProperty.call(obj, key)) {
-            return true;
-          }
-        }
-        return false;
-      }
-      function throwException(ex) {
-        return function reThrowException() {
-          throw ex;
-        };
-      }
-      function callSubscriberWithDelayedExceptions(subscriber, message, data) {
-        try {
-          subscriber(message, data);
-        } catch (ex) {
-          setTimeout(throwException(ex), 0);
-        }
-      }
-      function callSubscriberWithImmediateExceptions(subscriber, message, data) {
-        subscriber(message, data);
-      }
-      function deliverMessage(originalMessage, matchedMessage, data, immediateExceptions) {
-        var subscribers = messages[matchedMessage], callSubscriber = immediateExceptions ? callSubscriberWithImmediateExceptions : callSubscriberWithDelayedExceptions, s;
-        if (!Object.prototype.hasOwnProperty.call(messages, matchedMessage)) {
-          return;
-        }
-        for (s in subscribers) {
-          if (Object.prototype.hasOwnProperty.call(subscribers, s)) {
-            callSubscriber(subscribers[s], originalMessage, data);
-          }
-        }
-      }
-      function createDeliveryFunction(message, data, immediateExceptions) {
-        return function deliverNamespaced() {
-          var topic = String(message), position = topic.lastIndexOf(".");
-          deliverMessage(message, message, data, immediateExceptions);
-          while (position !== -1) {
-            topic = topic.substr(0, position);
-            position = topic.lastIndexOf(".");
-            deliverMessage(message, topic, data, immediateExceptions);
-          }
-          deliverMessage(message, ALL_SUBSCRIBING_MSG, data, immediateExceptions);
-        };
-      }
-      function hasDirectSubscribersFor(message) {
-        var topic = String(message), found = Boolean(Object.prototype.hasOwnProperty.call(messages, topic) && hasKeys(messages[topic]));
-        return found;
-      }
-      function messageHasSubscribers(message) {
-        var topic = String(message), found = hasDirectSubscribersFor(topic) || hasDirectSubscribersFor(ALL_SUBSCRIBING_MSG), position = topic.lastIndexOf(".");
-        while (!found && position !== -1) {
-          topic = topic.substr(0, position);
-          position = topic.lastIndexOf(".");
-          found = hasDirectSubscribersFor(topic);
-        }
-        return found;
-      }
-      function publish(message, data, sync, immediateExceptions) {
-        message = typeof message === "symbol" ? message.toString() : message;
-        var deliver = createDeliveryFunction(message, data, immediateExceptions), hasSubscribers = messageHasSubscribers(message);
-        if (!hasSubscribers) {
-          return false;
-        }
-        if (sync === true) {
-          deliver();
-        } else {
-          setTimeout(deliver, 0);
-        }
-        return true;
-      }
-      PubSub2.publish = function(message, data) {
-        return publish(message, data, false, PubSub2.immediateExceptions);
-      };
-      PubSub2.publishSync = function(message, data) {
-        return publish(message, data, true, PubSub2.immediateExceptions);
-      };
-      PubSub2.subscribe = function(message, func) {
-        if (typeof func !== "function") {
-          return false;
-        }
-        message = typeof message === "symbol" ? message.toString() : message;
-        if (!Object.prototype.hasOwnProperty.call(messages, message)) {
-          messages[message] = {};
-        }
-        var token = "uid_" + String(++lastUid);
-        messages[message][token] = func;
-        return token;
-      };
-      PubSub2.subscribeAll = function(func) {
-        return PubSub2.subscribe(ALL_SUBSCRIBING_MSG, func);
-      };
-      PubSub2.subscribeOnce = function(message, func) {
-        var token = PubSub2.subscribe(message, function() {
-          PubSub2.unsubscribe(token);
-          func.apply(this, arguments);
-        });
-        return PubSub2;
-      };
-      PubSub2.clearAllSubscriptions = function clearAllSubscriptions() {
-        messages = {};
-      };
-      PubSub2.clearSubscriptions = function clearSubscriptions(topic) {
-        var m;
-        for (m in messages) {
-          if (Object.prototype.hasOwnProperty.call(messages, m) && m.indexOf(topic) === 0) {
-            delete messages[m];
-          }
-        }
-      };
-      PubSub2.countSubscriptions = function countSubscriptions(topic) {
-        var m;
-        var token;
-        var count = 0;
-        for (m in messages) {
-          if (Object.prototype.hasOwnProperty.call(messages, m) && m.indexOf(topic) === 0) {
-            for (token in messages[m]) {
-              count++;
-            }
-            break;
-          }
-        }
-        return count;
-      };
-      PubSub2.getSubscriptions = function getSubscriptions(topic) {
-        var m;
-        var list = [];
-        for (m in messages) {
-          if (Object.prototype.hasOwnProperty.call(messages, m) && m.indexOf(topic) === 0) {
-            list.push(m);
-          }
-        }
-        return list;
-      };
-      PubSub2.unsubscribe = function(value) {
-        var descendantTopicExists = function(topic) {
-          var m2;
-          for (m2 in messages) {
-            if (Object.prototype.hasOwnProperty.call(messages, m2) && m2.indexOf(topic) === 0) {
-              return true;
-            }
-          }
-          return false;
-        }, isTopic = typeof value === "string" && (Object.prototype.hasOwnProperty.call(messages, value) || descendantTopicExists(value)), isToken = !isTopic && typeof value === "string", isFunction = typeof value === "function", result = false, m, message, t2;
-        if (isTopic) {
-          PubSub2.clearSubscriptions(value);
-          return;
-        }
-        for (m in messages) {
-          if (Object.prototype.hasOwnProperty.call(messages, m)) {
-            message = messages[m];
-            if (isToken && message[value]) {
-              delete message[value];
-              result = value;
-              break;
-            }
-            if (isFunction) {
-              for (t2 in message) {
-                if (Object.prototype.hasOwnProperty.call(message, t2) && message[t2] === value) {
-                  delete message[t2];
-                  result = true;
-                }
-              }
-            }
-          }
-        }
-        return result;
-      };
-    });
-  }
-});
-
 // node_modules/has-symbols/shams.js
 var require_shams = __commonJS({
   "node_modules/has-symbols/shams.js"(exports, module) {
@@ -7721,9 +7525,6 @@ var comHelper_default = {
   autoVal
 };
 
-// fronts/main.js
-var import_pubsub_js = __toModule(require_pubsub());
-
 // node_modules/js-lock/TimeoutError.js
 var TimeoutError = class extends Error {
   constructor(message = "") {
@@ -8024,7 +7825,21 @@ function rid(...args) {
   }
   return v.replace(/-/g, "_");
 }
-var PubSub = import_pubsub_js.default;
+function getObjPathFromPathArr(pathArr = []) {
+  let path3 = "";
+  pathArr.forEach((item, index) => {
+    if (index < 1) {
+      path3 = item;
+    } else {
+      if (typeof item === "string") {
+        path3 = `${path3}['${item}']`;
+      } else {
+        path3 = `${path3}[${item}]`;
+      }
+    }
+  });
+  return path3;
+}
 var Lock2 = Lock;
 var lodash = import_lodash.default;
 function deepGet(target, path3 = "", defaultVal) {
@@ -8142,7 +7957,6 @@ export {
   Interval,
   JSON5,
   Lock2 as Lock,
-  PubSub,
   R,
   REMOTE_ORIGIN,
   Time,
@@ -8165,6 +7979,7 @@ export {
   fetchreq,
   formModel,
   getImportURL,
+  getObjPathFromPathArr,
   getStrFromObj,
   global2 as global,
   importJsStr,

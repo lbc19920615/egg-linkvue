@@ -167,6 +167,9 @@ export default function(name) {
 
       const ret = {
         onBlur,
+        p_selfpath: props.selfpath,
+        p_formpath: props.formPath,
+        p_pathArr: props.pathArr,
         onInput,
         ...commonCom,
         getOpt,

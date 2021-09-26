@@ -55,7 +55,7 @@ export const baseServiceDef = ({ vue, props, config }) => {
 
 
     // watch(() => model.name, () => console.log(model, computedModel));
-    global.ZY.PubSub.publish(globalStore.EVENT_TYPES.INIT_MODEL_READY, '');
+    // global.ZY.PubSub.publish(globalStore.EVENT_TYPES.INIT_MODEL_READY, '');
     ctx.RefsManager.emit(globalStore.EVENT_TYPES.INIT_MODEL_READY, { ctx });
 
     return getModel();
@@ -68,7 +68,7 @@ export const baseServiceDef = ({ vue, props, config }) => {
       model[key] = newVal[key];
     }
     modeljson.value = ZY.JSON5.stringify(model)
-    global.ZY.PubSub.publish(globalStore.EVENT_TYPES.SET_MODEL_READY, '');
+    // global.ZY.PubSub.publish(globalStore.EVENT_TYPES.SET_MODEL_READY, '');
     ctx.RefsManager.emit(globalStore.EVENT_TYPES.SET_MODEL_READY, { ctx, model });
   }
 
