@@ -178,11 +178,11 @@ export default function(name) {
         try {
           const ___def = ZY.JSON5.parse(props.ui.widgetExt)
           props.ui.widgetConfig = Object.assign(props.ui.widgetConfig, ___def.data)
-          console.log(props.ui)
         } catch (e) {
         //
         }
       }
+      // console.log(props)
 
       const ret = {
         onBlur,
