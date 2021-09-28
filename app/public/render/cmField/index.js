@@ -1,12 +1,33 @@
 import { global, lodash } from './public/expose/main.js';
 import { useCommonComponent } from './public/hooks.js';
 
+function heredoc(fn) {
+  return fn.toString().match(/\/\*\s*([\s\S]*?)\s*\*\//m)[1];
+}
+
+// const REMOVE_PROPS = [ 'clearable', 'disabled' ];
+
 export default function(name) {
   const templateId = name + '-tpl';
+  const cm_field_html = heredoc(function() { /* {{html}}*/ });
+  console.log(cm_field_html);
+
   // eslint-disable-next-line no-undef
   globalThis.initTemplate(templateId, globalThis, {
-    html: `{{html}}`,
+
+    html: cm_field_html,
   });
+
+  function getWidget2(widgetObj = {}) {
+
+    // for (let [key] of Object.entries(widgetObj)) {
+    //   if (REMOVE_PROPS.includes(key)) {
+    //     Reflect.deleteProperty(widgetObj, key)
+    //   }
+    // }
+
+    return widgetObj;
+  }
 
   return {
     name,
@@ -40,7 +61,7 @@ export default function(name) {
       // let curFormCon = inject('curFormCon')
       // console.log(curFormCon, props)
       const context = props.context;
-      const uuid = 'cm-field-' + ZY.rid()
+      const uuid = 'cm-field-' + ZY.rid();
 
       const lock = new ZY.Lock(/* optional lock name, should be unique */);
 
@@ -147,7 +168,7 @@ export default function(name) {
       }
 
 
-      let cachedConfig = {}
+      let cachedConfig = {};
       try {
         cachedConfig = ZY.JSON5.parse(ZY.JSON5.stringify(
           context.get_SELF_CONFIG()
@@ -159,7 +180,7 @@ export default function(name) {
 
       function getContextCONFIG(path) {
         if (!path) {
-          return cachedConfig
+          return cachedConfig;
         }
         // console.log(cachedConfig, path)
         return ZY.lodash.get(cachedConfig, path);
@@ -167,17 +188,19 @@ export default function(name) {
 
       if (props.ui.widget2) {
         try {
-          let def = ZY.JSON5.parse(props.ui.widget2)
-          props.ui = Object.assign(props.ui, def.data)
-          // console.log(props.ui)
+          const def = getWidget2(ZY.JSON5.parse(props.ui.widget2));
+
+
+          props.ui = Object.assign(props.ui, def.data);
+          // console.log('widget2', def)
         } catch (e) {
         //
         }
       }
-      if (props.ui.widgetConfig  && props.ui.widgetExt) {
+      if (props.ui.widgetConfig && props.ui.widgetExt) {
         try {
-          const ___def = ZY.JSON5.parse(props.ui.widgetExt)
-          props.ui.widgetConfig = Object.assign(props.ui.widgetConfig, ___def.data)
+          const ___def = ZY.JSON5.parse(props.ui.widgetExt);
+          props.ui.widgetConfig = Object.assign(props.ui.widgetConfig, ___def.data);
         } catch (e) {
         //
         }
@@ -210,15 +233,15 @@ export default function(name) {
       provide('CurCmField', ret);
 
       if (!globalThis.cmFieldContext) {
-        globalThis.cmFieldContext = new Map()
+        globalThis.cmFieldContext = new Map();
       }
 
-      globalThis.cmFieldContext.set(uuid, ret)
+      globalThis.cmFieldContext.set(uuid, ret);
 
 
-      onBeforeUnmount(()=> {
-        globalThis.cmFieldContext.delete(uuid)
-      })
+      onBeforeUnmount(() => {
+        globalThis.cmFieldContext.delete(uuid);
+      });
 
       return ret;
     },

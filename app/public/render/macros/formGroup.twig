@@ -115,7 +115,12 @@
             {{forms.radioBoolean(modelPath)}}
         </template>
         <template v-if="type === 'boolean'">
+          <template v-if="ui.widgetConfig && ui.widgetConfig.ext === 'booleanWithClearable'">
+            {{forms.BooleanWithClearable(modelPath)}}
+          </template>
+          <template v-else>
             {{forms.Boolean(modelPath)}}
+          </template>
         </template>
         <template v-if="type === 'checkbox'">
             {{forms.checkbox(modelPath)}}
@@ -126,6 +131,7 @@
         <template v-if="type === 'time'">
             {{forms.time(modelPath)}}
         </template>
+
     </template>
 {% endmacro %}
 
