@@ -10,7 +10,7 @@ function heredoc(fn) {
 export default function(name) {
   const templateId = name + '-tpl';
   const cm_field_html = heredoc(function() { /* {{html}}*/ });
-  console.log(cm_field_html);
+  // console.log(cm_field_html);
 
   // eslint-disable-next-line no-undef
   globalThis.initTemplate(templateId, globalThis, {
