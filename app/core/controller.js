@@ -89,6 +89,7 @@ v-if="${basePath}"
       const indexKey = 'index' + level;
       const fromPath = getSelfPath(basePath, append.BASE_PATH);
       const array_tag = p.tag ? p.tag : 'div';
+      const wrap_tag = p.wrap ? p.wrap : '';
       const array_con_tag = p.con_tag ? p.con_tag : 'div';
       const con_attr = attrStr(p, 'ui.conAttrs', {
         itemKey,
@@ -108,6 +109,10 @@ v-if="${basePath}"
       //   <slot-com :defs="slotContent" :attrs="{parts}"
       // :binds="{key: '${key}', partName: '${append.part.name}', indexKey:${indexKey}, fromPath: '${fromPath}',  CONFIG: '${append.CONFIG}', selfpath: '${fromPath}['+ ${indexKey} +']', level:'${level}', parentlevel:'${level - 1}', basePath: '${basePath}', configPath: '${configPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
       //   name="array_item_before"></slot-com>
+      if (wrap_tag) {
+        context.tpl = context.tpl + `<${wrap_tag}>`;
+      }
+
       context.tpl = context.tpl + `
  <slot-com :defs="slotContent" :attrs="{parts}"
            :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}', label: '${getLabel(append.CONFIG, configPath, key)}', selfpath: '${fromPath}',  CONFIG: '${append.CONFIG}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
@@ -143,6 +148,11 @@ v-if="${basePath}"
          :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}',  label: '${getLabel(append.CONFIG, configPath, key)}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
             name="array_beforeend"></slot-com>            
 </${array_tag}>`;
+
+      if (wrap_tag) {
+        context.tpl = context.tpl + `</${wrap_tag}>`;
+      }
+
     } else {
       // console.log(p, key);
       if (!p.hidden) {
