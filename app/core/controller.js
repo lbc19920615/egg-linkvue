@@ -50,7 +50,7 @@ function getLabel(CONFIG, configPath, key) {
   const def = lodash.get({
     config: CONFIG,
   }, configPath);
-  console.log(def, configPath);
+  // console.log(def, configPath);
   if (def) {
     const ret = lodash.get(def, 'ui.label', key);
     // console.log(ret);
