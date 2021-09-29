@@ -65,7 +65,7 @@ function renderForm(p, basePath, configPath, append = {}) {
   };
   function render(p, key, context, level, basePath, configPath, pathArrStr, ext) {
     if (p.type === 'object') {
-      const obj_tag = p.tag ? p.tag : 'el-row';
+      const obj_tag = p.tag ? p.tag : 'div';
       const fromPath = getSelfPath(basePath, append.BASE_PATH);
       context.tpl = context.tpl + `
 <slot-com :defs="slotContent" :attrs="{parts}"
@@ -88,8 +88,8 @@ v-if="${basePath}"
       const itemKey = 'item' + level;
       const indexKey = 'index' + level;
       const fromPath = getSelfPath(basePath, append.BASE_PATH);
-      const array_tag = p.tag ? p.tag : 'el-row';
-      const array_con_tag = p.con_tag ? p.con_tag : 'el-col';
+      const array_tag = p.tag ? p.tag : 'div';
+      const array_con_tag = p.con_tag ? p.con_tag : 'div';
       const con_attr = attrStr(p, 'ui.conAttrs', {
         itemKey,
         indexKey,
