@@ -46,6 +46,70 @@ function attrStr(p, k = 'ui.attrs', context = {}) {
   return str;
 }
 
+/**
+ * attrStr
+ * @param attrs {[]}  Array
+ * @param context
+ * @return {string}
+ */
+function attrStr2(attrs = [], context = {}) {
+  const c = Object.assign({
+    $: lodash,
+  }, context);
+  let str = '';
+  if (Array.isArray(attrs)) {
+    attrs.forEach(attr => {
+      if (Array.isArray(attr)) {
+        str = str + ` ${attr[0]}='${attr[1]}'`;
+      } else if (typeof attr === 'string') {
+        str = str + ` ${attr}`;
+      } else if (lodash.isObject(attr) && Array.isArray(attr.handler)) {
+        // eslint-disable-next-line no-new-func
+        const fun = new Function(attr.handler[0], attr.handler[1]);
+        const ret = fun(c);
+        if (Array.isArray(ret)) {
+          str = str + ` ${ret[0]}='${attr.prefixValue ? attr.prefixValue : ''}${ret[1]}${attr.suffixValue ? attr.suffixValue : ''}'`;
+        }
+      }
+    });
+    // console.log('attrs', attrs, str);
+  }
+  return str;
+}
+
+/**
+ * attrStr
+ * @param p {{}}  config
+ * @param k {string} key
+ * @param context
+ * @return {string}
+ */
+function attrStyles(p, k = 'ui.styles', context = {}) {
+  const c = Object.assign({
+    $: lodash,
+  }, context);
+  let str = '';
+  const attrs = lodash.get(p, k);
+  if (Array.isArray(attrs)) {
+    attrs.forEach(attr => {
+      if (Array.isArray(attr)) {
+        str = str + ` ${attr[0]}:${attr[1]};`;
+      } else if (typeof attr === 'string') {
+        // str = str + ` ${attr}`;
+      } else if (lodash.isObject(attr) && Array.isArray(attr.handler)) {
+        // eslint-disable-next-line no-new-func
+        // const fun = new Function(attr.handler[0], attr.handler[1]);
+        // const ret = fun(c);
+        // if (Array.isArray(ret)) {
+        //   str = str + ` ${ret[0]}='${attr.prefixValue ? attr.prefixValue : ''}${ret[1]}${attr.suffixValue ? attr.suffixValue : ''}'`;
+        // }
+      }
+    });
+    // console.log('attrs', attrs, str);
+  }
+  return str;
+}
+
 function getLabel(CONFIG, configPath, key) {
   const def = lodash.get({
     config: CONFIG,
@@ -57,6 +121,25 @@ function getLabel(CONFIG, configPath, key) {
     return ret;
   }
   return key;
+}
+
+function styleAddToAttr(attrArr = [], col_style = '') {
+  if (!Array.isArray(attrArr)) {
+    attrArr = [];
+  }
+  if (!col_style) {
+    return attrArr;
+  }
+  const finded = attrArr.find(v => v[0] === 'style');
+  if (finded) {
+    finded[1] = finded[1] + '; ' + col_style;
+  } else {
+    attrArr.push([
+      'style',
+      col_style,
+    ]);
+  }
+  return attrArr;
 }
 
 function renderForm(p, basePath, configPath, append = {}) {
@@ -147,6 +230,11 @@ v-if="${basePath}"
         const field_tag = p.field_tag ? p.field_tag : 'cm-field';
         const wrap_tag = p.wrap ? p.wrap : '';
         const fromPath = getSelfPath(basePath, append.BASE_PATH);
+        const col_style = attrStyles(p).trim();
+        const attrs2 = styleAddToAttr(p.ui.attrs, col_style);
+
+        const attrs2Str = attrStr2(attrs2);
+        console.log(attrs2Str);
 
         if (wrap_tag) {
           context.tpl = context.tpl + `<${wrap_tag}>`;
@@ -157,7 +245,7 @@ v-if="${basePath}"
 <slot-com :defs="slotContent" :attrs="{parts}"
            :binds="{key: '${key}', partName: '${append.part.name}', label: '${getLabel(append.CONFIG, configPath, key)}', configPath: '${configPath}', selfpath: '${fromPath}',  process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
               name="prop_beforebegin"></slot-com>
-<${col_tag} class="level_${level} z-form__prop" ${attrStr(p)}
+<${col_tag} class="level_${level} z-form__prop" ${attrs2Str}
 ><slot-com :defs="slotContent" :attrs="{parts}"
            :binds="{key: '${key}', partName: '${append.part.name}', label: '${getLabel(append.CONFIG, configPath, key)}', config: getUI_CONFIG('${configPath}'), configPath: '${configPath}', selfpath: '${fromPath}',  process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
               name="prop_afterbegin"></slot-com>`;
