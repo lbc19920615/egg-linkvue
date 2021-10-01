@@ -291,6 +291,9 @@
             let reflectMapKey = key.trim()
             let hasDiffedChange = ZY.deepGet(diffed, reflectMapKey)
             let reflectMapArrKeys = reflectMapArr.map(v => v.key)
+            let reflectMapArrFullKeys = reflectMapArrKeys.map(v => {
+              return `${reflectMapKey}.${v}`
+            })
 
             // console.log(reflectMapKey, hasDiffedChange)
             if (hasDiffedChange) {
@@ -309,9 +312,10 @@
                      modelTarget = ZY.deepGet(model, reflectMapKey)
                   }
 
-                  // console.log(`${fullPath} changed`, model, modelTarget, reflectMapArr, modelTarget)
+                  // console.log(`${fullPath} changed`, model, reflectMapArrFullKeys, reflectMapArr, reflectMap, modelTarget)
 
-                  if (model === modelTarget && reflectMapArrKeys.includes(fullPath)) {
+                  // 如果更改的是reflect监听的元素 不需要更改其他reflectmap
+                  if (ZY.deepGet(model, reflectMapKey) === modelTarget && reflectMapArrFullKeys.includes(fullPath)) {
                     return
                   }
 
@@ -343,7 +347,7 @@
                         $NOW: Date.now()
                       })
                     } else {
-                      calcedVal = modelTarget[reflect]
+                      calcedVal = toRaw(modelTarget[reflect])
                     }
                     modelTarget[key]  = calcedVal
 
