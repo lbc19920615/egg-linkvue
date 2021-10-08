@@ -43,6 +43,7 @@ export default function(name) {
       context: null,
       selfpath: String,
       pathArr: Array,
+      prop_config: Object,
       ui: {
         type: Object,
         default() {
@@ -59,7 +60,7 @@ export default function(name) {
     setup(props, { emit }) {
       const { ref, watch, provide, onBeforeUnmount } = global.Vue;
       // let curFormCon = inject('curFormCon')
-      // console.log(curFormCon, props)
+      // console.log(props)
       const context = props.context;
       const uuid = 'cm-field-' + ZY.rid();
 

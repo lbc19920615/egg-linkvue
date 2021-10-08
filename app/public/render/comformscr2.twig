@@ -737,6 +737,17 @@
         }, path)
       }
 
+      function getUI_CONFIG_DEP_ID(path) {
+        let c = getUI_CONFIG(path)
+        return c.TOOLS_DEPID
+      }
+
+
+      function getUI_CONFIG_TOOLS_DEP_ITEM_ID(path) {
+        let c = getUI_CONFIG(path)
+        return c.TOOLS_DEP_ITEM_ID
+      }
+
 
       let instanse = {
       config,
@@ -744,7 +755,9 @@
       defaultTo: ZY.lodash.defaultTo,
       z_get,
       callPageEvent,
+        getUI_CONFIG_TOOLS_DEP_ITEM_ID,
         getUI_CONFIG,
+        getUI_CONFIG_DEP_ID,
         getCONFIG,
       get: ZY.lodash.get,
       dxValue,

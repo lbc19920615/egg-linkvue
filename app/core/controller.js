@@ -204,7 +204,7 @@ v-if="${basePath}"
         const attrs2 = styleAddToAttr(p.ui.attrs, col_style);
 
         const attrs2Str = attr2Str(attrs2);
-        console.log(attrs2Str);
+        // console.log(attrs2Str);
 
         if (wrap_tag) {
           context.tpl = context.tpl + `<${wrap_tag}>`;
@@ -216,6 +216,8 @@ v-if="${basePath}"
            :binds="{key: '${key}', partName: '${append.part.name}', label: '${getLabel(append.CONFIG, configPath, key)}', configPath: '${configPath}', selfpath: '${fromPath}',  process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
               name="prop_beforebegin"></slot-com>
 <${col_tag} class="level_${level} z-form__prop" ${attrs2Str}
+:tools_dep_id="getUI_CONFIG_DEP_ID('${configPath}')"
+:tools_dep_item_id="getUI_CONFIG_TOOLS_DEP_ITEM_ID('${configPath}')"
 ><slot-com :defs="slotContent" :attrs="{parts}"
            :binds="{key: '${key}', partName: '${append.part.name}', label: '${getLabel(append.CONFIG, configPath, key)}', config: getUI_CONFIG('${configPath}'), configPath: '${configPath}', selfpath: '${fromPath}',  process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
               name="prop_afterbegin"></slot-com>`;
@@ -233,6 +235,7 @@ type="${p.type}"
 :rules="${configPath}.rules"
 :context="${append.partKey}"
 part_key="${append.partKey}"
+:prop_config  =" getUI_CONFIG('${configPath}')"
 >
 <template v-slot:cmfield_label_beforeend="">
 <slot-com :defs="slotContent" :attrs="{parts}" 
