@@ -191,6 +191,10 @@ export const fetchreq = _req;
 
 import * as _time from './time';
 
+
+import APP_UTILS from '../app/core/utils';
+export let attr2Str = APP_UTILS.attr2Str
+
 /**
  * Time类
  * @type {{formatDateTime?: function(Date, string=): *}}
