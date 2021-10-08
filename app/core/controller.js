@@ -3,7 +3,7 @@ const lodash = require('lodash');
 const { Controller } = require('egg');
 const { getPropField } = require('./form2');
 
-const { getStrIfIsNotEmpty, buildCls } = require('./utils');
+const { getStrIfIsNotEmpty, buildCls, attr2Str } = require('./utils');
 
 function getSelfPath(basePath, BASE_PATH) {
   let fromPath = basePath.replace(BASE_PATH, '');
@@ -46,36 +46,6 @@ function attrStr(p, k = 'ui.attrs', context = {}) {
   return str;
 }
 
-/**
- * attrStr
- * @param attrs {[]}  Array
- * @param context
- * @return {string}
- */
-function attrStr2(attrs = [], context = {}) {
-  const c = Object.assign({
-    $: lodash,
-  }, context);
-  let str = '';
-  if (Array.isArray(attrs)) {
-    attrs.forEach(attr => {
-      if (Array.isArray(attr)) {
-        str = str + ` ${attr[0]}='${attr[1]}'`;
-      } else if (typeof attr === 'string') {
-        str = str + ` ${attr}`;
-      } else if (lodash.isObject(attr) && Array.isArray(attr.handler)) {
-        // eslint-disable-next-line no-new-func
-        const fun = new Function(attr.handler[0], attr.handler[1]);
-        const ret = fun(c);
-        if (Array.isArray(ret)) {
-          str = str + ` ${ret[0]}='${attr.prefixValue ? attr.prefixValue : ''}${ret[1]}${attr.suffixValue ? attr.suffixValue : ''}'`;
-        }
-      }
-    });
-    // console.log('attrs', attrs, str);
-  }
-  return str;
-}
 
 /**
  * attrStr
@@ -233,7 +203,7 @@ v-if="${basePath}"
         const col_style = attrStyles(p).trim();
         const attrs2 = styleAddToAttr(p.ui.attrs, col_style);
 
-        const attrs2Str = attrStr2(attrs2);
+        const attrs2Str = attr2Str(attrs2);
         console.log(attrs2Str);
 
         if (wrap_tag) {
