@@ -99,6 +99,16 @@
                 })
               }
             }
+            static 数组添加(e) {
+              let {parts, partName, selfpath} = e;
+              parts[partName].arrAppend(selfpath, {
+
+              })
+            }
+            static 数组删除(e) {
+              let {parts, partName, fromPath, indexKey} = e;
+              parts[partName].arrSplice(fromPath, indexKey);
+            }
           }
           globalThis.G = G
 
