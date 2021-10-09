@@ -8070,6 +8070,16 @@ function importJsStr(content) {
 }
 var AsyncFunction = Object.getPrototypeOf(async function() {
 }).constructor;
+var _DOM = {};
+_DOM.getAllPropKeys = function() {
+  return Object.keys(getComputedStyle(document.body)).filter((v) => {
+    return Number.isNaN(parseInt(v));
+  }).map((v) => {
+    let kebase = lodash.kebabCase(v);
+    return kebase;
+  });
+};
+var DOM = _DOM;
 var _U = {};
 _U.objArr2OptionsManager = function(arrObj = [], labelKey, valueKey) {
   let ret = {};
@@ -8111,6 +8121,7 @@ var export_diff = import_deep_object_diff.diff;
 var export_updatedDiff = import_deep_object_diff.updatedDiff;
 export {
   AsyncFunction,
+  DOM,
   Interval,
   JSON5,
   Lock2 as Lock,

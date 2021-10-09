@@ -321,6 +321,25 @@ export * as PinYin from './pingyin';
  */
 export const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
 
+
+let _DOM = {}
+_DOM.getAllPropKeys = function() {
+  return Object.keys(getComputedStyle(document.body))
+    .filter(v => {
+      return Number.isNaN(parseInt(v))
+    })
+    .map(v => {
+      let kebase = lodash.kebabCase(v)
+      // return {
+      //   label: kebase,
+      //   value: kebase
+      // }
+      return kebase
+    })
+}
+
+export let DOM = _DOM
+
 let _U = {}
 /**
  * objArr2OptionsManager
