@@ -32,16 +32,16 @@
 {#        {{ partConfigKey }}#}
 {#            {% verbatim %}{{ {% endverbatim %} {{ modelKey }} {% verbatim %} }} {% endverbatim %}#}
 
-        <slot-com :defs="slotContent" :attrs="{parts}"
-                  :binds="{name: '{{ part.name }}', partName: '{{ part.name }}', parts, process: '{{ CONFIG.process}}' }"
-                  name="form_before"></slot-com>
+{#        <slot-com :defs="slotContent" :attrs="{parts}"#}
+{#                  :binds="{name: '{{ part.name }}', partName: '{{ part.name }}', parts, process: '{{ CONFIG.process}}' }"#}
+{#                  name="form_before"></slot-com>#}
         <slot-com :defs="slotContent" :attrs="{parts}"
                   :binds="{name: '{{ part.name }}', partName: '{{ part.name }}', parts, process: '{{ CONFIG.process}}' }"
                   name="form_beforebegin"></slot-com>
         {{ partStr[part.name] }}
-        <slot-com :defs="slotContent" :attrs="{parts}"
-                  :binds="{name: '{{ part.name }}',  partName: '{{ part.name }}', parts, process: '{{ CONFIG.process}}' }"
-                  name="form_after"></slot-com>
+{#        <slot-com :defs="slotContent" :attrs="{parts}"#}
+{#                  :binds="{name: '{{ part.name }}',  partName: '{{ part.name }}', parts, process: '{{ CONFIG.process}}' }"#}
+{#                  name="form_after"></slot-com>#}
         <slot-com :defs="slotContent" :attrs="{parts}"
                   :binds="{name: '{{ part.name }}',  partName: '{{ part.name }}', parts, process: '{{ CONFIG.process}}' }"
                   name="form_afterend"></slot-com>
