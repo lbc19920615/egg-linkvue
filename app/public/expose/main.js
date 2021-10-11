@@ -8080,6 +8080,30 @@ _DOM.getAllPropKeys = function() {
   });
 };
 var DOM = _DOM;
+var _BOM = {};
+_BOM.createWindowManager = function({ url: url2 = "", target = "PromoteFirefoxWindowName" }) {
+  let windowObjectReference = null;
+  let defaultOptions = {
+    width: 800,
+    height: 600
+  };
+  function openFFPromotionPopup(options = {}) {
+    let op = Object.assign(defaultOptions, options);
+    let str = "";
+    for (let [key, value] of Object.entries(op)) {
+      str = str + `${key}=${value},`;
+    }
+    if (windowObjectReference == null || windowObjectReference.closed) {
+      windowObjectReference = window.open(url2, target, str + "resizable,scrollbars,status");
+    } else {
+      windowObjectReference.focus();
+    }
+  }
+  return {
+    open: openFFPromotionPopup
+  };
+};
+var BOM = _BOM;
 var _U = {};
 _U.objArr2OptionsManager = function(arrObj = [], labelKey, valueKey) {
   let ret = {};
@@ -8121,6 +8145,7 @@ var export_diff = import_deep_object_diff.diff;
 var export_updatedDiff = import_deep_object_diff.updatedDiff;
 export {
   AsyncFunction,
+  BOM,
   DOM,
   Interval,
   JSON5,

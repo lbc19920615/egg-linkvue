@@ -340,6 +340,63 @@ _DOM.getAllPropKeys = function() {
 
 export let DOM = _DOM
 
+
+let _BOM = {}
+/**
+ * createWindowManager
+ * @param url
+ * @param target
+ * @param options
+ */
+_BOM.createWindowManager = function(
+  {url = '', target = 'PromoteFirefoxWindowName'},
+
+) {
+
+  let windowObjectReference = null; // global variable
+
+  let defaultOptions = {
+    width: 800,
+    height: 600,
+  }
+
+  function openFFPromotionPopup(  options = {}) {
+
+    let op = Object.assign(defaultOptions, options)
+
+    let str = ''
+    for (let [key, value] of Object.entries(op)) {
+      str = str + `${key}=${value},`
+    }
+
+    // console.log('str', str)
+
+    if(windowObjectReference == null || windowObjectReference.closed)
+      /* if the pointer to the window object in memory does not exist
+         or if such pointer exists but the window was closed */
+
+    {
+      windowObjectReference = window.open(url,
+        target, str + "resizable,scrollbars,status");
+      /* then create it. The new window will be created and
+         will be brought on top of any other window. */
+    }
+    else
+    {
+      windowObjectReference.focus();
+      /* else the window reference must exist and the window
+         is not closed; therefore, we can bring it back on top of any other
+         window with the focus() method. There would be no need to re-create
+         the window or to reload the referenced resource. */
+    }
+  }
+
+  return {
+    open: openFFPromotionPopup
+  }
+}
+export let BOM = _BOM
+
 let _U = {}
 /**
  * objArr2OptionsManager
