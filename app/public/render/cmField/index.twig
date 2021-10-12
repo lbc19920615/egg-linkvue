@@ -5,7 +5,8 @@
 {#              :label="getLabel()"#}
               :rules="rules"
 >
-    <template v-slot:label="scope">{% verbatim %}{{ {% endverbatim %}getLabel(){% verbatim %} }}{% endverbatim %}
+    <template v-slot:label="scope"><slot name="cmfield_label_afterbegin"></slot>
+        {% verbatim %}{{ {% endverbatim %}getLabel(){% verbatim %} }}{% endverbatim %}
     <slot name="cmfield_label_beforeend"></slot>
     </template>
 {#{% verbatim %}{{ {% endverbatim %} ui {% verbatim %} }} {% endverbatim %}#}
