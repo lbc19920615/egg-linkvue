@@ -1,13 +1,13 @@
 {% import "../macros/formGroup.twig" as formGroup %}
 <el-form-item :prop="getProp(pathArr)"
               :x-path="formPath"
-              v-bind="ui"
+              v-bind="ui ? ui.form_item : {}"
 {#              :label="getLabel()"#}
               :rules="rules"
 >
     <template v-slot:label="scope">{% verbatim %}{{ {% endverbatim %}getLabel(){% verbatim %} }}{% endverbatim %}
     <slot name="cmfield_label_beforeend"></slot>
     </template>
-{#{% verbatim %}{{ {% endverbatim %} getProp(pathArr) {% verbatim %} }} {% endverbatim %}#}
+{#{% verbatim %}{{ {% endverbatim %} ui {% verbatim %} }} {% endverbatim %}#}
     {{ formGroup.formItem("value") }}
 </el-form-item>
