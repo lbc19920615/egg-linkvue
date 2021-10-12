@@ -92,28 +92,6 @@
           globalThis.工具 = 工具
           globalThis.T = 工具
 
-          class G {
-            static 设置步骤(...args) {
-              if (args.length === 2) {
-                工具.设置步骤({
-                  [args[0]]: args[1]
-                })
-              }
-            }
-            static 数组添加(e) {
-              let {parts, partName, selfpath} = e;
-              parts[partName].arrAppend(selfpath, {
-
-              })
-            }
-            static 数组删除(e) {
-              let {parts, partName, fromPath, indexKey} = e;
-              parts[partName].arrSplice(fromPath, indexKey);
-            }
-          }
-          globalThis.G = G
-
-
           let renderC = useRenderControl()
           {{ CONFIG.pageProperties }}
           {{ CONFIG.beforeScript }}
@@ -125,6 +103,8 @@
           page = extendControl2Page(page)
           page = useAppPageControl(page)
           let { EVENT_NAMES } = extendCommonArrEventHandler(page)
+
+          useGlobalEasy(page)
 
           function setDefMap(obj, name = obj.name) {
             page.defMap.set(name, obj)
