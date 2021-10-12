@@ -54,12 +54,11 @@ function attrStr(p, k = 'ui.attrs', context = {}) {
  * @param context
  * @return {string}
  */
-function attrStyles(p, k = 'ui.styles', context = {}) {
-  const c = Object.assign({
-    $: lodash,
-  }, context);
+function attrStyles(p, k = 'ui.styles') {
+
   let str = '';
   const attrs = lodash.get(p, k);
+  // console.log(attrs);
   if (Array.isArray(attrs)) {
     attrs.forEach(attr => {
       if (Array.isArray(attr)) {
@@ -201,10 +200,12 @@ v-if="${basePath}"
         const wrap_tag = p.wrap ? p.wrap : '';
         const fromPath = getSelfPath(basePath, append.BASE_PATH);
         const col_style = attrStyles(p).trim();
-        const attrs2 = styleAddToAttr(p.ui.attrs, col_style);
+        // console.log(col_style)
+        // const attrs2 = styleAddToAttr(p.ui.attrs, col_style);
 
-        const attrs2Str = attr2Str(attrs2);
-        // console.log(attrs2Str);
+        const attrs = lodash.get(p, 'ui.attrs', []);
+        const attrs2Str = attr2Str(attrs);
+        // console.log(attrs);
 
         if (wrap_tag) {
           context.tpl = context.tpl + `<${wrap_tag}>`;
@@ -218,6 +219,8 @@ v-if="${basePath}"
 <${col_tag} class="level_${level} z-form__prop" ${attrs2Str}
 :tools_dep_id="getUI_CONFIG_DEP_ID('${configPath}')"
 :tools_dep_item_id="getUI_CONFIG_TOOLS_DEP_ITEM_ID('${configPath}')"
+
+style="${col_style}"
 ><slot-com :defs="slotContent" :attrs="{parts}"
            :binds="{key: '${key}', partName: '${append.part.name}', label: '${getLabel(append.CONFIG, configPath, key)}', config: getUI_CONFIG('${configPath}'), configPath: '${configPath}', selfpath: '${fromPath}',  process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
               name="prop_afterbegin"></slot-com>`;

@@ -195,9 +195,18 @@
             onComputedChange(key, newVal) {
               // console.log('onComputedChange', key, newVal)
               let findKeys = computedLinks[key]
+              // if (key === 'ui2_styles') {
+              //   console.log(findKeys)
+              // }
               if (Array.isArray(findKeys)) {
                 findKeys.forEach(findKeyItem => {
                   let target = ZY.lodash.get(model, findKeyItem.parentKey)
+
+                  if (target && target.hasOwnProperty && !target.hasOwnProperty(findKeyItem.key)) {
+                    // console.log('sdsdsdsdsdsds')
+                    target[findKeyItem.key] = undefined
+                  }
+
                   comHelper.autoVal({
                     obj: model,
                     key: findKeyItem.key,
@@ -286,7 +295,7 @@
           }
           let oldObj = ZY.JSON5.parse(cachedModel)
           let diffed = ZY.diff(oldObj, newObj)
-          // console.log('model.content', reflectMap)
+          // console.log('model.content', computedLinks)
 
 
           reflectMap.forEach((arr, key) => {
