@@ -5,9 +5,9 @@
 {#              :label="getLabel()"#}
               :rules="rules"
 >
-    <template v-slot:label="scope"><slot name="cmfield_label_afterbegin"></slot>
-        {% verbatim %}{{ {% endverbatim %}getLabel(){% verbatim %} }}{% endverbatim %}
-    <slot name="cmfield_label_beforeend"></slot>
+    <template v-slot:label="scope"><div class="cm-filed__label"><slot name="cmfield_label_afterbegin"></slot>
+            {% verbatim %}{{ {% endverbatim %}getLabel(){% verbatim %} }}{% endverbatim %}
+            <slot name="cmfield_label_beforeend"></div></slot>
     </template>
 {#{% verbatim %}{{ {% endverbatim %} ui {% verbatim %} }} {% endverbatim %}#}
     {{ formGroup.formItem("value") }}
