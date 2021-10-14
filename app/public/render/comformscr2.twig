@@ -487,7 +487,10 @@
             // console.log('arr', newArr)
             newArr.push(initData)
           }
-          return arr[arr.length - 1]
+          if (Array.isArray(arr)) {
+            return arr[arr.length - 1]
+          }
+          return
         }
 
         /**

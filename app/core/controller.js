@@ -198,6 +198,8 @@ v-if="${basePath}"
         const col_tag = p.tag ? p.tag : 'div';
         const field_tag = p.field_tag ? p.field_tag : 'cm-field';
         const wrap_tag = p.wrap ? p.wrap : '';
+        const wrap_start = p.wrap_start ? p.wrap_start : '';
+        const wrap_end = p.wrap_end ? p.wrap_end : '';
         const fromPath = getSelfPath(basePath, append.BASE_PATH);
         const col_style = attrStyles(p).trim();
         // console.log(col_style)
@@ -209,6 +211,10 @@ v-if="${basePath}"
 
         if (wrap_tag) {
           context.tpl = context.tpl + `<${wrap_tag}>`;
+        }
+
+        if (wrap_start) {
+          context.tpl = context.tpl + wrap_start;
         }
 
 
@@ -256,6 +262,10 @@ part_key="${append.partKey}"
 <slot-com :defs="slotContent" :attrs="{parts}"
            :binds="{key: '${key}', type: '${p.type}', partName: '${append.part.name}', label: '${getLabel(append.CONFIG, configPath, key)}', selfpath: '${fromPath}', level:'${level}', parentlevel:'${level - 1}', basePath: '${basePath}', configPath: '${configPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
               name="prop_afterend"></slot-com>`;
+
+        if (wrap_end) {
+          context.tpl = context.tpl + wrap_end;
+        }
 
         if (wrap_tag) {
           context.tpl = context.tpl + `</${wrap_tag}>`;
