@@ -23,6 +23,7 @@
 
 {#      :style="getStyleFromStyles({{ partConfigKey }}.ui.styles)"#}
 {#      {% verbatim %}{{ {% endverbatim %} parts {% verbatim %} }} {% endverbatim %}#}
+      {{ attr.parseKeyValue(part.def.ui.attrs) }}
       <el-form class="z-form http-com-part http-com-part__{{ part.name }}"
                :ref="{{ pathKey }}.initEl" :model="{{ pathKey }}.model"
           {{ attr.parseKeyValue(part.def.ui.attrs) }}
