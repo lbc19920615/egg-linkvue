@@ -208,6 +208,11 @@ export default function(name) {
       }
       // console.log(props)
 
+      const widgetConfig2 = props.ui ? props.ui.widgetConfig : null;
+      if (widgetConfig2.common_state) {
+        widgetConfig2[widgetConfig2.common_state] = widgetConfig2.common_state;
+      }
+
       const ret = {
         onBlur,
         p_selfpath: props.selfpath,
@@ -220,6 +225,7 @@ export default function(name) {
         getLabel,
         cachedConfig,
         getUIOpt,
+        widgetConfig2,
         onFchange,
         isArray,
         context,

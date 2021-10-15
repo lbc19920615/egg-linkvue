@@ -13,7 +13,7 @@
   <el-input v-model="{{model}}"
             @input="onInput"
             @blur="onBlur"
-            v-bind="ui ? ui.widgetConfig : null"
+            v-bind="widgetConfig2"
           {{ _self.fieldAttr([]) }}
   ></el-input>
 {% endmacro %}
@@ -22,6 +22,7 @@
   <el-input v-model.number="{{model}}" type="{{ type }}"
             @input="onInput"
             @blur="onBlur"
+            v-bind="widgetConfig2"
           {{ _self.fieldAttr(commonInputAttrs) }}
   ></el-input>
 {% endmacro %}
@@ -30,7 +31,7 @@
 {% macro Boolean(model) %}
   <el-radio-group v-model="{{ model }}"
                   @change="onChange"
-                  v-bind="ui ? ui.widgetConfig : null"
+                  v-bind="widgetConfig2"
   >
     <el-radio :label="true">true</el-radio>
     <el-radio :label="false">false</el-radio>
@@ -40,7 +41,7 @@
 {% macro BooleanWithClearable(model) %}
   <el-radio-group v-model="{{ model }}"
                   @change="onChange"
-                  v-bind="ui ? ui.widgetConfig : null"
+                  v-bind="widgetConfig2"
   >
     <el-radio :label="true">true</el-radio>
     <el-radio :label="false">false</el-radio>

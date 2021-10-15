@@ -439,6 +439,17 @@ function ROOT_GETTERS(v, params = []) {
 
         /**
          *
+         * @param obj { any }
+         */
+        ret.setModelFromObj = function(obj = {}) {
+          // ZY.lodash.set(ret.model, path, value)
+          ZY.lodash.each(obj, function(item, key) {
+            ret.model[key] = item
+          })
+        }
+
+        /**
+         *
          * @param path { string }
          * @param value { any }
          */
