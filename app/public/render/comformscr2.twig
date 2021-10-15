@@ -117,7 +117,7 @@
       this.comManager = comManager
     },
     beforeUnmount() {
-      const { ref, inject, watch, getCurrentInstance, toRaw } = global.Vue;
+      const { ref, inject, watch, getCurrentInstance, toRaw, nextTick } = global.Vue;
       let comManager = this.comManager
       // console.log(comManager)
       comManager.destory(this.comUUID)
@@ -127,7 +127,7 @@
       provide('curFormCon', this)
     },
     setup(props, { emit }) {
-
+      let modelLocks = false
       let ROOT_FUNC = `
 function ROOT_STATE(v, defaultVal) {
  return ZY.lodash.get($rootStore.state, v, defaultVal)
@@ -148,7 +148,7 @@ function ROOT_GETTERS(v, params = []) {
       // console.log(txt)
 
       const config = ZY.JSON5.parse(txt);
-      const { ref, inject, watch, getCurrentInstance, toRaw } = global.Vue;
+      const { ref, inject, watch, getCurrentInstance, toRaw, nextTick } = global.Vue;
       const { useStore } = global.Vuex
       let store = useStore()
 
@@ -209,13 +209,14 @@ function ROOT_GETTERS(v, params = []) {
           computed,
           callback: {
             onComputedChange(key, newVal) {
-              // console.log('onComputedChange', key, newVal)
               let findKeys = computedLinks[key]
+              // console.log('onComputedChange', key, newVal, modelLocks)
               // if (key === 'ui2_styles') {
               //   console.log(findKeys)
               // }
               if (Array.isArray(findKeys)) {
                 findKeys.forEach(findKeyItem => {
+
                   let target = ZY.lodash.get(model, findKeyItem.parentKey)
 
                   if (target && target.hasOwnProperty && !target.hasOwnProperty(findKeyItem.key)) {
@@ -223,24 +224,28 @@ function ROOT_GETTERS(v, params = []) {
                     target[findKeyItem.key] = undefined
                   }
 
-                  comHelper.autoVal({
-                    obj: model,
-                    key: findKeyItem.key,
-                    base: model,
-                    computedVal() {
-                      // console.log('findKeyItem', findKeyItem)
-                      if (findKeyItem.valTpl) {
-                        // console.log(findKeyItem.valTpl)
-                        let context = {
-                          A: globalThis.getApp(),
-                          $VAL: newVal,
-                          L: ZY.lodash
+                  // console.log('findKeyItem', findKeyItem, modelLocks)
+
+                  if (!modelLocks) {
+                    comHelper.autoVal({
+                      obj: model,
+                      key: findKeyItem.key,
+                      base: model,
+                      computedVal() {
+                        // console.log('findKeyItem', findKeyItem)
+                        if (findKeyItem.valTpl) {
+                          // console.log(findKeyItem.valTpl)
+                          let context = {
+                            A: globalThis.getApp(),
+                            $VAL: newVal,
+                            L: ZY.lodash
+                          }
+                          return ZY_EXT.eval5(findKeyItem.valTpl, context)
                         }
-                        return ZY_EXT.eval5(findKeyItem.valTpl, context)
+                        return toRaw(newVal)
                       }
-                      return newVal
-                    }
-                  })
+                    })
+                  }
                 })
               }
             }
@@ -297,110 +302,113 @@ function ROOT_GETTERS(v, params = []) {
           }
         }
 
-        attachModelWatcher(model, '', model)
+        // attachModelWatcher(model, '', model)
 
 
 
         let cachedModel = ''
         watch(model, (newVal, oldVal) => {
-          let newObj = toRaw(newVal)
-          if (!cachedModel) {
-            cachedModel = '{}'
-          } else {
-          //
-          }
-          let oldObj = ZY.JSON5.parse(cachedModel)
-          let diffed = ZY.diff(oldObj, newObj)
-          // console.log('model.content', computedLinks)
+          // console.log(modelLocks, newVal, oldVal)
+          if (!modelLocks) {
+            let newObj = toRaw(newVal)
+            if (!cachedModel) {
+              cachedModel = '{}'
+            } else {
+              //
+            }
+            let oldObj = ZY.JSON5.parse(cachedModel)
+            let diffed = ZY.diff(oldObj, newObj)
+            // console.log('model.content', computedLinks)
 
 
-          reflectMap.forEach((arr, key) => {
-            // console.log(arr)
-            let reflectMapArr = arr
-            let reflectMapKey = key.trim()
-            let hasDiffedChange = ZY.deepGet(diffed, reflectMapKey)
-            let reflectMapArrKeys = reflectMapArr.map(v => v.key)
-            let reflectMapArrFullKeys = reflectMapArrKeys.map(v => {
-              return `${reflectMapKey}.${v}`
-            })
+            reflectMap.forEach((arr, key) => {
+              // console.log(arr)
+              let reflectMapArr = arr
+              let reflectMapKey = key.trim()
+              let hasDiffedChange = ZY.deepGet(diffed, reflectMapKey)
+              let reflectMapArrKeys = reflectMapArr.map(v => v.key)
+              let reflectMapArrFullKeys = reflectMapArrKeys.map(v => {
+                return `${reflectMapKey}.${v}`
+              })
 
-            // console.log(reflectMapKey, hasDiffedChange)
-            if (hasDiffedChange) {
-              ZY.lodash.each(hasDiffedChange, (svalue, skey) => {
-                if (typeof svalue !== 'undefined') {
-                  // let fullPath = key + '.' + skey
-                  let fullPath = [reflectMapKey, skey].filter(v => typeof v !== 'undefined').join('.')
-                  if (fullPath.trim().startsWith('.')) {
-                    fullPath = fullPath.trim().slice(1)
-                  }
+              // console.log(reflectMapKey, hasDiffedChange)
+              if (hasDiffedChange) {
+                ZY.lodash.each(hasDiffedChange, (svalue, skey) => {
+                  if (typeof svalue !== 'undefined') {
+                    // let fullPath = key + '.' + skey
+                    let fullPath = [reflectMapKey, skey].filter(v => typeof v !== 'undefined').join('.')
+                    if (fullPath.trim().startsWith('.')) {
+                      fullPath = fullPath.trim().slice(1)
+                    }
 
-                  let modelTarget = ZY.deepGet(model, fullPath)
-                  if (typeof modelTarget === 'object') {
-                  }
-                  else {
-                     modelTarget = ZY.deepGet(model, reflectMapKey)
-                  }
+                    let modelTarget = ZY.deepGet(model, fullPath)
+                    if (typeof modelTarget === 'object') {
+                    }
+                    else {
+                      modelTarget = ZY.deepGet(model, reflectMapKey)
+                    }
 
-                  // console.log(`${fullPath} changed`, model, reflectMapArrFullKeys, reflectMapArr, reflectMap, modelTarget)
+                    // console.log(`${fullPath} changed`, model, reflectMapArrFullKeys, reflectMapArr, reflectMap, modelTarget)
 
-                  // 如果更改的是reflect监听的元素 不需要更改其他reflectmap
-                  if (ZY.deepGet(model, reflectMapKey) === modelTarget && reflectMapArrFullKeys.includes(fullPath)) {
-                    return
-                  }
-
-                  // if (key === fullPath) {
-                  //   return
-                  // }
-
-                  reflectMapArr.forEach((arrItem) => {
-                    let {key, reflect, valTpl}  = arrItem
-
-                    if (!modelTarget.hasOwnProperty(reflect)) {
+                    // 如果更改的是reflect监听的元素 不需要更改其他reflectmap
+                    if (ZY.deepGet(model, reflectMapKey) === modelTarget && reflectMapArrFullKeys.includes(fullPath)) {
                       return
                     }
 
+                    // if (key === fullPath) {
+                    //   return
+                    // }
 
-                    let rawModel = toRaw(model)
-                    let $M = modelTarget
-                    let $VAL = ZY.deepGet($M, reflect)
-                    let calcedVal = undefined
-                    if (valTpl) {
-                      calcedVal = ZY_EXT.eval5(valTpl, {
-                        A: globalThis.getApp(),
-                        $R: reflect,
-                        $VAL,
-                        $M,
-                        $R_M: rawModel,
-                        $L: ZY.lodash,
-                        $DEFAULT: ZY.lodash.defaultTo,
-                        $NOW: Date.now()
-                      })
-                    } else {
-                      calcedVal = toRaw(modelTarget[reflect])
-                    }
-                    modelTarget[key]  = calcedVal
+                    reflectMapArr.forEach((arrItem) => {
+                      let {key, reflect, valTpl}  = arrItem
 
-                    // console.log('arrItem', parentPath, valTpl, path, rawModel, calcedVal)
-                    // ZY.lodash.set(model, path, calcedVal)
-                  })
+                      if (!modelTarget.hasOwnProperty(reflect)) {
+                        return
+                      }
 
 
-                }
-              })
-            }
-            // console.log(key, hasDiffedChange)
-          })
+                      let rawModel = toRaw(model)
+                      let $M = modelTarget
+                      let $VAL = ZY.deepGet($M, reflect)
+                      let calcedVal = undefined
+                      if (valTpl) {
+                        calcedVal = ZY_EXT.eval5(valTpl, {
+                          A: globalThis.getApp(),
+                          $R: reflect,
+                          $VAL,
+                          $M,
+                          $R_M: rawModel,
+                          $L: ZY.lodash,
+                          $DEFAULT: ZY.lodash.defaultTo,
+                          $NOW: Date.now()
+                        })
+                      } else {
+                        calcedVal = toRaw(modelTarget[reflect])
+                      }
+                      modelTarget[key]  = calcedVal
 
-          cachedModel = ZY.JSON5.stringify(newObj)
-          // emit('model:update', newVal);
+                      // console.log('arrItem', parentPath, valTpl, path, rawModel, calcedVal)
+                      // ZY.lodash.set(model, path, calcedVal)
+                    })
 
-          // console.log(curFormCon.comManager.context)
-          curFormCon.comManager.context.sendEvent('model:update:all', {
-            newVal,
-            diffed,
-            config,
-            model
-          })
+
+                  }
+                })
+              }
+              // console.log(key, hasDiffedChange)
+            })
+
+            cachedModel = ZY.JSON5.stringify(newObj)
+            // emit('model:update', newVal);
+
+            // console.log(curFormCon.comManager.context)
+            curFormCon.comManager.context.sendEvent('model:update:all', {
+              newVal,
+              diffed,
+              config,
+              model
+            })
+          }
         });
         ret.el = ref(null)
         ret.initEl = function(ctx) {
@@ -441,11 +449,16 @@ function ROOT_GETTERS(v, params = []) {
          *
          * @param obj { any }
          */
-        ret.setModelFromObj = function(obj = {}) {
+        ret.initModel = function(obj = {}) {
           // ZY.lodash.set(ret.model, path, value)
+          modelLocks = true
           ZY.lodash.each(obj, function(item, key) {
             ret.model[key] = item
           })
+          setTimeout(() => {
+            // console.log('nextTick')
+            modelLocks = false
+          }, 150)
         }
 
         /**
