@@ -245,6 +245,7 @@ type="${p.type}"
 :context="${append.partKey}"
 part_key="${append.partKey}"
 :prop_config  =" getUI_CONFIG('${configPath}')"
+:slot-content="slotContent"
 >
 <template v-slot:cmfield_label_beforeend="">
 <slot-com :defs="slotContent" :attrs="{parts}" 

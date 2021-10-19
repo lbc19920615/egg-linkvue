@@ -56,11 +56,12 @@ export default function(name) {
           return {};
         },
       },
+      slotContent: null,
     },
     setup(props, { emit }) {
       const { ref, watch, provide, onBeforeUnmount } = global.Vue;
       // let curFormCon = inject('curFormCon')
-      // console.log(props)
+      // console.log(props.slotContent);
       const context = props.context;
       const uuid = 'cm-field-' + ZY.rid();
 
@@ -231,6 +232,7 @@ export default function(name) {
         context,
         cmFieldUUID: uuid,
         getProp,
+        formSlotContent: props.slotContent,
         part_key: props.part_key,
         // onUpdateModelValue,
         value,
