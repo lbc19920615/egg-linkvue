@@ -136,16 +136,16 @@ export async function fileOpenJSON5() {
  * 保存v1版本design file
  * @param data
  * @param fileName
- * @param version
+ * @param prefix
  */
-export function saveDesignFile({ data = null, fileName = '', version = 'v1' }) {
+export function saveDesignFile({ data = null, fileName = '', prefix = '' }) {
   const d = new Date();
   const time = formatDateTime(d, 'YYYY-MM-DD__HH');
   const saved = {
     data,
     date: Date.now(),
   };
-  saveObjAsJson5File(saved, `${fileName}_${time}_${d.getTime()}`);
+  saveObjAsJson5File(saved, `${prefix}${fileName}_${time}_${d.getTime()}`);
 }
 
 /**

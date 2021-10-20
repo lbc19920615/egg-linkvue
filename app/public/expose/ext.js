@@ -11364,14 +11364,14 @@ async function fileOpenJSON5() {
     }));
   }
 }
-function saveDesignFile({ data: data2 = null, fileName = "", version: version3 = "v1" }) {
+function saveDesignFile({ data: data2 = null, fileName = "", prefix = "" }) {
   const d = new Date();
   const time = formatDateTime(d, "YYYY-MM-DD__HH");
   const saved = {
     data: data2,
     date: Date.now()
   };
-  saveObjAsJson5File(saved, `${fileName}_${time}_${d.getTime()}`);
+  saveObjAsJson5File(saved, `${prefix}${fileName}_${time}_${d.getTime()}`);
 }
 async function openDesignFile({ version: version3 = "v1" }) {
   const obj = await fileOpenJSON5();
