@@ -8100,7 +8100,10 @@ _BOM.createWindowManager = function({ url: url2 = "", target = "PromoteFirefoxWi
     }
   }
   return {
-    open: openFFPromotionPopup
+    open: openFFPromotionPopup,
+    getReference() {
+      return windowObjectReference;
+    }
   };
 };
 var BOM = _BOM;

@@ -392,7 +392,10 @@ _BOM.createWindowManager = function(
   }
 
   return {
-    open: openFFPromotionPopup
+    open: openFFPromotionPopup,
+    getReference() {
+      return windowObjectReference
+    }
   }
 }
 export let BOM = _BOM
