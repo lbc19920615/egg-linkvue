@@ -505,6 +505,20 @@ function ROOT_GETTERS(v, params = []) {
         }
 
         /**
+         * 设置动态options
+         * @param name
+         * @param value
+         */
+        ret.setDynamicOptions = function(name, value = []) {
+          globalStore.dispatch('setDynamicOptions',
+            [
+              name,
+              value
+            ]
+          )
+        }
+
+        /**
          * arr自动添加
          * @param path
          * @param initData
@@ -697,6 +711,9 @@ function ROOT_GETTERS(v, params = []) {
 
       // console.log('globalStore', globalStore)
 
+
+
+
       function dxEval(v, $root, context) {
         let trueContext = context ? context : this;
         // console.log(trueContext)
@@ -818,6 +835,15 @@ function ROOT_GETTERS(v, params = []) {
       }
 
 
+      function setDynamicOptions(name, value) {
+        globalStore.dispatch('setDynamicOptions',
+          [
+            name,
+            value
+          ]
+        )
+      }
+
       let instanse = {
       config,
       parts,
@@ -829,6 +855,7 @@ function ROOT_GETTERS(v, params = []) {
         getUI_CONFIG,
         getUI_CONFIG_DEP_ID,
         getCONFIG,
+        setDynamicOptions,
       get: ZY.lodash.get,
       dxValue,
       valTpl,
