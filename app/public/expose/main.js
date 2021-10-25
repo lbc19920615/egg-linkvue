@@ -7996,6 +7996,14 @@ function getObjPathFromPathArr(pathArr = []) {
   });
   return path3;
 }
+function getObjParentPathFromPathArr(pathArr = []) {
+  if (pathArr.length > 1) {
+    let ps = pathArr.slice(0, pathArr.length - 1);
+    return getObjPathFromPathArr(ps);
+  } else {
+    return "";
+  }
+}
 var Lock2 = Lock;
 var lodash = import_lodash.default;
 function deepGet(target, path3 = "", defaultVal) {
@@ -8177,6 +8185,7 @@ export {
   fetchreq,
   formModel,
   getImportURL,
+  getObjParentPathFromPathArr,
   getObjPathFromPathArr,
   getStrFromObj,
   global2 as global,

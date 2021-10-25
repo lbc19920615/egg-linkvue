@@ -102,6 +102,11 @@ export function rid(...args) {
  */
 // export let PubSub = _PubSub
 
+/**
+ *
+ * @param pathArr {string[]}
+ * @returns {string}
+ */
 export function getObjPathFromPathArr(pathArr = []) {
   let path = '';
   pathArr.forEach((item, index) => {
@@ -116,6 +121,24 @@ export function getObjPathFromPathArr(pathArr = []) {
     }
   });
   return path;
+}
+
+/**
+ *
+ * @param pathArr {string[]}
+ * @returns {string}
+ */
+export function getObjParentPathFromPathArr(pathArr = []) {
+  if (pathArr.length > 1) {
+    let ps = pathArr.slice(0, pathArr.length - 1)
+    return getObjPathFromPathArr(ps)
+  }
+  // else if (patharr.length === 1) {
+  //   return ''
+  // }
+  else {
+    return ''
+  }
 }
 
 import _Lock from 'js-lock'
