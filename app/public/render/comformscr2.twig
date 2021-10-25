@@ -267,40 +267,40 @@ function ROOT_GETTERS(v, params = []) {
             config,
             model
           }
-          // console.log('sdsdsdsds')
+
           curFormCon.comManager.context.sendEvent('model:update', obj)
         }
         ret.forceUpdate = forceUpdate
 
-        function watchHandler(key) {
-          return function(newVal) {
-            // console.log('model.content', newVal)
-            let obj = {
-              key,
-              newVal,
-              config,
-              model
-            }
-            emit('model:update', obj);
-            curFormCon.comManager.context.sendEvent('model:update', obj)
-          }
-        }
-        function attachModelWatcher(model, parentPath, subModel) {
-          if (typeof subModel === 'object') {
-            for (let key in subModel) {
-              let tureKey = parentPath ? `${parentPath}.${key}` : key
-              if (Array.isArray(subModel[key])) {
-                subModel[key].forEach((subItem, subIndex) => {
-                  // console.log(subItem, subIndex)
-                  attachModelWatcher(model, `${tureKey}[${subIndex}]`, subItem)
-                })
-              } else {
-                // console.log('model', tureKey,  ZY.lodash.get(model, tureKey))
-                watch(() => ZY.lodash.get(model, tureKey), watchHandler(tureKey));
-              }
-            }
-          }
-        }
+        // function watchHandler(key) {
+        //   return function(newVal) {
+        //     // console.log('model.content', newVal)
+        //     let obj = {
+        //       key,
+        //       newVal,
+        //       config,
+        //       model
+        //     }
+        //     emit('model:update', obj);
+        //     curFormCon.comManager.context.sendEvent('model:update', obj)
+        //   }
+        // }
+        // function attachModelWatcher(model, parentPath, subModel) {
+        //   if (typeof subModel === 'object') {
+        //     for (let key in subModel) {
+        //       let tureKey = parentPath ? `${parentPath}.${key}` : key
+        //       if (Array.isArray(subModel[key])) {
+        //         subModel[key].forEach((subItem, subIndex) => {
+        //           // console.log(subItem, subIndex)
+        //           attachModelWatcher(model, `${tureKey}[${subIndex}]`, subItem)
+        //         })
+        //       } else {
+        //         // console.log('model', tureKey,  ZY.lodash.get(model, tureKey))
+        //         watch(() => ZY.lodash.get(model, tureKey), watchHandler(tureKey));
+        //       }
+        //     }
+        //   }
+        // }
 
         // attachModelWatcher(model, '', model)
 
@@ -410,12 +410,26 @@ function ROOT_GETTERS(v, params = []) {
             })
           }
         });
+
+        /**
+         * el 是el-form 的ref引用
+         */
         ret.el = ref(null)
+        /**
+         * 初始化el-form 的ref引用
+         * @param ctx
+         */
         ret.initEl = function(ctx) {
           // console.log(ctx)
           ret.el.value = ctx
         }
 
+        /**
+         * 调用form的某个方法
+         * @param methodName
+         * @param args
+         * @returns {Promise<*>}
+         */
         async function callEl(methodName, ...args) {
           if (!ret.el ) {
             throw new Error('formCom.value null')
@@ -429,6 +443,10 @@ function ROOT_GETTERS(v, params = []) {
         }
         ret.callEl = callEl
 
+        /**
+         * 获取状态
+         * @returns {{val: {}, toRaw(): *}}
+         */
         ret.getState = function() {
           let res = {}
           for (let k in ret.model) {
@@ -446,7 +464,7 @@ function ROOT_GETTERS(v, params = []) {
         }
 
         /**
-         *
+         * 初始化model 不会触发computed reflect
          * @param obj { any }
          */
         ret.initModel = function(obj = {}) {
@@ -471,7 +489,7 @@ function ROOT_GETTERS(v, params = []) {
         }
 
         /**
-         * getModelByPath
+         * getModelByPath 通过path获取model
          * @param path { string }
          * @returns {*}
          */
@@ -479,29 +497,46 @@ function ROOT_GETTERS(v, params = []) {
           return ZY.lodash.get(ret.model, path)
         }
 
+        /**
+         * setModelByPath 通过path设置model
+         * @param path
+         * @param value
+         */
         ret.setModelByPath = function(path, value) {
           ZY.lodash.set(ret.model, path, value)
         }
 
+        /**
+         * pathArr 设置对象同一等级其他函数
+         * @param pathArr
+         * @param key
+         * @param value
+         */
+        ret.setSameLevel = function(pathArr, key, value) {
+          let parentPath = ZY.getObjParentPathFromPathArr(pathArr)
+          if (parentPath) {
+            let parent = ret.getModelByPath(parentPath)
+            if (parent) {
+              parent[key] = value
+            }
+          }
+        }
+
+        /**
+         * 触发事件
+         * @param name
+         * @param event
+         */
         ret.fireEvent = function(name, event) {
           // console.log('curFormCon', name, event, curFormCon)
-          curFormCon.callPageEvent('form:input:blur', {
+          // 'form:input:blur'
+          curFormCon.callPageEvent(name, {
             config,
             process: config.process,
             part: ret,
             partDef,
 
           }, event)
-        }
-
-        function getParentPath(path) {
-          let arr = path.split('.')
-          if (Array.isArray(arr)) {
-            arr  = arr.splice(-1)
-            console.log(arr)
-            return arr.join('.')
-          }
-          return ''
         }
 
         /**
@@ -525,15 +560,7 @@ function ROOT_GETTERS(v, params = []) {
          */
         ret.arrAppend = function(path, initData = {}) {
           let arr = ZY.lodash.get(ret.model, path)
-          // let parentPath = getParentPath(path)
-          // console.log(arr)
           if (Array.isArray(arr)) {
-            // if (arr[0]) {
-            //   let type = typeof arr[0]
-            //   if (type === 'object') {
-            //     arr.push({})
-            //   }
-            // }
             arr.push(initData)
           } else {
             ZY.lodash.set(ret.model, path, [])
@@ -561,6 +588,11 @@ function ROOT_GETTERS(v, params = []) {
           // console.log(arr)
         }
 
+        /**
+         * 获取配置
+         * @param path
+         * @returns {*}
+         */
         ret.get_SELF_CONFIG = function(path) {
           // console.log(rowDef)
           if (!path) {
@@ -585,6 +617,10 @@ function ROOT_GETTERS(v, params = []) {
           // console.log(arr)
         }
 
+        /**
+         * 获取不带computed值的model
+         * @returns {{}}
+         */
         ret.getModel = function() {
           let res = {}
           for (let k in ret.model) {
@@ -593,6 +629,11 @@ function ROOT_GETTERS(v, params = []) {
           return res
         }
 
+        /**
+         * 获取raw 的状态
+         * @param args
+         * @returns {*}
+         */
         ret.getRawState = function(...args) {
           return ret.getState(...args).toRaw()
         }
@@ -724,10 +765,6 @@ function ROOT_GETTERS(v, params = []) {
           let A = options.app
 
          ${commonFun}
-
-         // function ROOT_STATE(v, defaultVal) {
-         //   return ZY.lodash.get($rootStore.state, v, defaultVal)
-         // }
 
          ${ROOT_FUNC}
 
