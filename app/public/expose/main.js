@@ -7981,6 +7981,9 @@ function rid(...args) {
   }
   return v.replace(/-/g, "_");
 }
+function getHereDoc(fn) {
+  return fn.toString().match(/\/\*\s*([\s\S]*?)\s*\*\//m)[1];
+}
 function getObjPathFromPathArr(pathArr = []) {
   let path3 = "";
   pathArr.forEach((item, index) => {
@@ -8184,6 +8187,7 @@ export {
   fetchContentV3,
   fetchreq,
   formModel,
+  getHereDoc,
   getImportURL,
   getObjParentPathFromPathArr,
   getObjPathFromPathArr,

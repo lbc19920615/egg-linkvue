@@ -103,6 +103,15 @@ export function rid(...args) {
 // export let PubSub = _PubSub
 
 /**
+ * 获取here doc
+ * @param fn
+ * @returns {string}
+ */
+export function getHereDoc(fn) {
+  return fn.toString().match(/\/\*\s*([\s\S]*?)\s*\*\//m)[1];
+}
+
+/**
  *
  * @param pathArr {string[]}
  * @returns {string}
