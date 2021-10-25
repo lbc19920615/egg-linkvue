@@ -443,10 +443,6 @@ function ROOT_GETTERS(v, params = []) {
         }
         ret.callEl = callEl
 
-        /**
-         * 获取状态
-         * @returns {{val: {}, toRaw(): *}}
-         */
         ret.getState = function() {
           let res = {}
           for (let k in ret.model) {
@@ -488,11 +484,6 @@ function ROOT_GETTERS(v, params = []) {
           ZY.lodash.set(ret.model, path, value)
         }
 
-        /**
-         * getModelByPath 通过path获取model
-         * @param path { string }
-         * @returns {*}
-         */
         ret.getModelByPath = function(path = '') {
           return ZY.lodash.get(ret.model, path)
         }
@@ -588,11 +579,6 @@ function ROOT_GETTERS(v, params = []) {
           // console.log(arr)
         }
 
-        /**
-         * 获取配置
-         * @param path
-         * @returns {*}
-         */
         ret.get_SELF_CONFIG = function(path) {
           // console.log(rowDef)
           if (!path) {
