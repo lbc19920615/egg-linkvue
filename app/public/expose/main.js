@@ -3202,6 +3202,66 @@ var require_dist3 = __commonJS({
   }
 });
 
+// node_modules/stringify-attributes/node_modules/escape-goat/index.js
+var require_escape_goat = __commonJS({
+  "node_modules/stringify-attributes/node_modules/escape-goat/index.js"(exports) {
+    "use strict";
+    var htmlEscape3 = (string) => string.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    var htmlUnescape = (htmlString) => htmlString.replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/&#0?39;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, "&");
+    exports.htmlEscape = (strings, ...values3) => {
+      if (typeof strings === "string") {
+        return htmlEscape3(strings);
+      }
+      let output = strings[0];
+      for (const [index, value] of values3.entries()) {
+        output = output + htmlEscape3(String(value)) + strings[index + 1];
+      }
+      return output;
+    };
+    exports.htmlUnescape = (strings, ...values3) => {
+      if (typeof strings === "string") {
+        return htmlUnescape(strings);
+      }
+      let output = strings[0];
+      for (const [index, value] of values3.entries()) {
+        output = output + htmlUnescape(String(value)) + strings[index + 1];
+      }
+      return output;
+    };
+  }
+});
+
+// node_modules/html-tags/html-tags-void.json
+var require_html_tags_void = __commonJS({
+  "node_modules/html-tags/html-tags-void.json"(exports, module) {
+    module.exports = [
+      "area",
+      "base",
+      "br",
+      "col",
+      "embed",
+      "hr",
+      "img",
+      "input",
+      "link",
+      "menuitem",
+      "meta",
+      "param",
+      "source",
+      "track",
+      "wbr"
+    ];
+  }
+});
+
+// node_modules/html-tags/void.js
+var require_void = __commonJS({
+  "node_modules/html-tags/void.js"(exports, module) {
+    "use strict";
+    module.exports = require_html_tags_void();
+  }
+});
+
 // fronts/main.js
 var import_polyfill = __toModule(require_polyfill());
 
@@ -7953,6 +8013,61 @@ var getHanzi = function(pingyin = "") {
   return ret;
 };
 
+// node_modules/stringify-attributes/index.js
+var import_escape_goat = __toModule(require_escape_goat());
+function stringifyAttributes(attributes) {
+  const handledAttributes = [];
+  for (let [key, value] of Object.entries(attributes)) {
+    if (value === false) {
+      continue;
+    }
+    if (Array.isArray(value)) {
+      value = value.join(" ");
+    }
+    let attribute = (0, import_escape_goat.htmlEscape)(key);
+    if (value !== true) {
+      attribute += `="${(0, import_escape_goat.htmlEscape)(String(value))}"`;
+    }
+    handledAttributes.push(attribute);
+  }
+  return handledAttributes.length > 0 ? " " + handledAttributes.join(" ") : "";
+}
+
+// node_modules/create-html-element/index.js
+var import_void = __toModule(require_void());
+
+// node_modules/escape-goat/index.js
+var _htmlEscape = (string) => string.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+function htmlEscape2(strings, ...values3) {
+  if (typeof strings === "string") {
+    return _htmlEscape(strings);
+  }
+  let output = strings[0];
+  for (const [index, value] of values3.entries()) {
+    output = output + _htmlEscape(String(value)) + strings[index + 1];
+  }
+  return output;
+}
+
+// node_modules/create-html-element/index.js
+var voidHtmlTags = new Set(import_void.default);
+function createHtmlElement({
+  name = "div",
+  attributes = {},
+  html = "",
+  text
+} = {}) {
+  if (html && text) {
+    throw new Error("The `html` and `text` options are mutually exclusive");
+  }
+  const content = text ? htmlEscape2(text) : html;
+  let result = `<${name}${stringifyAttributes(attributes)}>`;
+  if (!voidHtmlTags.has(name)) {
+    result += `${content}</${name}>`;
+  }
+  return result;
+}
+
 // fronts/main.js
 var global2 = (0, import_polyfill.default)();
 var uuid = v4_default;
@@ -8079,6 +8194,7 @@ function importJsStr(content) {
   const objectURL = URL.createObjectURL(new Blob([content], { type: "text/javascript" }));
   return import(objectURL);
 }
+var createEle = createHtmlElement;
 var AsyncFunction = Object.getPrototypeOf(async function() {
 }).constructor;
 var _DOM = {};
@@ -8178,6 +8294,7 @@ export {
   camelNameToCls,
   comHelper,
   compareObj,
+  createEle,
   deepGet,
   defaultStr,
   export_deletedDiff as deletedDiff,

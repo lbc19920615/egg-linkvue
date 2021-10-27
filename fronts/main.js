@@ -348,6 +348,13 @@ export { diff, addedDiff, deletedDiff, updatedDiff, detailedDiff } from 'deep-ob
 
 export * as PinYin from './pingyin';
 
+import createHtmlElement from 'create-html-element';
+/**
+ * createEle
+ * @type {(options?: Options) => string}
+ */
+export let createEle = createHtmlElement
+
 /**
  * AsyncFunction
  */
