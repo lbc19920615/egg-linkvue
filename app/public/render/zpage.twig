@@ -3,6 +3,17 @@
       border: 1px solid;
       background: aliceblue;
   }
+
+  [current-to-move] {
+      /*background-color: #0d84ff;*/
+      border: 1px dashed #0d84ff;
+      /*border-bottom: 2px solid;*/
+      /*border-bottom-color: #0d84ff;*/
+      pointer-events: none;
+      position: relative;
+      background-color: #eeeeee;
+      opacity: .5;
+  }
 </style>
 
 <template>
@@ -23,6 +34,7 @@
 {% endverbatim %}
 
       </template>
+      <div id="debug"></div>
     </div>
 </template>
 
