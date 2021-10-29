@@ -536,7 +536,7 @@ function ROOT_GETTERS(v, params = []) {
          * @param value
          */
         ret.setDynamicOptions = function(name, value = []) {
-          globalStore.dispatch('setDynamicOptions',
+          store.dispatch('setDynamicOptions',
             [
               name,
               value
