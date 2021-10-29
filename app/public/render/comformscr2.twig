@@ -551,6 +551,7 @@ function ROOT_GETTERS(v, params = []) {
          */
         ret.arrAppend = function(path, initData = {}) {
           let arr = ZY.lodash.get(ret.model, path)
+          console.log(arr, path)
           if (Array.isArray(arr)) {
             arr.push(initData)
           } else {

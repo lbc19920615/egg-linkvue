@@ -159,7 +159,7 @@ v-if="${basePath}"
               name="array_beforebegin"></slot-com>                   
 <${array_tag} class="level_${level} z-form__array ${buildCls(p)}" ${attrStr(p)}>
  <slot-com :defs="slotContent" :attrs="{parts}"
-           :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}', label: '${getLabel(append.CONFIG, configPath, key)}', selfpath: '${fromPath}',  CONFIG: '${append.CONFIG}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
+           :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}', pathArr: [${pathArrStr.slice(1)}],   label: '${getLabel(append.CONFIG, configPath, key)}', selfpath: '${fromPath}',  CONFIG: '${append.CONFIG}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
               name="array_afterbegin"></slot-com>              
 <${array_con_tag} v-for="(${itemKey}, ${indexKey}) in ${basePath}" class="z-form__array-con ${con_cls}" ${con_attr}>
 <slot-com :defs="slotContent" :attrs="{parts}"
@@ -176,11 +176,11 @@ v-if="${basePath}"
 
       context.tpl = context.tpl + `
 <slot-com :defs="slotContent" :attrs="{parts}"
-         :binds="{key: '${key}', partName: '${append.part.name}', indexKey:${indexKey}, fromPath: '${fromPath}',  label: '${getLabel(append.CONFIG, configPath, key)}', selfpath: '${fromPath}['+ ${indexKey} +']', level:'${level}', parentlevel:'${level - 1}', basePath: '${basePath}', configPath: '${configPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
+         :binds="{key: '${key}', partName: '${append.part.name}', indexKey:${indexKey}, fromPath: '${fromPath}', pathArr: [${pathArrStr.slice(1)}], label: '${getLabel(append.CONFIG, configPath, key)}', selfpath: '${fromPath}['+ ${indexKey} +']', level:'${level}', parentlevel:'${level - 1}', basePath: '${basePath}', configPath: '${configPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
             name="array_con_beforeend"></slot-com>            
 </${array_con_tag}>
 <slot-com :defs="slotContent" :attrs="{parts}"
-         :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}',  label: '${getLabel(append.CONFIG, configPath, key)}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
+         :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}', pathArr: [${pathArrStr.slice(1)}],  label: '${getLabel(append.CONFIG, configPath, key)}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
             name="array_beforeend"></slot-com>            
 </${array_tag}>
 <slot-com :defs="slotContent" :attrs="{parts}"
