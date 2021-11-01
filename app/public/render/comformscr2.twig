@@ -475,6 +475,11 @@ function ROOT_GETTERS(v, params = []) {
           }, 150)
         }
 
+        ret.getModelByPathArr = function(pathArr = []) {
+          let path = ZY.getObjPathFromPathArr(pathArr)
+          return ZY.lodash.get(ret.model, path)
+        }
+
         /**
          *
          * @param path { string }
@@ -868,6 +873,11 @@ function ROOT_GETTERS(v, params = []) {
         )
       }
 
+      function handleAttrVal(v) {
+        // console.log('handleAttrVal', v)
+        return v
+      }
+
       let instanse = {
       config,
       parts,
@@ -881,6 +891,7 @@ function ROOT_GETTERS(v, params = []) {
         getCONFIG,
         setDynamicOptions,
       get: ZY.lodash.get,
+        handleAttrVal,
       dxValue,
       valTpl,
       // dxEval,

@@ -249,7 +249,7 @@ part_key="${append.partKey}"
 >
 <template v-slot:cmfield_label_beforeend="">
 <slot-com :defs="slotContent" :attrs="{parts}" 
-         :binds="{key: '${key}', partName: '${append.part.name}', config: getUI_CONFIG('${configPath}'), configPath: '${configPath}', selfpath: '${fromPath}',  process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
+         :binds="{key: '${key}', partName: '${append.part.name}', config: getUI_CONFIG('${configPath}'), pathArr: [${pathArrStr.slice(1)}],  configPath: '${configPath}', selfpath: '${fromPath}',  process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
             name="prop_label_beforeend"></slot-com>
 </template>
 </${field_tag}>`;
