@@ -121,7 +121,7 @@ function renderForm(p, basePath, configPath, append = {}) {
       const fromPath = getSelfPath(basePath, append.BASE_PATH);
       context.tpl = context.tpl + `
 <slot-com :defs="slotContent" :attrs="{parts}"
-           :binds="{key: '${key}', partName: '${append.part.name}', config: getUI_CONFIG('${configPath}'), configPath: '${configPath}', label: '${getLabel(append.CONFIG, configPath, key)}', selfpath: '${fromPath}',  process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
+           :binds="{key: '${key}', partName: '${append.part.name}', config: getUI_CONFIG('${configPath}'), pathArr: [${pathArrStr.slice(1)}], configPath: '${configPath}', label: '${getLabel(append.CONFIG, configPath, key)}', selfpath: '${fromPath}',  process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
             name="object_beforebegin"></slot-com>            
 <${obj_tag} class="level_${level} z-form__object ${buildCls(p)}" ${attrStr(p)}
 v-if="${basePath}"
@@ -134,7 +134,7 @@ v-if="${basePath}"
       context.tpl = context.tpl + `
 </${obj_tag}>
 <slot-com :defs="slotContent" :attrs="{parts}"
-           :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}', selfpath: '${fromPath}',  process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
+           :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}', selfpath: '${fromPath}',  pathArr: [${pathArrStr.slice(1)}], process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
             name="object_afterend"></slot-com>`;
     } else if (p.type === 'array') {
       const itemKey = 'item' + level;
