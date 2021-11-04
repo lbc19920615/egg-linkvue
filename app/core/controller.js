@@ -163,7 +163,7 @@ v-if="${basePath}"
               name="array_afterbegin"></slot-com>              
 <${array_con_tag} v-for="(${itemKey}, ${indexKey}) in ${basePath}" class="z-form__array-con ${con_cls}" ${con_attr}>
 <slot-com :defs="slotContent" :attrs="{parts}"
-         :binds="{key: '${key}', partName: '${append.part.name}', indexKey:${indexKey}, fromPath: '${fromPath}', label: '${getLabel(append.CONFIG, configPath, key)}',  CONFIG: '${append.CONFIG}', selfpath: '${fromPath}['+ ${indexKey} +']', level:'${level}', parentlevel:'${level - 1}', basePath: '${basePath}', configPath: '${configPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
+         :binds="{key: '${key}', partName: '${append.part.name}', indexKey:${indexKey}, fromPath: '${fromPath}',  pathArr: [${pathArrStr.slice(1)}],  label: '${getLabel(append.CONFIG, configPath, key)}',  CONFIG: '${append.CONFIG}', selfpath: '${fromPath}['+ ${indexKey} +']', level:'${level}', parentlevel:'${level - 1}', basePath: '${basePath}', configPath: '${configPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
             name="array_con_afterbegin"></slot-com>           
 `;
       if (p.items.type === 'object') {
