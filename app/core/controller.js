@@ -122,7 +122,7 @@ function renderForm(p, basePath, configPath, append = {}) {
       const fromPath = getSelfPath(basePath, append.BASE_PATH);
 
       if (wrap_tag) {
-        context.tpl = context.tpl + `<${wrap_tag}>`;
+        context.tpl = context.tpl + `<${wrap_tag} ${attrStr(p, 'wrapAttrs')}>`;
       }
 
       context.tpl = context.tpl + `
@@ -168,7 +168,7 @@ v-if="${basePath}"
       const con_cls = buildCls(p, 'ui.conClass');
       // console.dir(append.CONFIG)
       if (wrap_tag) {
-        context.tpl = context.tpl + `<${wrap_tag}>`;
+        context.tpl = context.tpl + `<${wrap_tag} ${attrStr(p, 'wrapAttrs')}>`;
       }
 
       context.tpl = context.tpl + `
