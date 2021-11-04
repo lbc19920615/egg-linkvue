@@ -118,24 +118,42 @@ function renderForm(p, basePath, configPath, append = {}) {
   function render(p, key, context, level, basePath, configPath, pathArrStr, ext) {
     if (p.type === 'object') {
       const obj_tag = p.tag ? p.tag : 'div';
+      const wrap_tag = p.wrap ? p.wrap : '';
       const fromPath = getSelfPath(basePath, append.BASE_PATH);
+
+      if (wrap_tag) {
+        context.tpl = context.tpl + `<${wrap_tag}>`;
+      }
+
       context.tpl = context.tpl + `
 <slot-com :defs="slotContent" :attrs="{parts}"
            :binds="{key: '${key}', partName: '${append.part.name}', config: getUI_CONFIG('${configPath}'), pathArr: [${pathArrStr.slice(1)}], configPath: '${configPath}', label: '${getLabel(append.CONFIG, configPath, key)}', selfpath: '${fromPath}',  process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
             name="object_beforebegin"></slot-com>            
 <${obj_tag} class="level_${level} z-form__object ${buildCls(p)}" ${attrStr(p)}
 v-if="${basePath}"
->`;
+>
+<slot-com :defs="slotContent" :attrs="{parts}"
+           :binds="{key: '${key}', partName: '${append.part.name}', config: getUI_CONFIG('${configPath}'), pathArr: [${pathArrStr.slice(1)}], configPath: '${configPath}', label: '${getLabel(append.CONFIG, configPath, key)}', selfpath: '${fromPath}',  process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
+            name="object_afterbegin"></slot-com>    
+`;
       for (const [ key, value ] of Object.entries(p.properties)) {
         ext.parentModel = `${basePath}`;
         render(value, key, context, level + 1,
           `${basePath}.${key}`, `${configPath}.properties.${key}`, `${pathArrStr},'${key}'`, ext);
       }
       context.tpl = context.tpl + `
+<slot-com :defs="slotContent" :attrs="{parts}"
+           :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}', selfpath: '${fromPath}',  pathArr: [${pathArrStr.slice(1)}], process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
+            name="object_beforeend"></slot-com>
 </${obj_tag}>
 <slot-com :defs="slotContent" :attrs="{parts}"
            :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}', selfpath: '${fromPath}',  pathArr: [${pathArrStr.slice(1)}], process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
             name="object_afterend"></slot-com>`;
+
+      if (wrap_tag) {
+        context.tpl = context.tpl + `</${wrap_tag}>`;
+      }
+
     } else if (p.type === 'array') {
       const itemKey = 'item' + level;
       const indexKey = 'index' + level;
