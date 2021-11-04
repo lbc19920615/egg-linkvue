@@ -258,6 +258,10 @@ function ROOT_GETTERS(v, params = []) {
         })
         model = ret.model
 
+        ret.fromDef = function() {
+          const obj = formModel.createFormModel(rowDef);
+          return obj
+        }
 
         function forceUpdate(parent, key, newVal) {
           parent[key] = newVal

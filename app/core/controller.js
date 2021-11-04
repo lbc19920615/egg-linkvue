@@ -122,14 +122,14 @@ function renderForm(p, basePath, configPath, append = {}) {
       const fromPath = getSelfPath(basePath, append.BASE_PATH);
 
       if (wrap_tag) {
-        context.tpl = context.tpl + `<${wrap_tag} ${attrStr(p, 'wrapAttrs')}>`;
+        context.tpl = context.tpl + `<${wrap_tag} :binds="{ pathArr: [${pathArrStr.slice(1)}] }" ${attrStr(p, 'wrapAttrs')}>`;
       }
 
       context.tpl = context.tpl + `
 <slot-com :defs="slotContent" :attrs="{parts}"
            :binds="{key: '${key}', partName: '${append.part.name}', config: getUI_CONFIG('${configPath}'), pathArr: [${pathArrStr.slice(1)}], configPath: '${configPath}', label: '${getLabel(append.CONFIG, configPath, key)}', selfpath: '${fromPath}',  process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
             name="object_beforebegin"></slot-com>            
-<${obj_tag} class="level_${level} z-form__object ${buildCls(p)}" ${attrStr(p)}
+<${obj_tag} class="level_${level} z-form__object ${buildCls(p)}" ${attrStr(p)} :binds="{ pathArr: [${pathArrStr.slice(1)}] }"
 v-if="${basePath}"
 >
 <slot-com :defs="slotContent" :attrs="{parts}"
@@ -168,18 +168,19 @@ v-if="${basePath}"
       const con_cls = buildCls(p, 'ui.conClass');
       // console.dir(append.CONFIG)
       if (wrap_tag) {
-        context.tpl = context.tpl + `<${wrap_tag} ${attrStr(p, 'wrapAttrs')}>`;
+        context.tpl = context.tpl + `<${wrap_tag} :binds="{ pathArr: [${pathArrStr.slice(1)}] }" ${attrStr(p, 'wrapAttrs')}>`;
       }
 
       context.tpl = context.tpl + `
  <slot-com :defs="slotContent" :attrs="{parts}"
            :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}',   pathArr: [${pathArrStr.slice(1)}], label: '${getLabel(append.CONFIG, configPath, key)}', selfpath: '${fromPath}',  CONFIG: '${append.CONFIG}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
               name="array_beforebegin"></slot-com>                   
-<${array_tag} class="level_${level} z-form__array ${buildCls(p)}" ${attrStr(p)}>
+<${array_tag} class="level_${level} z-form__array ${buildCls(p)}" :binds="{ pathArr: [${pathArrStr.slice(1)}] }" ${attrStr(p)}>
  <slot-com :defs="slotContent" :attrs="{parts}"
            :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}', pathArr: [${pathArrStr.slice(1)}],   label: '${getLabel(append.CONFIG, configPath, key)}', selfpath: '${fromPath}',  CONFIG: '${append.CONFIG}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
               name="array_afterbegin"></slot-com>              
-<${array_con_tag} v-for="(${itemKey}, ${indexKey}) in ${basePath}" class="z-form__array-con ${con_cls}" ${con_attr}>
+<${array_con_tag} v-for="(${itemKey}, ${indexKey}) in ${basePath}" class="z-form__array-con ${con_cls}"  ${con_attr} 
+:binds="{ itemKey:${itemKey}, indexKey:${indexKey}, pathArr: [${pathArrStr.slice(1)}, ${indexKey}] }">
 <slot-com :defs="slotContent" :attrs="{parts}"
          :binds="{key: '${key}', partName: '${append.part.name}', indexKey:${indexKey}, fromPath: '${fromPath}',  pathArr: [${pathArrStr.slice(1)}],  label: '${getLabel(append.CONFIG, configPath, key)}',  CONFIG: '${append.CONFIG}', selfpath: '${fromPath}['+ ${indexKey} +']', level:'${level}', parentlevel:'${level - 1}', basePath: '${basePath}', configPath: '${configPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
             name="array_con_afterbegin"></slot-com>           
@@ -238,7 +239,7 @@ v-if="${basePath}"
 
         context.tpl = context.tpl + `
 <slot-com :defs="slotContent" :attrs="{parts}"
-           :binds="{key: '${key}', partName: '${append.part.name}', label: '${getLabel(append.CONFIG, configPath, key)}', configPath: '${configPath}', selfpath: '${fromPath}',  process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
+           :binds="{key: '${key}', partName: '${append.part.name}', pathArr: [${pathArrStr.slice(1)}], label: '${getLabel(append.CONFIG, configPath, key)}', configPath: '${configPath}', selfpath: '${fromPath}',  process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
               name="prop_beforebegin"></slot-com>
 <${col_tag} class="level_${level} z-form__prop" ${attrs2Str}
 :tools_dep_id="getUI_CONFIG_DEP_ID('${configPath}')"
@@ -246,7 +247,7 @@ v-if="${basePath}"
 
 style="${col_style}"
 ><slot-com :defs="slotContent" :attrs="{parts}"
-           :binds="{key: '${key}', partName: '${append.part.name}', label: '${getLabel(append.CONFIG, configPath, key)}', config: getUI_CONFIG('${configPath}'), configPath: '${configPath}', selfpath: '${fromPath}',  process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
+           :binds="{key: '${key}', partName: '${append.part.name}', pathArr: [${pathArrStr.slice(1)}], label: '${getLabel(append.CONFIG, configPath, key)}', config: getUI_CONFIG('${configPath}'), configPath: '${configPath}', selfpath: '${fromPath}',  process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
               name="prop_afterbegin"></slot-com>`;
 
         context.tpl = context.tpl +
@@ -275,11 +276,11 @@ part_key="${append.partKey}"
 
         context.tpl = context.tpl + `
  <slot-com :defs="slotContent" :attrs="{parts}"
-           :binds="{key: '${key}', type: '${p.type}', partName: '${append.part.name}', label: '${getLabel(append.CONFIG, configPath, key)}', selfpath: '${fromPath}',  level:'${level}', parentlevel:'${level - 1}', basePath: '${basePath}', configPath: '${configPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
+           :binds="{key: '${key}', type: '${p.type}', partName: '${append.part.name}', pathArr: [${pathArrStr.slice(1)}], label: '${getLabel(append.CONFIG, configPath, key)}', selfpath: '${fromPath}',  level:'${level}', parentlevel:'${level - 1}', basePath: '${basePath}', configPath: '${configPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
               name="prop_beforeend"></slot-com>              
 </${col_tag}>
 <slot-com :defs="slotContent" :attrs="{parts}"
-           :binds="{key: '${key}', type: '${p.type}', partName: '${append.part.name}', label: '${getLabel(append.CONFIG, configPath, key)}', selfpath: '${fromPath}', level:'${level}', parentlevel:'${level - 1}', basePath: '${basePath}', configPath: '${configPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
+           :binds="{key: '${key}', type: '${p.type}', partName: '${append.part.name}', pathArr: [${pathArrStr.slice(1)}], label: '${getLabel(append.CONFIG, configPath, key)}', selfpath: '${fromPath}', level:'${level}', parentlevel:'${level - 1}', basePath: '${basePath}', configPath: '${configPath}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
               name="prop_afterend"></slot-com>`;
 
         if (wrap_end) {
