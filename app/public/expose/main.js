@@ -8189,8 +8189,9 @@ function rmObjProps(obj = {}) {
 }
 function rmPropByPath(obj, parent, path3) {
   if (import_lodash.default.has(obj, parent)) {
-    Reflect.deleteProperty(import_lodash.default.get(obj, parent), path3);
+    return Reflect.deleteProperty(import_lodash.default.get(obj, parent), path3);
   }
+  return false;
 }
 function buildAsyncpipe() {
   const steps = Array.from(arguments);

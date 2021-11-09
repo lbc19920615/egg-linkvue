@@ -336,8 +336,9 @@ export function rmObjProps(obj = {}) {
  */
 export function rmPropByPath(obj, parent, path) {
   if (_lodash.has(obj, parent)) {
-    Reflect.deleteProperty(_lodash.get(obj, parent), path)
+    return Reflect.deleteProperty(_lodash.get(obj, parent), path)
   }
+  return false
 }
 
 /**
