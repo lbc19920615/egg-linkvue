@@ -319,6 +319,28 @@ export function camelNameToCls(camel) {
 }
 
 /**
+ *
+ * @param obj
+ */
+export function rmObjProps(obj = {}) {
+  _lodash.each(obj, function (item, key) {
+    Reflect.deleteProperty(obj, key)
+  })
+}
+
+/**
+ *
+ * @param obj {{}}
+ * @param parent {string}
+ * @param path {string}
+ */
+export function rmPropByPath(obj, parent, path) {
+  if (_lodash.has(obj, parent)) {
+    Reflect.deleteProperty(_lodash.get(obj, parent), path)
+  }
+}
+
+/**
  * buildAsyncpipe
  * @returns {function(*=): T}
  */

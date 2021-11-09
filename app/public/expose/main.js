@@ -8182,6 +8182,16 @@ function camelNameToCls(camel) {
   }
   return v;
 }
+function rmObjProps(obj = {}) {
+  import_lodash.default.each(obj, function(item, key) {
+    Reflect.deleteProperty(obj, key);
+  });
+}
+function rmPropByPath(obj, parent, path3) {
+  if (import_lodash.default.has(obj, parent)) {
+    Reflect.deleteProperty(import_lodash.default.get(obj, parent), path3);
+  }
+}
 function buildAsyncpipe() {
   const steps = Array.from(arguments);
   return function asyncpipe(arg) {
@@ -8316,6 +8326,8 @@ export {
   nid,
   qs,
   rid,
+  rmObjProps,
+  rmPropByPath,
   sleep,
   export_updatedDiff as updatedDiff,
   uuid
