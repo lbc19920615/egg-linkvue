@@ -38,14 +38,16 @@
   </el-radio-group>
 {% endmacro %}
 
+
+
 {% macro BooleanWithClearable(model) %}
   <el-radio-group v-model="{{ model }}"
                   @change="onChange"
                   v-bind="widgetConfig2"
   >
-    <el-radio :label="true">true</el-radio>
-    <el-radio :label="false">false</el-radio>
-    <el-radio :label="null">undefined</el-radio>
+    <el-radio :label="true">是</el-radio>
+    <el-radio :label="false">否</el-radio>
+    <el-radio :label="null">null</el-radio>
   </el-radio-group>
 {% endmacro %}
 
