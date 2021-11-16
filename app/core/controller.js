@@ -119,10 +119,17 @@ function renderForm(p, basePath, configPath, append = {}) {
     if (p.type === 'object') {
       const obj_tag = p.tag ? p.tag : 'div';
       const wrap_tag = p.wrap ? p.wrap : '';
+      const wrap_start = p.wrap_start ? p.wrap_start : '';
+      const wrap_end = p.wrap_end ? p.wrap_end : '';
       const fromPath = getSelfPath(basePath, append.BASE_PATH);
 
       if (wrap_tag) {
         context.tpl = context.tpl + `<${wrap_tag} :binds="{ pathArr: [${pathArrStr.slice(1)}] }" ${attrStr(p, 'wrapAttrs')}>`;
+      }
+
+
+      if (wrap_start) {
+        context.tpl = context.tpl + wrap_start;
       }
 
       context.tpl = context.tpl + `
@@ -150,6 +157,11 @@ v-if="${basePath}"
            :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}', selfpath: '${fromPath}',  pathArr: [${pathArrStr.slice(1)}], process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
             name="object_afterend"></slot-com>`;
 
+      if (wrap_end) {
+        context.tpl = context.tpl + wrap_end;
+      }
+
+
       if (wrap_tag) {
         context.tpl = context.tpl + `</${wrap_tag}>`;
       }
@@ -160,6 +172,8 @@ v-if="${basePath}"
       const fromPath = getSelfPath(basePath, append.BASE_PATH);
       const array_tag = p.tag ? p.tag : 'div';
       const wrap_tag = p.wrap ? p.wrap : '';
+      const wrap_start = p.wrap_start ? p.wrap_start : '';
+      const wrap_end = p.wrap_end ? p.wrap_end : '';
       const array_con_tag = p.con_tag ? p.con_tag : 'div';
       const con_attr = attrStr(p, 'ui.conAttrs', {
         itemKey,
@@ -206,6 +220,10 @@ v-if="${basePath}"
          :binds="{key: '${key}', partName: '${append.part.name}', configPath: '${configPath}',   pathArr: [${pathArrStr.slice(1)}],  label: '${getLabel(append.CONFIG, configPath, key)}', process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
             name="array_aftereend"></slot-com> 
 `;
+
+      if (wrap_end) {
+        context.tpl = context.tpl + wrap_end;
+      }
 
       if (wrap_tag) {
         context.tpl = context.tpl + `</${wrap_tag}>`;
