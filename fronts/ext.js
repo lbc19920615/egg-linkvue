@@ -2,6 +2,11 @@ import _eval5 from 'eval5';
 import _JSON5 from 'json5';
 
 import { formatDateTime } from './time';
+import _local from 'localforage';
+import _fileUtils from 'file-saver';
+import * as _FS from 'browser-fs-access';
+import _cssObj from 'cssobj';
+import _marked from 'marked';
 
 
 /**
@@ -26,16 +31,12 @@ __main();
 `, ctx ? ctx : {});
 }
 
-import _local from 'localforage';
-
 /**
  * store
  * @type {LocalForage}
  */
 export const store = _local;
 
-
-import _fileUtils from 'file-saver';
 
 /**
  * saveAs
@@ -68,8 +69,6 @@ export function saveObjAsJson5File(obj = {}, fileName) {
     file: fileName + '.json5',
   });
 }
-
-import * as _FS from 'browser-fs-access';
 
 /**
  * saveStrUseFS
@@ -133,6 +132,17 @@ export async function fileOpenJSON5() {
 }
 
 /**
+ * @param data
+ * @param fileName
+ * @param prefix
+ */
+export function saveJSONFile({ data = null, fileName = '', prefix = '' }) {
+  const d = new Date();
+  const time = formatDateTime(d, 'YYYY-MM-DD__HH');
+  saveObjAsJson5File(data, `${prefix}${fileName}_${time}_${d.getTime()}`);
+}
+
+/**
  * 保存v1版本design file
  * @param data
  * @param fileName
@@ -161,14 +171,11 @@ export async function openDesignFile({ version = 'v1' }) {
   return Promise.reject(new Error('文件格式不对'));
 }
 
-import _cssObj from 'cssobj';
 /**
  * cssObj
  * @type {CssObj.Static}
  */
 export const cssObj = _cssObj;
-
-import _marked from 'marked';
 
 /**
  * marked

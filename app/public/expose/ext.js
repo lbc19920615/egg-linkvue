@@ -11364,6 +11364,11 @@ async function fileOpenJSON5() {
     }));
   }
 }
+function saveJSONFile({ data: data2 = null, fileName = "", prefix = "" }) {
+  const d = new Date();
+  const time = formatDateTime(d, "YYYY-MM-DD__HH");
+  saveObjAsJson5File(data2, `${prefix}${fileName}_${time}_${d.getTime()}`);
+}
 function saveDesignFile({ data: data2 = null, fileName = "", prefix = "" }) {
   const d = new Date();
   const time = formatDateTime(d, "YYYY-MM-DD__HH");
@@ -11392,6 +11397,7 @@ export {
   run,
   saveAs,
   saveDesignFile,
+  saveJSONFile,
   saveObjAsJson5File,
   saveStrAs,
   saveStrUseFS,
