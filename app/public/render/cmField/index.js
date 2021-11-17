@@ -167,6 +167,7 @@ export default function(name) {
       function onBlur(e) {
         // console.log('onBlur', context)
         context.fireEvent('blur', e);
+        context.fireEvent('cmfield:blur', e);
       }
 
 
