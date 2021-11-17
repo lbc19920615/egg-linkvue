@@ -160,6 +160,7 @@ function ROOT_GETTERS(v, params = []) {
           return ret
         }
       }
+      window.COM_FORM_COMMON_EVAL_FUNS = COMMON_EVAL_FUNS
 
       function heredoc(fn) {
         return fn.toString().match(/\/\*\s*([\s\S]*?)\s*\*\//m)[1];
@@ -700,9 +701,10 @@ function ROOT_GETTERS(v, params = []) {
                           let spath = ext.path
                           const fun = formDefProp.computedFun;
                           let keys = []
-                          ZY_EXT.eval5(fun, {
-                            app: globalThis.getApp(),
-                            T: COMMON_EVAL_FUNS,
+                          let modelFun = Array.of(...fun.matchAll(/(MODEL\()[^\)]*\)/g))
+                          let modelStr = modelFun.map( v => v[0]).join(';')
+                          // console.log(modelStr)
+                          ZY_EXT.eval5(modelStr, {
                             MODEL(key) {
                               keys.push(key)
                             }
@@ -718,6 +720,7 @@ function ROOT_GETTERS(v, params = []) {
                                 let val = ZY_EXT.eval5(fun, {
                                    app: globalThis.getApp(),
                                    T: COMMON_EVAL_FUNS,
+                                    ...COMMON_EVAL_FUNS,
                                    MODEL(v, defaultVal) {
                                       return ZY.lodash.get(model, v, defaultVal)
                                    }
@@ -965,6 +968,7 @@ function ROOT_GETTERS(v, params = []) {
         getUI_CONFIG,
         getUI_CONFIG_DEP_ID,
         getCONFIG,
+        COMMON_EVAL_FUNS,
         setDynamicOptions,
       get: ZY.lodash.get,
         handleAttrVal,
