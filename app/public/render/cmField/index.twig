@@ -12,4 +12,7 @@
     </template>
 {#{% verbatim %}{{ {% endverbatim %} ui {% verbatim %} }} {% endverbatim %}#}
     {{ formGroup.formItem("value") }}
+  <div class="cm-filed__desc"><slot name="cmfield_desc_afterbegin"></slot>
+    {% verbatim %}{{ {% endverbatim %}getDesc(){% verbatim %} }}{% endverbatim %}
+    <slot name="cmfield_desc_beforeend"></div>
 </el-form-item>

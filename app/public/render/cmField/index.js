@@ -146,6 +146,12 @@ export default function(name) {
         return replaceNbsps(ret);
       }
 
+      function getDesc() {
+        const ret = props.ui && props.ui.desc ? props.ui.desc : '';
+        // console.log('ui label', ret);
+        return replaceNbsps(ret);
+      }
+
 
       function getProp(pathArr = []) {
         let path = '';
@@ -225,6 +231,7 @@ export default function(name) {
         getOpt,
         getContextCONFIG,
         getLabel,
+        getDesc,
         cachedConfig,
         getUIOpt,
         widgetConfig2,
