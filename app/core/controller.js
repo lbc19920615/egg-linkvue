@@ -259,7 +259,7 @@ v-if="${basePath}"
 <slot-com :defs="slotContent" :attrs="{parts}"
            :binds="{key: '${key}', partName: '${append.part.name}', pathArr: [${pathArrStr.slice(1)}], label: '${getLabel(append.CONFIG, configPath, key)}', configPath: '${configPath}', selfpath: '${fromPath}',  process: '${append.CONFIG.process}', parts: parts, BASE_PATH:'${append.BASE_PATH}' }"
               name="prop_beforebegin"></slot-com>
-<${col_tag} class="level_${level} z-form__prop" ${attrs2Str}
+<${col_tag} class="level_${level} z-form__prop ${buildCls(p)}" ${attrs2Str}
 :tools_dep_id="getUI_CONFIG_DEP_ID('${configPath}')"
 :tools_dep_item_id="getUI_CONFIG_TOOLS_DEP_ITEM_ID('${configPath}')"
 
