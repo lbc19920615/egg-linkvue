@@ -182,7 +182,9 @@ v-if="${basePath}"
       const con_cls = buildCls(p, 'ui.conClass');
       // console.dir(append.CONFIG)
       if (wrap_tag) {
-        context.tpl = context.tpl + `<${wrap_tag} :binds="{ key: '${key}',  label: '${getLabel(append.CONFIG, configPath, key)}',   config: getUI_CONFIG('${configPath}'),  selfpath: '${fromPath}',  partName: '${append.part.name}', pathArr: [${pathArrStr.slice(1)}] }" ${attrStr(p, 'wrapAttrs')}>`;
+        context.tpl = context.tpl + `<${wrap_tag} 
+:binds="{ key: '${key}',  label: '${getLabel(append.CONFIG, configPath, key)}',   config: getUI_CONFIG('${configPath}'),  selfpath: '${fromPath}',  partName: '${append.part.name}', pathArr: [${pathArrStr.slice(1)}] }" 
+${attrStr(p, 'wrapAttrs')}>`;
       }
 
       context.tpl = context.tpl + `
@@ -247,7 +249,9 @@ v-if="${basePath}"
         // console.log(attrs);
 
         if (wrap_tag) {
-          context.tpl = context.tpl + `<${wrap_tag}>`;
+          context.tpl = context.tpl + `<${wrap_tag}
+:binds="{ key: '${key}',  label: '${getLabel(append.CONFIG, configPath, key)}',   config: getUI_CONFIG('${configPath}'),  selfpath: '${fromPath}',  partName: '${append.part.name}', pathArr: [${pathArrStr.slice(1)}] }" 
+>`;
         }
 
         if (wrap_start) {
