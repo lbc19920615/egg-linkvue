@@ -1,7 +1,6 @@
 {% import "./macros/formGroup.twig" as formGroup %}
 {% import "./macros/attr.twig" as attr %}
 
-
 <template>
 <div class="http-com comformscr2">
   {% for part in CONFIG.parts %}
@@ -162,6 +161,7 @@ function ROOT_GETTERS(v, params = []) {
 
 
       function initPart(partDef) {
+        // console.log(partDef)
         let rowDef = partDef.def
         let computedLinks = {
         }
@@ -327,7 +327,7 @@ function ROOT_GETTERS(v, params = []) {
               watch(() => {
                 return ZY.deepGet(model, key)
               }, (newVal, oldVal) => {
-                console.log('sdsdhsjdsjhdjsds', key)
+                // console.log('sdsdhsjdsjhdjsds', key)
                 computedFunItem.run(model)
               })
             })
