@@ -5,8 +5,9 @@
 {#              :label="getLabel()"#}
               :rules="rules"
 >
-{#  {% verbatim %}{{ {% endverbatim %}rules{% verbatim %} }}{% endverbatim %}#}
-    <template v-slot:label="scope"><div class="cm-filed__label"  v-bind="ui ? ui.form_item_label : {}"><slot name="cmfield_label_afterbegin"></slot>
+{#  {% verbatim %}{{ {% endverbatim %}showLabel(ui){% verbatim %} }}{% endverbatim %}#}
+    <template v-if="showLabel(ui)" v-slot:label="scope"><div class="cm-filed__label"
+                                        v-bind="ui ? ui.form_item_label : {}"><slot name="cmfield_label_afterbegin"></slot>
             {% verbatim %}{{ {% endverbatim %}getLabel(){% verbatim %} }}{% endverbatim %}
             <slot name="cmfield_label_beforeend"></div></slot>
     </template>

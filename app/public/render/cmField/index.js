@@ -146,6 +146,13 @@ export default function(name) {
         return replaceNbsps(ret);
       }
 
+      function showLabel() {
+        if (props.ui && props.ui.hiddenLabel) {
+          return false;
+        }
+        return true;
+      }
+
       function getDesc() {
         const ret = props.ui && props.ui.desc ? props.ui.desc : '';
         // console.log('ui label', ret);
@@ -221,6 +228,7 @@ export default function(name) {
         widgetConfig2[widgetConfig2.common_state] = widgetConfig2.common_state;
       }
 
+
       const ret = {
         onBlur,
         p_selfpath: props.selfpath,
@@ -230,7 +238,9 @@ export default function(name) {
         ...commonCom,
         getOpt,
         getContextCONFIG,
+        propConfig: props.prop_config,
         getLabel,
+        showLabel,
         getDesc,
         cachedConfig,
         getUIOpt,
