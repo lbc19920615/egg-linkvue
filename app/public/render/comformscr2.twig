@@ -96,7 +96,7 @@
     },
     mounted() {
 
-      const { ref, inject, watch, getCurrentInstance } = global.Vue;
+      const { inject } = global.Vue;
       this.$emit('init', this);
 
       let comManager = inject('comManager')
@@ -282,40 +282,6 @@ function ROOT_GETTERS(v, params = []) {
           curFormCon.comManager.context.sendEvent('model:update', obj)
         }
         ret.forceUpdate = forceUpdate
-
-        // function watchHandler(key) {
-        //   return function(newVal) {
-        //     // console.log('model.content', newVal)
-        //     let obj = {
-        //       key,
-        //       newVal,
-        //       config,
-        //       model
-        //     }
-        //     emit('model:update', obj);
-        //     curFormCon.comManager.context.sendEvent('model:update', obj)
-        //   }
-        // }
-        // function attachModelWatcher(model, parentPath, subModel) {
-        //   if (typeof subModel === 'object') {
-        //     for (let key in subModel) {
-        //       let tureKey = parentPath ? `${parentPath}.${key}` : key
-        //       if (Array.isArray(subModel[key])) {
-        //         subModel[key].forEach((subItem, subIndex) => {
-        //           // console.log(subItem, subIndex)
-        //           attachModelWatcher(model, `${tureKey}[${subIndex}]`, subItem)
-        //         })
-        //       } else {
-        //         // console.log('model', tureKey,  ZY.lodash.get(model, tureKey))
-        //         watch(() => ZY.lodash.get(model, tureKey), watchHandler(tureKey));
-        //       }
-        //     }
-        //   }
-        // }
-
-        // attachModelWatcher(model, '', model)
-
-        // console.log(computedFunMap)
 
         let cachedModel = ''
 
@@ -800,16 +766,6 @@ function ROOT_GETTERS(v, params = []) {
         }
       `
 
-      // console.log('curFormCon', curFormCon)
-      // function callComManager(name,e ) {
-      //   comManager.context.sendEvent(name,e)
-      // }
-
-      // console.log('globalStore', globalStore)
-
-
-
-
       function dxEval(v, $root, context) {
         let trueContext = context ? context : this;
         // console.log(trueContext)
@@ -860,19 +816,6 @@ function ROOT_GETTERS(v, params = []) {
       config.parts.forEach(part => {
         parts[part.name] = initPart(part)
       })
-
-    // async function callCom(partKey, methodName, ...args) {
-    //   let part = parts[partKey]
-    //   if (!part.el ) {
-    //     throw new Error('formCom.value null')
-    //   }
-    //   // console.log(partKey, parts, part.el)
-    //   let elRef = part.el.value
-    //   if (!elRef) {
-    //     throw new Error('formCom.value null')
-    //   }
-    //   return await ZY.awaitTo(elRef[methodName](...args))
-    // }
 
     function z_get(obj, p, defaultVal) {
       let ret = ZY.lodash.get(obj, p, defaultVal)
@@ -970,27 +913,6 @@ function ROOT_GETTERS(v, params = []) {
       }
     })()
 
-
-    // instanse.getState = function(partKey = '') {
-    //   let ret = parts[partKey]
-    //   let res = {}
-    //   for (let k in ret.model) {
-    //     res[k] = ret.model[k]
-    //   }
-    //   for (let k in ret.computedModel) {
-    //     res[k] = ret.computedModel[k].value
-    //   }
-    //   return {
-    //     val: res,
-    //     toRaw() {
-    //       return ZY.JSON5.parse(ZY.JSON5.stringify(res))
-    //     }
-    //   }
-    // }
-    //
-    // instanse.getRawState = function(...args) {
-    //   return instanse.getState(...args).toRaw()
-    // }
 
     return instanse
   },
