@@ -1,9 +1,8 @@
 import GlobalsPlugin from 'esbuild-plugin-globals';
 import esbuild from 'esbuild';
-import s from 'esbuild-plugin-vue-iii';
 
 (async () => {
-  const vue3Plugin = s.vue3Plugin;
+  // const vue3Plugin = s.vue3Plugin;
 
   /** Mapping from module paths to global variables */
   const globals = {
@@ -28,7 +27,7 @@ import s from 'esbuild-plugin-vue-iii';
         'vue',
       ],
       plugins: [
-        vue3Plugin(),
+        // vue3Plugin(),
         GlobalsPlugin({
           /**
            * Simple string pattern
