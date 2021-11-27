@@ -9,7 +9,7 @@ module.exports = {
   //   package: 'egg-mysql',
   // },
   sequelize: {
-    enable: true,
+    enable: false,
     package: 'egg-sequelize',
   },
   twig: {
