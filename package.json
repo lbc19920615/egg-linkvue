@@ -75,7 +75,7 @@
     "test-local": "egg-bin test",
     "cov": "egg-bin cov",
     "lint": "eslint .",
-    "ci": "npm run lint && npm run cov",
+    "ci": "",
     "autod": "autod",
     "ts:doc": "npx typedoc fronts/ts/index.ts --tsconfig fronts/tsconfig.json --out doc/public/tsdoc",
     "js:doc": "npx jsdoc fronts -c ./fronts/jsdoc.json"
