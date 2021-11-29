@@ -342,6 +342,29 @@ export function rmPropByPath(obj, parent, path) {
 }
 
 /**
+ * initTemplate
+ * @param id
+ * @param document
+ * @param html
+ * @returns {Promise<void>}
+ */
+export async function initTemplate(id, document, { html = '' } = {}) {
+  if (!document.getElementById(id)) {
+    try {
+      const template = document.createElement('template');
+      template.innerHTML = html;
+      template.id = id;
+      document.body.appendChild(template);
+    } catch (e) {
+      console.error(new Error('loadTwigComponent failed'));
+    }
+  } else {
+    //
+  }
+}
+
+
+/**
  * buildAsyncpipe
  * @returns {function(*=): T}
  */

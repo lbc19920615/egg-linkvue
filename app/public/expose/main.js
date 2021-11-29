@@ -8193,6 +8193,19 @@ function rmPropByPath(obj, parent, path3) {
   }
   return false;
 }
+async function initTemplate(id, document2, { html = "" } = {}) {
+  if (!document2.getElementById(id)) {
+    try {
+      const template = document2.createElement("template");
+      template.innerHTML = html;
+      template.id = id;
+      document2.body.appendChild(template);
+    } catch (e2) {
+      console.error(new Error("loadTwigComponent failed"));
+    }
+  } else {
+  }
+}
 function buildAsyncpipe() {
   const steps = Array.from(arguments);
   return function asyncpipe(arg) {
@@ -8322,6 +8335,7 @@ export {
   getStrFromObj,
   global2 as global,
   importJsStr,
+  initTemplate,
   isNumeric,
   lodash,
   nid,
