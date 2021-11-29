@@ -118,7 +118,7 @@
       this.comManager = comManager
     },
     beforeUnmount() {
-      const { ref, inject, watch, getCurrentInstance, toRaw, nextTick } = global.Vue;
+      // const { ref, inject, watch, getCurrentInstance, toRaw, nextTick } = global.Vue;
       let comManager = this.comManager
       // console.log(comManager)
       comManager.destory(this.comUUID)
@@ -682,9 +682,9 @@ function ROOT_GETTERS(v, params = []) {
                           }
                           computedLinks[linked].push({
                             key,
-                            parentType: ext.parentType ?? '',
+                            parentType: ext.parentType ? ext.parentType :  '',
                             parentKey: ext.path,
-                            parentDef: ext.parentDef ?? {},
+                            parentDef: ext.parentDef ? ext.parentDef : {},
                             valTpl: formDefProp.computedTpl,
                             reflectMap: ext.reflectMap
                           });
@@ -792,6 +792,12 @@ function ROOT_GETTERS(v, params = []) {
         })
       }
 
+      /**
+       *
+       * @param partContext
+       * @param v
+       * @returns {undefined|*}
+       */
       function dxValue(partContext, v) {
         // console.log('this', this, v)
         if (!partContext) {
@@ -801,6 +807,12 @@ function ROOT_GETTERS(v, params = []) {
         return dxEval(v, partContext, this)
       }
 
+      /**
+       * 即将废弃
+       * @deprecated
+       * @param v
+       * @returns {*}
+       */
       function valTpl(v) {
         return dxEval(v, {}, this)
       }
@@ -811,29 +823,45 @@ function ROOT_GETTERS(v, params = []) {
         parts[part.name] = initPart(part)
       })
 
-    function z_get(obj, p, defaultVal) {
-      let ret = ZY.lodash.get(obj, p, defaultVal)
-      if (ret === '') {
-        return defaultVal
+      function z_get(obj, p, defaultVal) {
+        let ret = ZY.lodash.get(obj, p, defaultVal)
+        if (ret === '') {
+          return defaultVal
+        }
+        return ret
       }
-      return ret
-    }
 
 
+      /**
+       * 触发上一级page control的事件接受
+       * @param name
+       * @param scope
+       * @param e
+       */
       function callPageEvent(name, scope, e) {
-        // console.log('callPageEvent', name, scope, e)
+        // console.log('callPageEvent',  curFormCon.comManager.context)
         curFormCon.comManager.context.sendEvent(name, {
           scope,
           originEvent: e,
         })
       }
 
+      /**
+       * 获取配置
+       * @param path
+       * @returns {*}
+       */
       function getCONFIG(path) {
         // console.log('getCONFIG', config, path)
         return ZY.lodash.get(config, path)
       }
 
 
+      /**
+       * 获取配置
+       * @param path
+       * @returns {*}
+       */
       function getUI_CONFIG(path) {
         // console.log('getCONFIG', config, path)
         return ZY.lodash.get({
@@ -841,17 +869,32 @@ function ROOT_GETTERS(v, params = []) {
         }, path)
       }
 
+      /**
+       * 即将废弃
+       * @param path
+       * @returns {*}
+       */
       function getUI_CONFIG_DEP_ID(path) {
         let c = getUI_CONFIG(path)
         return c.TOOLS_DEPID
       }
 
 
+      /**
+       * 即将废弃
+       * @param path
+       * @returns {*}
+       */
       function getUI_CONFIG_TOOLS_DEP_ITEM_ID(path) {
         let c = getUI_CONFIG(path)
         return c.TOOLS_DEP_ITEM_ID
       }
 
+      /**
+       * 从 style entries 得到style string
+       * @param styles
+       * @returns {string}
+       */
       function getStyleFromStyles(styles) {
         let str = ''
         if (Array.isArray(styles)) {
@@ -864,6 +907,11 @@ function ROOT_GETTERS(v, params = []) {
       }
 
 
+      /**
+       * 设置动态options 即将废弃
+       * @param name
+       * @param value
+       */
       function setDynamicOptions(name, value) {
         globalStore.dispatch('setDynamicOptions',
           [
@@ -873,30 +921,35 @@ function ROOT_GETTERS(v, params = []) {
         )
       }
 
+      /**
+       * handleAttrVal
+       * @param v
+       * @returns {*}
+       */
       function handleAttrVal(v) {
         // console.log('handleAttrVal', v)
         return v
       }
 
       let instanse = {
-      config,
-      parts,
+        config,
+        parts,
         getStyleFromStyles,
-      defaultTo: ZY.lodash.defaultTo,
-      z_get,
-      callPageEvent,
+        defaultTo: ZY.lodash.defaultTo,
+        z_get,
+        callPageEvent,
         getUI_CONFIG_TOOLS_DEP_ITEM_ID,
         getUI_CONFIG,
         getUI_CONFIG_DEP_ID,
         getCONFIG,
         COMMON_EVAL_FUNS,
         setDynamicOptions,
-      get: ZY.lodash.get,
+        get: ZY.lodash.get,
         handleAttrVal,
-      dxValue,
-      valTpl,
-      // dxEval,
-    };
+        dxValue,
+        valTpl,
+        // dxEval,
+      };
 
     instanse.slotContent = (function() {
       if (props.render) {
