@@ -264,16 +264,16 @@ export default function(name) {
 
       provide('CurCmField', ret);
 
-      // if (!global.cmFieldContext) {
-      //   global.cmFieldContext = new Map();
-      // }
-      //
-      // global.cmFieldContext.set(uuid, ret);
-      //
-      //
-      // onBeforeUnmount(() => {
-      //   global.cmFieldContext.delete(uuid);
-      // });
+      if (!global.cmFieldContext) {
+        global.cmFieldContext = new Map();
+      }
+
+      global.cmFieldContext.set(uuid, ret);
+
+
+      onBeforeUnmount(() => {
+        global.cmFieldContext.delete(uuid);
+      });
 
       return ret;
     },
