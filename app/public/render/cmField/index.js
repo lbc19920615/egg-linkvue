@@ -1,15 +1,15 @@
-import { global, lodash } from './public/expose/main.js';
+import { global, lodash, getHereDoc, JSON5, rid, Lock } from './public/expose/main.js';
 // import { useCommonComponent } from './public/hooks.js';
 
-function heredoc(fn) {
-  return fn.toString().match(/\/\*\s*([\s\S]*?)\s*\*\//m)[1];
-}
+// function heredoc(fn) {
+//   return fn.toString().match(/\/\*\s*([\s\S]*?)\s*\*\//m)[1];
+// }
 
 // const REMOVE_PROPS = [ 'clearable', 'disabled' ];
 
 export default function(name) {
   const templateId = name + '-tpl';
-  const cm_field_html = heredoc(function() { /* {{html}}*/ });
+  const cm_field_html = getHereDoc(function() { /* {{html}}*/ });
   // console.log(cm_field_html);
 
   // eslint-disable-next-line no-undef
@@ -199,7 +199,7 @@ export default function(name) {
           return cachedConfig;
         }
         // console.log(cachedConfig, path)
-        return ZY.lodash.get(cachedConfig, path);
+        return lodash.get(cachedConfig, path);
       }
 
       if (props.ui.widget2) {
