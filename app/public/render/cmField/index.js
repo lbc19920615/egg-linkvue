@@ -1,5 +1,5 @@
 import { global, lodash } from './public/expose/main.js';
-import { useCommonComponent } from './public/hooks.js';
+// import { useCommonComponent } from './public/hooks.js';
 
 function heredoc(fn) {
   return fn.toString().match(/\/\*\s*([\s\S]*?)\s*\*\//m)[1];
@@ -67,7 +67,7 @@ export default function(name) {
 
       const lock = new ZY.Lock(/* optional lock name, should be unique */);
 
-      const commonCom = useCommonComponent({ name });
+      // const commonCom = useCommonComponent({ name });
 
       let value = ref('');
       if (props.type === 'checkbox') {
@@ -235,7 +235,7 @@ export default function(name) {
         p_formpath: props.formPath,
         p_pathArr: props.pathArr,
         onInput,
-        ...commonCom,
+        // ...commonCom,
         getOpt,
         getContextCONFIG,
         propConfig: props.prop_config,
