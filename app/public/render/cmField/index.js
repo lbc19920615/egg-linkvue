@@ -1,4 +1,4 @@
-import { global, lodash, getHereDoc, JSON5, rid, Lock } from './public/expose/main.js';
+import { global, lodash, getHereDoc, initTemplate, JSON5, rid, Lock } from './public/expose/main.js';
 // import { useCommonComponent } from './public/hooks.js';
 
 // function heredoc(fn) {
@@ -13,8 +13,12 @@ export default function(name) {
   // console.log(cm_field_html);
 
   // eslint-disable-next-line no-undef
-  globalThis.initTemplate(templateId, globalThis, {
+  // globalThis.initTemplate(templateId, globalThis, {
+  //
+  //   html: cm_field_html,
+  // });
 
+  initTemplate(templateId, global.document, {
     html: cm_field_html,
   });
 
@@ -63,9 +67,10 @@ export default function(name) {
       // let curFormCon = inject('curFormCon')
       // console.log(props.slotContent);
       const context = props.context;
-      const uuid = 'cm-field-' + ZY.rid();
+      const uuid = 'cm-field-' + rid();
 
-      const lock = new ZY.Lock(/* optional lock name, should be unique */);
+      // const lock = new ZY.Lock(/* optional lock name, should be unique */);
+      const lock = new Lock(/* optional lock name, should be unique */);
 
       // const commonCom = useCommonComponent({ name });
 
@@ -186,7 +191,7 @@ export default function(name) {
 
       let cachedConfig = {};
       try {
-        cachedConfig = ZY.JSON5.parse(ZY.JSON5.stringify(
+        cachedConfig = JSON5.parse(JSON5.stringify(
           context.get_SELF_CONFIG()
         ));
         // console.log(cachedConfig)
@@ -204,7 +209,7 @@ export default function(name) {
 
       if (props.ui.widget2) {
         try {
-          const def = getWidget2(ZY.JSON5.parse(props.ui.widget2));
+          const def = getWidget2(JSON5.parse(props.ui.widget2));
 
 
           props.ui = Object.assign(props.ui, def.data);
@@ -215,7 +220,7 @@ export default function(name) {
       }
       if (props.ui.widgetConfig && props.ui.widgetExt) {
         try {
-          const ___def = ZY.JSON5.parse(props.ui.widgetExt);
+          const ___def = JSON5.parse(props.ui.widgetExt);
           props.ui.widgetConfig = Object.assign(props.ui.widgetConfig, ___def.data);
         } catch (e) {
         //
