@@ -1,4 +1,6 @@
-{% import "../macros/formGroup.twig" as formGroup %}
+{#{% import "../macros/formGroup.twig" as formGroup %}#}
+{#{% import "../macros/form.twig" as forms %}#}
+
 <el-form-item :prop="getProp(pathArr)"
               :x-path="formPath"
               v-bind="ui ? ui.form_item : {}"
@@ -12,7 +14,151 @@
             <slot name="cmfield_label_beforeend"></div></slot>
     </template>
 {#{% verbatim %}{{ {% endverbatim %} ui {% verbatim %} }} {% endverbatim %}#}
-    {{ formGroup.formItem("value") }}
+  <template v-if="ui && ui.widget">
+{#    {{forms.custom(modelPath)}}#}
+    <custom-form-render
+        :ui="ui"
+        :selfpath="p_selfpath"
+        :formpath="p_formpath"
+        :path-arr="p_pathArr"
+        :part_key="part_key"
+        :context="context"
+        :field_uuid="cmFieldUUID"
+        v-model="value"
+        @change="onChange"
+        @fchange="onFchange"
+        :slot-content="formSlotContent"
+        :prop_config="propConfig"
+    ></custom-form-render>
+  </template>
+  <template v-else-if="ui && ui.widgetFormat">
+    {#              {% verbatim %}#}
+    {#              {{ui}}#}
+    {#              {% endverbatim %}#}
+    <template v-if="ui.widgetFormat === 'datetime'">
+{#      {{forms.datetime(modelPath)}}#}
+      <el-date-picker
+          type="datetime"
+          v-model="value"
+          @change="onChange"
+          v-bind="ui ? ui.widgetConfig : null"
+      >
+      </el-date-picker >
+    </template>
+  </template>
+  <template v-else>
+    {#        {% verbatim %}#}
+    {#        {{ui}}#}
+    {#        {% endverbatim %}#}
+    <template v-if="type === 'string'">
+{#      {{forms.input('value')}}#}
+      <el-input v-model="value"
+                @input="onInput"
+                @blur="onBlur"
+                v-bind="widgetConfig2"
+      ></el-input>
+    </template>
+    <template v-if="type === 'number'">
+{#      {{forms.inputNumber('value')}}#}
+      <el-input v-model.number="value"
+                type="number"
+                @input="onInput"
+                @blur="onBlur"
+                v-bind="widgetConfig2"
+      ></el-input>
+    </template>
+    <template v-if="type === 'integer'">
+{#      {{forms.inputNumber('value')}}#}
+      <el-input v-model.number="value"
+                type="number"
+                @input="onInput"
+                @blur="onBlur"
+                v-bind="widgetConfig2"
+      ></el-input>
+    </template>
+    <template v-if="type === 'radio'">
+{#      {{forms.radio('value')}}#}
+      <el-radio-group
+          v-model="value"
+          @change="onChange"
+      >
+        {% verbatim %}
+          <template v-if="ui && ui.widgetConfig && ui.widgetConfig.enums">
+            <el-radio v-for="(item, enumIndex) in ui.widgetConfig.enums"
+                    :label="item[0]">{{item[1]}}</el-radio>
+          </template>
+        {% endverbatim %}
+      </el-radio-group>
+    </template>
+    <template v-if="type === 'radioBoolean'">
+{#      {{forms.radioBoolean('value')}}#}
+      <el-radio-group v-model="value"
+                      @change="onChange"
+      >
+        {% verbatim %}
+          <template v-if="ui && ui.widgetConfig && ui.widgetConfig.enums">
+            <el-radio :label="ui.widgetConfig.enums[0][0]">{{ui.widgetConfig.enums[0][1] ? ui.widgetConfig.enums[0][1] : '是'}}</el-radio>
+            <el-radio :label="ui.widgetConfig.enums[1][0]">{{ui.widgetConfig.enums[1][1] ? ui.widgetConfig.enums[1][1] : '否'}}</el-radio>
+          </template>
+        {% endverbatim %}
+      </el-radio-group>
+    </template>
+    <template v-if="type === 'boolean'">
+      <template v-if="ui.widgetConfig && ui.widgetConfig.ext === 'booleanWithClearable'">
+{#        {{forms.BooleanWithClearable('value')}}#}
+        <el-radio-group v-model="value"
+                        @change="onChange"
+                        v-bind="widgetConfig2"
+        >
+          <el-radio :label="true">是</el-radio>
+          <el-radio :label="false">否</el-radio>
+          <el-radio :label="null">null</el-radio>
+        </el-radio-group>
+      </template>
+      <template v-else>
+{#        {{forms.Boolean('value')}}#}
+        <el-radio-group v-model="value"
+                        @change="onChange"
+                        v-bind="widgetConfig2"
+        >
+          <el-radio :label="true">true</el-radio>
+          <el-radio :label="false">false</el-radio>
+        </el-radio-group>
+      </template>
+    </template>
+    <template v-if="type === 'checkbox'">
+{#      {{forms.checkbox('value')}}#}
+      <el-checkbox-group v-model="value" @change="onChange"
+      >
+        {% verbatim %}
+            <template v-if="ui && ui.widgetConfig && ui.widgetConfig.enums">
+              <el-checkbox v-for="(item, enumIndex) in ui.widgetConfig.enums"
+                      :label="item[0]">{{item[1]}}</el-checkbox>
+            </template>
+        {% endverbatim %}
+      </el-checkbox-group>
+    </template>
+    <template v-if="type === 'select'">
+{#      {{forms.select('value')}}#}
+      <el-select v-model="value" @change="onChange">
+        {% verbatim %}
+            <template v-if="ui && ui.widgetConfig && ui.widgetConfig.enums">
+              <el-option v-for="(item, enumIndex) in ui.widgetConfig.enums"
+                      :label="item[1]" :value="item[0]"></el-option>
+            </template>
+        {% endverbatim %}
+      </el-select>
+    </template>
+    <template v-if="type === 'time'">
+{#      {{forms.time('value')}}#}
+      <el-time-picker
+          arrow-control
+          v-model="value" @change="onChange"
+          v-bind="ui ? ui.widgetConfig : null"
+      >
+      </el-time-picker>
+    </template>
+  </template>
   <div class="cm-filed__desc"><slot name="cmfield_desc_afterbegin"></slot>
     {% verbatim %}{{ {% endverbatim %}getDesc(){% verbatim %} }}{% endverbatim %}
     <slot name="cmfield_desc_beforeend"></div>

@@ -1,11 +1,4 @@
 import { global, lodash, getHereDoc, initTemplate, JSON5, rid, Lock } from './public/expose/main.js';
-// import { useCommonComponent } from './public/hooks.js';
-
-// function heredoc(fn) {
-//   return fn.toString().match(/\/\*\s*([\s\S]*?)\s*\*\//m)[1];
-// }
-
-// const REMOVE_PROPS = [ 'clearable', 'disabled' ];
 
 export default function(name) {
   const templateId = name + '-tpl';
@@ -23,13 +16,6 @@ export default function(name) {
   });
 
   function getWidget2(widgetObj = {}) {
-
-    // for (let [key] of Object.entries(widgetObj)) {
-    //   if (REMOVE_PROPS.includes(key)) {
-    //     Reflect.deleteProperty(widgetObj, key)
-    //   }
-    // }
-
     return widgetObj;
   }
 
