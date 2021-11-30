@@ -8153,13 +8153,6 @@ var REMOTE_ORIGIN = url.origin;
 function getImportURL(url2) {
   return new URL(import.meta.url);
 }
-function fetchContentV2(queryObj = {}, params = {}) {
-  let query = qs.stringify(queryObj);
-  return fetchreq("/getcontentv2?" + query, {
-    baseUrl: REMOTE_ORIGIN,
-    ...params
-  });
-}
 function fetchContentV3(data = {}, query = {}) {
   let url2 = "/getcontentv3";
   if (Object.keys(query).length > 0) {
@@ -8324,7 +8317,6 @@ export {
   export_deletedDiff as deletedDiff,
   export_detailedDiff as detailedDiff,
   export_diff as diff,
-  fetchContentV2,
   fetchContentV3,
   fetchreq,
   formModel,

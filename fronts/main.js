@@ -256,19 +256,19 @@ export function getImportURL(url) {
   return new URL(import.meta.url)
 }
 
-/**
- * fetchContentV2
- * @param queryObj {{}}
- * @param params {{}}
- * @returns {Promise<any>}
- */
-export function fetchContentV2 (queryObj = {}, params = {}) {
-  let query = qs.stringify(queryObj)
-  return fetchreq('/getcontentv2?' + query, {
-    baseUrl: REMOTE_ORIGIN,
-    ...params
-  })
-}
+// /**
+//  * fetchContentV2
+//  * @param queryObj {{}}
+//  * @param params {{}}
+//  * @returns {Promise<any>}
+//  */
+// export function fetchContentV2 (queryObj = {}, params = {}) {
+//   let query = qs.stringify(queryObj)
+//   return fetchreq('/getcontentv2?' + query, {
+//     baseUrl: REMOTE_ORIGIN,
+//     ...params
+//   })
+// }
 
 /**
  * fetchContentV3
