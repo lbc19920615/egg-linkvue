@@ -420,6 +420,19 @@ function ROOT_GETTERS(v, params = []) {
           ret.el.value = ctx
         }
 
+        function getEl(methodName, ...args) {
+          if (!ret.el ) {
+            throw new Error('formCom.value null')
+          }
+          // console.log(partKey, parts, part.el)
+          let elRef = ret.el.value
+          if (!elRef) {
+            throw new Error('formCom.value null')
+          }
+          return elRef
+        }
+        ret.getEl = getEl
+
         /**
          * 调用form的某个方法
          * @param methodName
