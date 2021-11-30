@@ -7934,85 +7934,6 @@ var esm_default = n;
 // fronts/main.js
 var import_deep_object_diff = __toModule(require_dist3());
 
-// fronts/pingyin.js
-var pingyin_exports = {};
-__export(pingyin_exports, {
-  _getHanzi: () => _getHanzi,
-  getHanzi: () => getHanzi,
-  getSingleHanzi: () => getSingleHanzi,
-  initDict: () => initDict,
-  parsePingYing: () => parsePingYing
-});
-function initDict() {
-  const dict = globalThis.pinyinUtil.dict;
-  if (!dict.py2hz)
-    throw "\u672A\u627E\u5230\u5408\u9002\u7684\u5B57\u5178\u6587\u4EF6\uFF01";
-  dict.py2hz2 = {};
-  dict.py2hz2.i = "i";
-  for (let i = 97; i <= 123; i++) {
-    const ch = String.fromCharCode(i);
-    if (!dict.py2hz[ch]) {
-      for (const j in dict.py2hz) {
-        if (j.indexOf(ch) === 0) {
-          dict.py2hz2[ch] = dict.py2hz[j];
-          break;
-        }
-      }
-    }
-  }
-}
-var getSingleHanzi = function(pinyin) {
-  return globalThis.pinyinUtil.dict.py2hz2[pinyin] || globalThis.pinyinUtil.dict.py2hz[pinyin] || "";
-};
-var _getHanzi = function(pinyin) {
-  const MAGIC_LENGTH = 5;
-  let result = getSingleHanzi(pinyin);
-  if (result) {
-    return [result.split(""), pinyin];
-  }
-  let temp = "";
-  for (let i = 0, len = pinyin.length; i < len; i++) {
-    temp += pinyin[i];
-    result = getSingleHanzi(temp);
-    if (!result)
-      continue;
-    let flag = false;
-    if (i + 1 < pinyin.length) {
-      for (let j = 1, len2 = pinyin.length; j <= MAGIC_LENGTH && i + j < len2; j++) {
-        if (getSingleHanzi(pinyin.substr(0, i + j + 1))) {
-          flag = true;
-          break;
-        }
-      }
-    }
-    if (!flag) {
-      return [
-        result.split(""),
-        pinyin.substr(0, i + 1),
-        pinyin.substr(i + 1)
-      ];
-    }
-  }
-  return [[], ""];
-};
-var parsePingYing = function(pinyin = "", res = []) {
-  const ret = _getHanzi(pinyin);
-  if (Array.isArray(ret)) {
-    if (ret.length === 2) {
-      res.push(ret);
-    }
-    if (ret.length === 3) {
-      res.push([ret[0], ret[1]]);
-      parsePingYing(ret[2], res);
-    }
-  }
-};
-var getHanzi = function(pingyin = "") {
-  const ret = [];
-  parsePingYing(pingyin, ret);
-  return ret;
-};
-
 // node_modules/stringify-attributes/index.js
 var import_escape_goat = __toModule(require_escape_goat());
 function stringifyAttributes(attributes) {
@@ -8199,7 +8120,7 @@ async function initTemplate(id, document2, { html = "" } = {}) {
   } else {
   }
 }
-function buildAsyncpipe() {
+function buildAsyncPipe() {
   const steps = Array.from(arguments);
   return function asyncpipe(arg) {
     return steps.reduce(function(result, nextStep) {
@@ -8215,8 +8136,8 @@ var createEle = createHtmlElement;
 var AsyncFunction = Object.getPrototypeOf(async function() {
 }).constructor;
 var _DOM = {};
-_DOM.getAllPropKeys = function() {
-  return Object.keys(getComputedStyle(document.body)).filter((v) => {
+_DOM.getAllPropKeys = function(el = document.body) {
+  return Object.keys(getComputedStyle(el)).filter((v) => {
     return Number.isNaN(parseInt(v));
   }).map((v) => {
     let kebase = lodash.kebabCase(v);
@@ -8297,7 +8218,6 @@ export {
   Interval,
   JSON5,
   Lock2 as Lock,
-  pingyin_exports as PinYin,
   R,
   REMOTE_ORIGIN,
   Time,
@@ -8306,7 +8226,7 @@ export {
   export_addedDiff as addedDiff,
   attr2Str,
   awaitTo,
-  buildAsyncpipe,
+  buildAsyncPipe,
   camel2hyphen,
   camelNameToCls,
   comHelper,

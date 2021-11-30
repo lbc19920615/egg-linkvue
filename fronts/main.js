@@ -319,8 +319,8 @@ export function camelNameToCls(camel) {
 }
 
 /**
- *
- * @param obj
+ * rmObjProps
+ * @param obj {{}}
  */
 export function rmObjProps(obj = {}) {
   _lodash.each(obj, function (item, key) {
@@ -329,7 +329,7 @@ export function rmObjProps(obj = {}) {
 }
 
 /**
- *
+ * rmPropByPath
  * @param obj {{}}
  * @param parent {string}
  * @param path {string}
@@ -365,10 +365,10 @@ export async function initTemplate(id, document, { html = '' } = {}) {
 
 
 /**
- * buildAsyncpipe
+ * buildAsyncPipe
  * @returns {function(*=): T}
  */
-export function buildAsyncpipe() {
+export function buildAsyncPipe() {
   const steps = Array.from(arguments);
   return function asyncpipe(arg) {
     return steps.reduce(function(result, nextStep) {
@@ -392,7 +392,7 @@ export function importJsStr(content) {
 
 export { diff, addedDiff, deletedDiff, updatedDiff, detailedDiff } from 'deep-object-diff';
 
-export * as PinYin from './pingyin';
+// export * as PinYin from './pingyin';
 
 import createHtmlElement from 'create-html-element';
 /**
@@ -408,8 +408,13 @@ export const AsyncFunction = Object.getPrototypeOf(async function(){}).construct
 
 
 let _DOM = {}
-_DOM.getAllPropKeys = function() {
-  return Object.keys(getComputedStyle(document.body))
+/**
+ * getAllPropKeys
+ * @param el { HTMLElement }
+ * @returns {*[]}
+ */
+_DOM.getAllPropKeys = function(el = document.body) {
+  return Object.keys(getComputedStyle(el))
     .filter(v => {
       return Number.isNaN(parseInt(v))
     })
@@ -429,9 +434,8 @@ export let DOM = _DOM
 let _BOM = {}
 /**
  * createWindowManager
- * @param url
- * @param target
- * @param options
+ * @param url {string}
+ * @param target {string}
  */
 _BOM.createWindowManager = function(
   {url = '', target = 'PromoteFirefoxWindowName'},
