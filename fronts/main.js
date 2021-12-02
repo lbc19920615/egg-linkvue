@@ -93,6 +93,15 @@ export function rid(...args) {
   return v.replace(/-/g, '_')
 }
 
+/**
+ * cid
+ * @param args
+ * @returns {string}
+ */
+export function cid(...args) {
+  return _lodash.kebabCase(rid(...args))
+}
+
 // import _PubSub from 'pubsub-js'
 /**
  * PubSub
@@ -375,6 +384,19 @@ export function buildAsyncPipe() {
       return result.then(nextStep);
     }, Promise.resolve(arg));
   };
+}
+
+/**
+ * structuralClone
+ * @param obj {{}}
+ * @returns {Promise<unknown>}
+ */
+export function structuralClone(obj = {}) {
+  return new Promise(resolve => {
+    const {port1, port2} = new MessageChannel();
+    port2.onmessage = ev => resolve(ev.data);
+    port1.postMessage(obj);
+  });
 }
 
 /**

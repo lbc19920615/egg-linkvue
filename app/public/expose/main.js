@@ -8017,6 +8017,9 @@ function rid(...args) {
   }
   return v.replace(/-/g, "_");
 }
+function cid(...args) {
+  return import_lodash.default.kebabCase(rid(...args));
+}
 function getHereDoc(fn) {
   return fn.toString().match(/\/\*\s*([\s\S]*?)\s*\*\//m)[1];
 }
@@ -8128,6 +8131,13 @@ function buildAsyncPipe() {
     }, Promise.resolve(arg));
   };
 }
+function structuralClone(obj = {}) {
+  return new Promise((resolve) => {
+    const { port1, port2 } = new MessageChannel();
+    port2.onmessage = (ev) => resolve(ev.data);
+    port1.postMessage(obj);
+  });
+}
 function importJsStr(content) {
   const objectURL = URL.createObjectURL(new Blob([content], { type: "text/javascript" }));
   return import(objectURL);
@@ -8229,6 +8239,7 @@ export {
   buildAsyncPipe,
   camel2hyphen,
   camelNameToCls,
+  cid,
   comHelper,
   compareObj,
   createEle,
@@ -8256,6 +8267,7 @@ export {
   rmObjProps,
   rmPropByPath,
   sleep,
+  structuralClone,
   export_updatedDiff as updatedDiff,
   uuid
 };
