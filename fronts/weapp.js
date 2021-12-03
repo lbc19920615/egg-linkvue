@@ -62,3 +62,80 @@ export function rid(...args) {
   }
   return v.replace(/-/g, '_');
 }
+
+import _JSON5 from 'json5';
+/**
+ * JSON5
+ * @type {JSON}
+ */
+export const JSON5 = _JSON5;
+
+/**
+ *
+ * @param pathArr {string[]}
+ * @return {string}
+ */
+export function getObjPathFromPathArr(pathArr = []) {
+  let path = '';
+  pathArr.forEach((item, index) => {
+    if (index < 1) {
+      path = item;
+    } else {
+      if (typeof item === 'string') {
+        path = `${path}['${item}']`;
+      } else {
+        path = `${path}[${item}]`;
+      }
+    }
+  });
+  return path;
+}
+
+/**
+ *
+ * @param pathArr {string[]}
+ * @return {string}
+ */
+export function getObjParentPathFromPathArr(pathArr = []) {
+  if (pathArr.length > 1) {
+    const ps = pathArr.slice(0, pathArr.length - 1);
+    return getObjPathFromPathArr(ps);
+  }
+  // else if (patharr.length === 1) {
+  //   return ''
+  // }
+
+  return '';
+
+}
+
+
+/**
+ * deepGet
+ * @param target
+ * @param path
+ * @param defaultVal
+ */
+export function deepGet(target, path = '', defaultVal) {
+  if (!path) {
+    return target;
+  }
+  return lodash.get(target, path, defaultVal);
+}
+
+
+import * as _time from './time';
+/**
+ * Time类
+ * @type {{formatDateTime?: function(Date, string=): *}}
+ */
+export const Time = _time;
+
+/**
+ * 获取here doc
+ * @param fn
+ * @returns {string}
+ */
+export function getHereDoc(fn) {
+  return fn.toString().match(/\/\*\s*([\s\S]*?)\s*\*\//m)[1];
+}
