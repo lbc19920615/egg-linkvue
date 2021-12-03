@@ -47,6 +47,7 @@ export default function(name, cm_field_html) {
         },
       },
       slotContent: null,
+      formId: String
     },
     setup(props, { emit }) {
       const { ref, watch, provide, onBeforeUnmount } = global.Vue;
