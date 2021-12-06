@@ -355,10 +355,10 @@ function ROOT_GETTERS(v, params = []) {
           return false
         }
 
-        let reflectLocks = false
         reflectMap.forEach((reflectMapItems, reflectMapKey) => {
           if (Array.isArray(reflectMapItems)) {
             reflectMapItems.forEach(reflectMapItem => {
+              let reflectLocks = false
               let reflectOptions = reflectMapItem.reflectOptions
               if (reflectOptions.v2) {
                 let cachedModel = ''
@@ -373,8 +373,8 @@ function ROOT_GETTERS(v, params = []) {
                 // console.log(reflectMapItem, reflectMapKey, templatePathArr)
                 watch(model,  (newVal, oldVal) => {
                   let newObj = toRaw(newVal)
+                  // console.log(reflectLocks, reflectMapItem.key)
                   if (!reflectLocks) {
-
                     if (cachedModel) {
                       let oldObj = ZY.JSON5.parse(cachedModel)
                       let diffed = ZY.diff(oldObj, newObj)
