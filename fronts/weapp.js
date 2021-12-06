@@ -1,8 +1,17 @@
-import _lodash from 'lodash';
+import _lodashget from 'lodash/get';
+
+const getGlobal = function() {
+  // if (typeof self !== 'undefined') { return self; }
+  // eslint-disable-next-line no-undef
+  if (typeof globalThis !== 'undefined') { return globalThis; }
+  if (typeof global !== 'undefined') { return global; }
+  throw new Error('unable to locate global object');
+};
+
 const nanoid = (size = 21) => {
   let id = '';
   const bytes = new Uint8Array(size);
-  global.crypto.getRandomValues(bytes);
+  getGlobal().crypto.getRandomValues(bytes);
 
   // A compact alternative for `for (var i = 0; i < step; i++)`.
   while (size--) {
@@ -32,7 +41,9 @@ const nanoid = (size = 21) => {
  * lodash
  * @type {_.LoDashStatic | _}
  */
-export const lodash = _lodash;
+export const lodash = {
+  get: _lodashget,
+};
 
 /**
  * @description nanoid
@@ -120,7 +131,7 @@ export function deepGet(target, path = '', defaultVal) {
   if (!path) {
     return target;
   }
-  return lodash.get(target, path, defaultVal);
+  return _lodashget(target, path, defaultVal);
 }
 
 
