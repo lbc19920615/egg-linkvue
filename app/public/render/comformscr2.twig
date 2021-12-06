@@ -163,9 +163,10 @@ function ROOT_GETTERS(v, params = []) {
       const curFormCon = getCurrentInstance().ctx;
 
 
-      function initPart(partDef) {
+      function initPart(partDef, {partsPath, partIndex} = {}) {
         // console.log(partDef)
         let rowDef = partDef.def
+        let partPath = `${partsPath}[${partIndex}].def`
         let computedLinks = {
         }
         let reflectMap = new Map()
@@ -209,7 +210,8 @@ function ROOT_GETTERS(v, params = []) {
         formDefTravase(rowDef, computedLinks, {
           path: '',
           computedFunMap,
-          reflectMap
+          reflectMap,
+          pathArr: []
         });
 
 
@@ -303,6 +305,110 @@ function ROOT_GETTERS(v, params = []) {
           }
         })
 
+        function flattenObject(ob) {
+          var toReturn = {};
+
+          for (var i in ob) {
+            if (!ob.hasOwnProperty(i)) continue;
+
+            if ((typeof ob[i]) == 'object' && ob[i] !== null) {
+              var flatObject = flattenObject(ob[i]);
+              for (var x in flatObject) {
+                if (!flatObject.hasOwnProperty(x)) continue;
+
+                toReturn[i + '.' + x] = flatObject[x];
+              }
+            } else {
+              toReturn[i] = ob[i];
+            }
+          }
+          return toReturn;
+        }
+
+        /**
+         * 比较新的path和旧的template path
+         * @description 1. @INDEX 必须是数字 2. 其余要key相等
+         * @param templatePathArr
+         * @param changedPathArr
+         * @returns {boolean}
+         */
+        function comparePathIsLikeTemplate(templatePathArr, changedPathArr) {
+          if (templatePathArr.length === changedPathArr.length) {
+            let flag = true
+            templatePathArr.forEach((templatePathArrItem, templatePathArrItemINDEX) => {
+              // templatePathArrItem @INDEX 对应的 changedPathArr 部分必须是数字
+              if (templatePathArrItem === '@INDEX') {
+                if (!ZY.isNumeric(changedPathArr[templatePathArrItemINDEX])) {
+                  console.log(`changedPathArr ${templatePathArrItemINDEX} 不对`,  changedPathArr[templatePathArrItemINDEX])
+                  flag = false
+                }
+              }
+              else {
+                if (changedPathArr[templatePathArrItemINDEX] !== templatePathArrItem) {
+                  flag = false
+                }
+              }
+            })
+            // console.log('sdsdsdsds')
+            return flag
+          }
+          return false
+        }
+
+        let reflectLocks = false
+        reflectMap.forEach((reflectMapItems, reflectMapKey) => {
+          if (Array.isArray(reflectMapItems)) {
+            reflectMapItems.forEach(reflectMapItem => {
+              let reflectOptions = reflectMapItem.reflectOptions
+              if (reflectOptions.v2) {
+                let cachedModel = ''
+                let templatePathArr = reflectMapItem.pathArr
+                if (reflectMapItem.parentType === 'array') {
+                  templatePathArr = templatePathArr.concat(['@INDEX', reflectMapItem.reflect])
+                }
+                else if (reflectMapItem.parentType === 'object') {
+                  console.warn('reflectMap v2 parentType object 需要改')
+                }
+
+                // console.log(reflectMapItem, reflectMapKey, templatePathArr)
+                watch(model,  (newVal, oldVal) => {
+                  let newObj = toRaw(newVal)
+                  if (!reflectLocks) {
+
+                    if (cachedModel) {
+                      let oldObj = ZY.JSON5.parse(cachedModel)
+                      let diffed = ZY.diff(oldObj, newObj)
+                      let flattenD = flattenObject(diffed)
+                      ZY.lodash.each(flattenD, function(newchangedPathVal, changedPath) {
+                        let changedPathArr = changedPath.split('.')
+                        let changedPathIsLikeTemplate = comparePathIsLikeTemplate(templatePathArr, changedPathArr);
+                        // console.log(changedPathArr,newchangedPathVal, templatePathArr, changedPathIsLikeTemplate)
+                        if (changedPathIsLikeTemplate) {
+                          let selfPathArr = changedPathArr.slice(0, changedPathArr.length - 1).concat([reflectMapItem.key])
+                          let context = {
+                            A: globalThis.getApp(),
+                            $VAL: newchangedPathVal,
+                            L: ZY.lodash
+                          }
+                          let newVal = ZY_EXT.eval5(reflectMapItem.valTpl, context)
+                          reflectLocks = true
+                          ZY.lodash.set(model, selfPathArr, newVal)
+                          // console.log(newVal, selfPathArr)
+                          setTimeout(() => {
+                            reflectLocks = false
+                          }, 150)
+                        }
+                      })
+                      // console.log(diffed, flattenD)
+                    }
+                  }
+                  cachedModel = ZY.JSON5.stringify(newObj)
+                })
+              }
+            })
+          }
+        })
+
         watch(model, (newVal, oldVal) => {
           // console.log(modelLocks, newVal, oldVal)
           if (!modelLocks) {
@@ -314,7 +420,7 @@ function ROOT_GETTERS(v, params = []) {
             }
             let oldObj = ZY.JSON5.parse(cachedModel)
             let diffed = ZY.diff(oldObj, newObj)
-            // console.log('model.content', computedLinks)
+            // console.log('model.content', oldObj, newObj)
 
 
             reflectMap.forEach((arr, key) => {
@@ -580,13 +686,15 @@ function ROOT_GETTERS(v, params = []) {
           return
         }
 
-        // ret.appSplice = function(path, index, deleteCount = 1) {
-        //   let arr = ZY.lodash.get(ret.model, path)
-        //   if (Array.isArray(arr)) {
-        //     arr.splice(index, deleteCount)
-        //   }
-        //   // console.log(arr)
-        // }
+        /**
+         * 获取part的配置
+         * @param configPath
+         * @returns {*}
+         */
+        ret.getPartConfig = function(configPath) {
+          let s_path = configPath.replace(partPath + '.', '')
+          return ZY.lodash.get(rowDef, s_path)
+        }
 
         ret.get_SELF_CONFIG = function(path) {
           // console.log(rowDef)
@@ -635,7 +743,7 @@ function ROOT_GETTERS(v, params = []) {
         return ret
       }
 
-      function formDefTravase(formDef = {}, computedLinks, ext = {path: '', reflectMap: {}, computedFunMap: new Map()}) {
+      function formDefTravase(formDef = {}, computedLinks, ext = {path: '', pathArr: [], reflectMap: {}, computedFunMap: new Map()}) {
 
         if (formDef.type === 'object') {
           Object.entries(formDef.properties)
@@ -644,6 +752,7 @@ function ROOT_GETTERS(v, params = []) {
 
                     if (formDefProp.type !== 'array') {
                       if (formDefProp.type === 'object') {
+                        let newPathArr = ext.pathArr ? ext.pathArr.concat([key]) : ext.pathArr
                         // console.log('oh this is a big formDefTravase handle object', {
                         //   truePath,
                         //   formDef
@@ -654,9 +763,10 @@ function ROOT_GETTERS(v, params = []) {
                           parentType: 'object',
                           computedFunMap: ext.computedFunMap,
                           reflectMap: ext.reflectMap,
+                          pathArr: newPathArr
                         });
-
-                      } else {
+                      }
+                      else {
                         if (formDefProp.computedFun) {
                           let spath = ext.path
                           const fun = formDefProp.computedFun;
@@ -712,10 +822,13 @@ function ROOT_GETTERS(v, params = []) {
                             key,
                             // reflectArr: formDefProp.reflectArr,
                             // reflectArr: ['firstName', 'lastName'],
+                            reflectOptions: formDefProp.reflectOptions ?? {},
                             parentPath: ext.path,
                             path: truePath,
+                            parentType: ext.parentType,
                             reflect: formDefProp.reflect,
                             valTpl: formDefProp.reflectTpl,
+                            pathArr: ext.pathArr
                           }
                           if (ext.reflectMap.has(spath)) {
                             target = ext.reflectMap.get(spath)
@@ -724,13 +837,23 @@ function ROOT_GETTERS(v, params = []) {
                           ext.reflectMap.set(spath, target)
                         }
                       }
-                    } else {
+                    }
+                    else {
+                      let newPathArr = []
+                      // console.log(ext.pathArr)
+                      if (ext.pathArr.length < 1) {
+                        newPathArr = ext.pathArr.concat([key])
+                      }
+                      else {
+                        newPathArr = ext.pathArr.concat(['@INDEX', key])
+                      }
                       formDefTravase(formDefProp.items, computedLinks, {
                         path: truePath,
                         parentDef: formDef.properties[key].items,
                         parentType: 'array',
                         computedFunMap: ext.computedFunMap,
-                        reflectMap: ext.reflectMap
+                        reflectMap: ext.reflectMap,
+                        pathArr: newPathArr
                       });
                     }
                   });
@@ -835,8 +958,11 @@ function ROOT_GETTERS(v, params = []) {
 
 
       let parts = {}
-      config.parts.forEach(part => {
-        parts[part.name] = initPart(part)
+      config.parts.forEach((part, partIndex) => {
+        parts[part.name] = initPart(part, {
+          partsPath: 'config.parts',
+          partIndex
+        })
       })
 
       function z_get(obj, p, defaultVal) {
