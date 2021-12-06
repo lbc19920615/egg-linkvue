@@ -827,6 +827,119 @@ var require_get = __commonJS({
   }
 });
 
+// node_modules/lodash/_defineProperty.js
+var require_defineProperty = __commonJS({
+  "node_modules/lodash/_defineProperty.js"(exports, module) {
+    var getNative = require_getNative();
+    var defineProperty = function() {
+      try {
+        var func = getNative(Object, "defineProperty");
+        func({}, "", {});
+        return func;
+      } catch (e) {
+      }
+    }();
+    module.exports = defineProperty;
+  }
+});
+
+// node_modules/lodash/_baseAssignValue.js
+var require_baseAssignValue = __commonJS({
+  "node_modules/lodash/_baseAssignValue.js"(exports, module) {
+    var defineProperty = require_defineProperty();
+    function baseAssignValue(object, key, value) {
+      if (key == "__proto__" && defineProperty) {
+        defineProperty(object, key, {
+          "configurable": true,
+          "enumerable": true,
+          "value": value,
+          "writable": true
+        });
+      } else {
+        object[key] = value;
+      }
+    }
+    module.exports = baseAssignValue;
+  }
+});
+
+// node_modules/lodash/_assignValue.js
+var require_assignValue = __commonJS({
+  "node_modules/lodash/_assignValue.js"(exports, module) {
+    var baseAssignValue = require_baseAssignValue();
+    var eq = require_eq();
+    var objectProto = Object.prototype;
+    var hasOwnProperty = objectProto.hasOwnProperty;
+    function assignValue(object, key, value) {
+      var objValue = object[key];
+      if (!(hasOwnProperty.call(object, key) && eq(objValue, value)) || value === void 0 && !(key in object)) {
+        baseAssignValue(object, key, value);
+      }
+    }
+    module.exports = assignValue;
+  }
+});
+
+// node_modules/lodash/_isIndex.js
+var require_isIndex = __commonJS({
+  "node_modules/lodash/_isIndex.js"(exports, module) {
+    var MAX_SAFE_INTEGER = 9007199254740991;
+    var reIsUint = /^(?:0|[1-9]\d*)$/;
+    function isIndex(value, length) {
+      var type = typeof value;
+      length = length == null ? MAX_SAFE_INTEGER : length;
+      return !!length && (type == "number" || type != "symbol" && reIsUint.test(value)) && (value > -1 && value % 1 == 0 && value < length);
+    }
+    module.exports = isIndex;
+  }
+});
+
+// node_modules/lodash/_baseSet.js
+var require_baseSet = __commonJS({
+  "node_modules/lodash/_baseSet.js"(exports, module) {
+    var assignValue = require_assignValue();
+    var castPath = require_castPath();
+    var isIndex = require_isIndex();
+    var isObject = require_isObject();
+    var toKey = require_toKey();
+    function baseSet(object, path, value, customizer) {
+      if (!isObject(object)) {
+        return object;
+      }
+      path = castPath(path, object);
+      var index = -1, length = path.length, lastIndex = length - 1, nested = object;
+      while (nested != null && ++index < length) {
+        var key = toKey(path[index]), newValue = value;
+        if (key === "__proto__" || key === "constructor" || key === "prototype") {
+          return object;
+        }
+        if (index != lastIndex) {
+          var objValue = nested[key];
+          newValue = customizer ? customizer(objValue, key, nested) : void 0;
+          if (newValue === void 0) {
+            newValue = isObject(objValue) ? objValue : isIndex(path[index + 1]) ? [] : {};
+          }
+        }
+        assignValue(nested, key, newValue);
+        nested = nested[key];
+      }
+      return object;
+    }
+    module.exports = baseSet;
+  }
+});
+
+// node_modules/lodash/set.js
+var require_set = __commonJS({
+  "node_modules/lodash/set.js"(exports, module) {
+    var baseSet = require_baseSet();
+    function set(object, path, value) {
+      return object == null ? object : baseSet(object, path, value);
+    }
+    module.exports = set;
+  }
+});
+
 // node_modules/json5/dist/index.js
 var require_dist = __commonJS({
   "node_modules/json5/dist/index.js"(exports, module) {
@@ -2518,6 +2631,7 @@ var require_duration = __commonJS({
 
 // fronts/weapp.js
 var import_get = __toModule(require_get());
+var import_set = __toModule(require_set());
 var import_json5 = __toModule(require_dist());
 
 // fronts/time.js
@@ -2570,7 +2684,8 @@ var nanoid = (size = 21) => {
   return id;
 };
 var lodash = {
-  get: import_get.default
+  get: import_get.default,
+  set: import_set.default
 };
 var nid = nanoid;
 function isNumeric(n) {
