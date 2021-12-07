@@ -1,5 +1,8 @@
 import _lodashget from 'lodash/get';
 import _lodashset from 'lodash/set';
+import _lodashlang from 'lodash/lang';
+import _lodashcollection from 'lodash/collection';
+import _lodashstring from 'lodash/string';
 
 const getGlobal = function() {
   // if (typeof self !== 'undefined') { return self; }
@@ -45,6 +48,9 @@ const nanoid = (size = 21) => {
 export const lodash = {
   get: _lodashget,
   set: _lodashset,
+  ..._lodashlang,
+  ..._lodashcollection,
+  ..._lodashstring,
 };
 
 /**
