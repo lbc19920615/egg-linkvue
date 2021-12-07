@@ -1,5 +1,7 @@
 import _lodashget from 'lodash/get';
 import _lodashset from 'lodash/set';
+import _lodashpick from 'lodash/pick';
+import _lodashpickby from 'lodash/pickBy';
 import _lodashlang from 'lodash/lang';
 import _lodashcollection from 'lodash/collection';
 import _lodashstring from 'lodash/string';
@@ -48,6 +50,8 @@ const nanoid = (size = 21) => {
 export const lodash = {
   get: _lodashget,
   set: _lodashset,
+  pick: _lodashpick,
+  pickBy: _lodashpickby,
   ..._lodashlang,
   ..._lodashcollection,
   ..._lodashstring,
