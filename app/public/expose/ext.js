@@ -11321,8 +11321,10 @@ function saveStrAs(str = "", {
   const blob = new cls([str], { type });
   return saveAs(blob, file);
 }
-function saveObjAsJson5File(obj = {}, fileName) {
-  saveStrAs(import_json5.default.stringify(obj), {
+function saveObjAsJson5File(obj = {}, fileName = "", {
+  saveFun = saveStrAs
+} = {}) {
+  saveFun(import_json5.default.stringify(obj), {
     file: fileName + ".json5"
   });
 }
@@ -11364,19 +11366,23 @@ async function fileOpenJSON5({ mimeTypes = [] } = {}) {
     }));
   }
 }
-function saveJSONFile({ data: data2 = null, fileName = "", prefix = "" }) {
+function saveJSONFile({ data: data2 = null, fileName = "", prefix = "", saveFun }) {
   const d = new Date();
   const time = formatDateTime(d, "YYYY-MM-DD__HH");
-  saveObjAsJson5File(data2, `${prefix}${fileName}_${time}_${d.getTime()}`);
+  saveObjAsJson5File(data2, `${prefix}${fileName}_${time}_${d.getTime()}`, {
+    saveFun
+  });
 }
-function saveDesignFile({ data: data2 = null, fileName = "", prefix = "" }) {
+function saveDesignFile({ data: data2 = null, fileName = "", prefix = "", saveFun }) {
   const d = new Date();
   const time = formatDateTime(d, "YYYY-MM-DD__HH");
   const saved = {
     data: data2,
     date: Date.now()
   };
-  saveObjAsJson5File(saved, `${prefix}${fileName}_${time}_${d.getTime()}`);
+  saveObjAsJson5File(saved, `${prefix}${fileName}_${time}_${d.getTime()}`, {
+    saveFun
+  });
 }
 async function openDesignFile({ version: version3 = "v1" }) {
   const obj = await fileOpenJSON5();

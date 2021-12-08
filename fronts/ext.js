@@ -63,9 +63,13 @@ export function saveStrAs(str = '', {
 /**
  * 存贮js对象为json5文件
  * @param obj
+ * @param fileName
+ * @param saveFun
  */
-export function saveObjAsJson5File(obj = {}, fileName) {
-  saveStrAs(_JSON5.stringify(obj), {
+export function saveObjAsJson5File(obj = {}, fileName = '', {
+  saveFun = saveStrAs,
+} = {}) {
+  saveFun(_JSON5.stringify(obj), {
     file: fileName + '.json5',
   });
 }
@@ -136,11 +140,14 @@ export async function fileOpenJSON5({ mimeTypes = [] } = {}) {
  * @param data
  * @param fileName
  * @param prefix
+ * @param saveFun
  */
-export function saveJSONFile({ data = null, fileName = '', prefix = '' }) {
+export function saveJSONFile({ data = null, fileName = '', prefix = '', saveFun }) {
   const d = new Date();
   const time = formatDateTime(d, 'YYYY-MM-DD__HH');
-  saveObjAsJson5File(data, `${prefix}${fileName}_${time}_${d.getTime()}`);
+  saveObjAsJson5File(data, `${prefix}${fileName}_${time}_${d.getTime()}`, {
+    saveFun,
+  });
 }
 
 /**
@@ -148,15 +155,18 @@ export function saveJSONFile({ data = null, fileName = '', prefix = '' }) {
  * @param data
  * @param fileName
  * @param prefix
+ * @param saveFun
  */
-export function saveDesignFile({ data = null, fileName = '', prefix = '' }) {
+export function saveDesignFile({ data = null, fileName = '', prefix = '', saveFun }) {
   const d = new Date();
   const time = formatDateTime(d, 'YYYY-MM-DD__HH');
   const saved = {
     data,
     date: Date.now(),
   };
-  saveObjAsJson5File(saved, `${prefix}${fileName}_${time}_${d.getTime()}`);
+  saveObjAsJson5File(saved, `${prefix}${fileName}_${time}_${d.getTime()}`, {
+    saveFun,
+  });
 }
 
 /**
