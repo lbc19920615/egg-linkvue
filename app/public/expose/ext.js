@@ -11341,11 +11341,11 @@ function saveStrUseFS(str = "", {
   });
 }
 var FS = dist_exports;
-async function fileOpenJSON5() {
+async function fileOpenJSON5({ mimeTypes = [] } = {}) {
   let text = "";
   try {
     const blob = await FS.fileOpen({
-      mimeTypes: ["text/*"]
+      mimeTypes
     });
     if (blob) {
       text = await blob.text();

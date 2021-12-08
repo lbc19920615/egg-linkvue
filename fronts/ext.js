@@ -101,13 +101,14 @@ export const FS = _FS;
 
 /**
  * 读取JSON5文件
+ * @param mimeTypes {string[]}
  * @return {Promise<any>}
  */
-export async function fileOpenJSON5() {
+export async function fileOpenJSON5({ mimeTypes = [] } = {}) {
   let text = '';
   try {
     const blob = await FS.fileOpen({
-      mimeTypes: [ 'text/*' ],
+      mimeTypes,
     });
     if (blob) {
       text = await blob.text();
