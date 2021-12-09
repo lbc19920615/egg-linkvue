@@ -242,6 +242,15 @@ export let attr2Str = APP_UTILS.attr2Str
  */
 export const Time = _time;
 
+/**
+ * CSS
+ * @type {{parseObj(*): void}}
+ */
+export const CSS = {
+  parseObj(style,  {split = ';', pasedKey = _lodash.kebabCase, pasedValue = function(v) {return v}}) {
+    return Object.entries(style).map(([k, v]) => `${pasedKey(k)}:${pasedValue(v)}`).join(split)
+  }
+};
 
 import * as _formModel from './formmodel';
 /**

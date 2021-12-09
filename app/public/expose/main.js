@@ -12680,6 +12680,13 @@ var qs = import_qs.default;
 var fetchreq = fetchio_default;
 var attr2Str = import_utils.default.attr2Str;
 var Time = time_exports;
+var CSS = {
+  parseObj(style, { split: split2 = ";", pasedKey = import_lodash.default.kebabCase, pasedValue = function(v) {
+    return v;
+  } }) {
+    return Object.entries(style).map(([k, v]) => `${pasedKey(k)}:${pasedValue(v)}`).join(split2);
+  }
+};
 var formModel = formmodel_exports;
 var url = new URL(import.meta.url);
 var REMOTE_ORIGIN = url.origin;
@@ -12833,6 +12840,7 @@ var export_updatedDiff = import_deep_object_diff.updatedDiff;
 export {
   AsyncFunction,
   BOM,
+  CSS,
   DOM,
   Interval,
   JSON5,
