@@ -11320,7 +11320,8 @@ function electronSave(blob, {
 }) {
   return new Promise((resolve) => {
     const fs = global.require("fs");
-    global.electronRemote.dialog.showSaveDialog({
+    const remote = global.require("electron").remote;
+    remote.dialog.showSaveDialog({
       title: "\u53E6\u5B58\u4E3A",
       defaultPath: fileName
     }).then((result) => {
@@ -11330,6 +11331,25 @@ function electronSave(blob, {
       }
     }).catch((err) => {
       console.error(err);
+    });
+  });
+}
+function electronOpen(options = {}) {
+  return new Promise((resolve) => {
+    const fs = global.require("fs");
+    const remote = global.require("electron").remote;
+    remote.dialog.showOpenDialog({
+      properties: ["openFile"],
+      ...options
+    }).then((result) => {
+      if (!result.canceled) {
+        if (result.filePaths && result.filePaths[0]) {
+          const buffer = fs.readFileSync(result.filePaths[0]);
+          resolve(new Blob([buffer]));
+        }
+      }
+    }).catch((err) => {
+      console.log(err);
     });
   });
 }
@@ -11381,12 +11401,33 @@ function saveStrUseFS(str = "", {
   });
 }
 var FS = dist_exports;
+async function fileOpen2({ mimeTypes = [] } = {}) {
+  let blob = null;
+  const options = {
+    mimeTypes
+  };
+  try {
+    if (isElectron()) {
+      blob = await electronOpen(options);
+    } else {
+      blob = await FS.fileOpen(options);
+    }
+  } catch (e2) {
+  }
+  return blob;
+}
 async function fileOpenJSON5({ mimeTypes = [] } = {}) {
   let text = "";
   try {
-    const blob = await FS.fileOpen({
+    let blob = null;
+    const options = {
       mimeTypes
-    });
+    };
+    if (isElectron()) {
+      blob = await electronOpen(options);
+    } else {
+      blob = await FS.fileOpen(options);
+    }
     if (blob) {
       text = await blob.text();
       try {
@@ -11435,6 +11476,7 @@ export {
   FS,
   cssObj,
   eval5,
+  fileOpen2 as fileOpen,
   fileOpenJSON5,
   marked,
   openDesignFile,

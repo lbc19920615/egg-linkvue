@@ -38,8 +38,9 @@ function electronSave(blob, {
 }) {
   return new Promise(resolve => {
     const fs = global.require('fs');
+    const remote = global.require('electron').remote;
     // console.log(fs);
-    global.electronRemote.dialog.showSaveDialog({
+    remote.dialog.showSaveDialog({
       title: '另存为',
       defaultPath: fileName,
       // properties: ['openFile', 'openDirectory']
@@ -53,6 +54,36 @@ function electronSave(blob, {
       })
       .catch(err => {
         console.error(err);
+      });
+  });
+}
+
+/**
+ * electronOpen
+ * @param options
+ * @return {Promise<unknown>}
+ */
+function electronOpen(options = {}) {
+  return new Promise(resolve => {
+    const fs = global.require('fs');
+    const remote = global.require('electron').remote;
+    remote.dialog.showOpenDialog({
+      properties: [ 'openFile' ],
+      ...options,
+    })
+      .then(result => {
+        // console.log(result.canceled);
+        // console.log(result.filePaths);
+        if (!result.canceled) {
+          if (result.filePaths && result.filePaths[0]) {
+            const buffer = fs.readFileSync(result.filePaths[0]);
+            // console.log(buffer)
+            resolve(new Blob([ buffer ]));
+          }
+        }
+      })
+      .catch(err => {
+        console.log(err);
       });
   });
 }
@@ -159,6 +190,30 @@ export function saveStrUseFS(str = '', {
 export const FS = _FS;
 
 /**
+ *
+ * @param mimeTypes
+ * @return {Promise<void>}
+ */
+export async function fileOpen({ mimeTypes = [] } = {}) {
+  let blob = null;
+  const options = {
+    mimeTypes,
+  };
+
+  try {
+    if (isElectron()) {
+      blob = await electronOpen(options);
+    } else {
+      blob = await FS.fileOpen(options);
+    }
+  } catch (e) {
+    //
+  }
+  return blob;
+}
+
+
+/**
  * 读取JSON5文件
  * @param mimeTypes {string[]}
  * @return {Promise<any>}
@@ -166,9 +221,16 @@ export const FS = _FS;
 export async function fileOpenJSON5({ mimeTypes = [] } = {}) {
   let text = '';
   try {
-    const blob = await FS.fileOpen({
+    let blob = null;
+    const options = {
       mimeTypes,
-    });
+    };
+
+    if (isElectron()) {
+      blob = await electronOpen(options);
+    } else {
+      blob = await FS.fileOpen(options);
+    }
     if (blob) {
       text = await blob.text();
       try {
