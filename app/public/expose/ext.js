@@ -11440,7 +11440,7 @@ async function fileOpenJSON5({ mimeTypes = [] } = {}) {
       }
     }
   } catch (e2) {
-    return Promise.reject(new Error("fileOpenJSON5 select err", {
+    return Promise.reject(new Error(`fileOpenJSON5 select err ${e2.message}`, {
       cause: e2
     }));
   }
@@ -11478,6 +11478,7 @@ export {
   eval5,
   fileOpen2 as fileOpen,
   fileOpenJSON5,
+  isElectron,
   marked,
   openDesignFile,
   run,

@@ -8,7 +8,8 @@ import * as _FS from 'browser-fs-access';
 import _cssObj from 'cssobj';
 import _marked from 'marked';
 
-function isElectron() {
+export function isElectron() {
+  // return false
   // Renderer process
   // eslint-disable-next-line no-undef
   if (typeof window !== 'undefined' && typeof window.process === 'object' && window.process.type === 'renderer') {
@@ -246,7 +247,7 @@ export async function fileOpenJSON5({ mimeTypes = [] } = {}) {
     }
   } catch (e) {
     return Promise.reject(
-      new Error('fileOpenJSON5 select err', {
+      new Error(`fileOpenJSON5 select err ${e.message}`, {
         cause: e,
       })
     );
