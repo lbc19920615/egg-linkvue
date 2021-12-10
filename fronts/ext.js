@@ -9,6 +9,33 @@ import _cssObj from 'cssobj';
 import _marked from 'marked';
 
 
+// eslint-disable-next-line no-unused-vars
+function electronSave(blob, {
+  fileName,
+  // eslint-disable-next-line no-unused-vars
+  extensions,
+}) {
+  return new Promise(resolve => {
+    const fs = global.require2('fs');
+    // console.log(fs);
+    global.electronRemote.dialog.showSaveDialog({
+      title: '另存为',
+      defaultPath: fileName,
+      // properties: ['openFile', 'openDirectory']
+    })
+      .then(result => {
+        // console.dir(result);
+        if (!result.canceled) {
+          fs.writeFileSync(result.filePath, blob);
+          resolve();
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  });
+}
+
 /**
  * eval5
  * @type {(code: string, ctx?: (VMContext | undefined), options?: (ScriptOptions | undefined)) => any}
@@ -90,6 +117,13 @@ export function saveStrUseFS(str = '', {
   options = {},
 } = {}) {
   const blob = new cls([ str ], { type });
+  if (global.require2) {
+    return electronSave(blob, {
+      fileName,
+      extensions,
+      ...options,
+    });
+  }
   return _FS.fileSave(blob, {
     fileName,
     extensions,

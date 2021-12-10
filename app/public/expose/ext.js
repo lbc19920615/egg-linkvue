@@ -11302,6 +11302,25 @@ async function fileSave(...e2) {
 // fronts/ext.js
 var import_cssobj = __toModule(require_cssobj_umd());
 var import_marked = __toModule(require_marked());
+function electronSave(blob, {
+  fileName,
+  extensions
+}) {
+  return new Promise((resolve) => {
+    const fs = global.require2("fs");
+    global.electronRemote.dialog.showSaveDialog({
+      title: "\u53E6\u5B58\u4E3A",
+      defaultPath: fileName
+    }).then((result) => {
+      if (!result.canceled) {
+        fs.writeFileSync(result.filePath, blob);
+        resolve();
+      }
+    }).catch((err) => {
+      console.error(err);
+    });
+  });
+}
 var eval5 = esm_default;
 function run(code = "", ctx = {}) {
   return eval5(`
@@ -11336,6 +11355,13 @@ function saveStrUseFS(str = "", {
   options = {}
 } = {}) {
   const blob = new cls([str], { type });
+  if (global.require2) {
+    return electronSave(blob, {
+      fileName,
+      extensions,
+      ...options
+    });
+  }
   return fileSave(blob, {
     fileName,
     extensions,
