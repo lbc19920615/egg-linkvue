@@ -8,6 +8,27 @@ import * as _FS from 'browser-fs-access';
 import _cssObj from 'cssobj';
 import _marked from 'marked';
 
+function isElectron() {
+  // Renderer process
+  // eslint-disable-next-line no-undef
+  if (typeof window !== 'undefined' && typeof window.process === 'object' && window.process.type === 'renderer') {
+    return true;
+  }
+
+  // Main process
+  if (typeof process !== 'undefined' && typeof process.versions === 'object' && !!process.versions.electron) {
+    return true;
+  }
+
+  // Detect the user agent when the `nodeIntegration` option is set to true
+  // eslint-disable-next-line no-undef
+  if (typeof navigator === 'object' && typeof navigator.userAgent === 'string' && navigator.userAgent.indexOf('Electron') >= 0) {
+    return true;
+  }
+
+  return false;
+}
+
 
 // eslint-disable-next-line no-unused-vars
 function electronSave(blob, {
@@ -16,7 +37,7 @@ function electronSave(blob, {
   extensions,
 }) {
   return new Promise(resolve => {
-    const fs = global.require2('fs');
+    const fs = global.require('fs');
     // console.log(fs);
     global.electronRemote.dialog.showSaveDialog({
       title: '另存为',
@@ -117,7 +138,7 @@ export function saveStrUseFS(str = '', {
   options = {},
 } = {}) {
   const blob = new cls([ str ], { type });
-  if (global.require2) {
+  if (isElectron()) {
     return electronSave(blob, {
       fileName,
       extensions,

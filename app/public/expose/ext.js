@@ -11302,12 +11302,24 @@ async function fileSave(...e2) {
 // fronts/ext.js
 var import_cssobj = __toModule(require_cssobj_umd());
 var import_marked = __toModule(require_marked());
+function isElectron() {
+  if (typeof window !== "undefined" && typeof window.process === "object" && window.process.type === "renderer") {
+    return true;
+  }
+  if (typeof process !== "undefined" && typeof process.versions === "object" && !!process.versions.electron) {
+    return true;
+  }
+  if (typeof navigator === "object" && typeof navigator.userAgent === "string" && navigator.userAgent.indexOf("Electron") >= 0) {
+    return true;
+  }
+  return false;
+}
 function electronSave(blob, {
   fileName,
   extensions
 }) {
   return new Promise((resolve) => {
-    const fs = global.require2("fs");
+    const fs = global.require("fs");
     global.electronRemote.dialog.showSaveDialog({
       title: "\u53E6\u5B58\u4E3A",
       defaultPath: fileName
@@ -11355,7 +11367,7 @@ function saveStrUseFS(str = "", {
   options = {}
 } = {}) {
   const blob = new cls([str], { type });
-  if (global.require2) {
+  if (isElectron()) {
     return electronSave(blob, {
       fileName,
       extensions,
