@@ -10,6 +10,7 @@ import _lodashpickby from 'lodash/pickBy';
 import _lodashlang from 'lodash/lang';
 import _lodashcollection from 'lodash/collection';
 import _lodashstring from 'lodash/string';
+import _lodasharray from 'lodash/array';
 import _Schema from 'async-validator';
 export let Schema = _Schema;
 
@@ -59,6 +60,7 @@ export const lodash = {
   set: _lodashset,
   pick: _lodashpick,
   pickBy: _lodashpickby,
+  ..._lodasharray,
   ..._lodashlang,
   ..._lodashcollection,
   ..._lodashstring,
