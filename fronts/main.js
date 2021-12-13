@@ -20,7 +20,7 @@ import _qs from 'qs';
 import * as _time from './time';
 
 
-import APP_UTILS from '../app/core/utils';
+import APP_UTILS from './utils';
 import * as _formModel from './formmodel';
 import _sleep from 'sleep-promise';
 import createHtmlElement from 'create-html-element';
@@ -247,10 +247,15 @@ export const qs = _qs;
 
 // import _req from './ts/fetchio.ts';
 /**
- * fetchreq
+ * attr2Str
+ * @deprecated
  */
-// export const fetchreq = _req;
 export let attr2Str = APP_UTILS.attr2Str
+
+/**
+ * UTILS
+ */
+export let UTILS = APP_UTILS
 
 /**
  * Time类

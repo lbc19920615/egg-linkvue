@@ -10,6 +10,8 @@ import _lodashpickby from 'lodash/pickBy';
 import _lodashlang from 'lodash/lang';
 import _lodashcollection from 'lodash/collection';
 import _lodashstring from 'lodash/string';
+import _Schema from 'async-validator';
+export let Schema = _Schema;
 
 const getGlobal = function() {
   // if (typeof self !== 'undefined') { return self; }
@@ -168,3 +170,4 @@ export const Time = _time;
 export function getHereDoc(fn) {
   return fn.toString().match(/\/\*\s*([\s\S]*?)\s*\*\//m)[1];
 }
+

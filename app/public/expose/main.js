@@ -12603,6 +12603,7 @@ function defaultStr(v, defaultVal) {
 }
 var qs = import_qs.default;
 var attr2Str = import_utils.default.attr2Str;
+var UTILS = import_utils.default;
 var Time = time_exports;
 var CSS = {
   parseObj(style, { split: split2 = ";", pasedKey = import_lodash.default.kebabCase, pasedValue = function(v) {
@@ -12775,6 +12776,7 @@ export {
   Time,
   Timeout,
   U,
+  UTILS,
   export_addedDiff as addedDiff,
   attr2Str,
   awaitTo,
