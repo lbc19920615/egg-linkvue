@@ -70,7 +70,8 @@ function formSchemaToObject(formDef, obj) {
 
 /**
  * 通过formDef生成model
- * @link https://ncform.github.io/ncform/ncform-show/playground/index.html#tpl=basic-verification-rule
+ * {@link https://ncform.github.io/ncform/ncform-show/playground/index.html#tpl=basic-verification-rule}
+ * @deprecated
  * @param formDef {{}}
  * @returns {any}
  */
@@ -85,7 +86,7 @@ export function createFormModel(formDef) {
 /**
  * 通过formDef生成model
  * @param formDef
- * @returns {{}|[]}
+ * @returns {{}}
  */
 export function create(formDef) {
   let obj;

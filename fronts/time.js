@@ -10,6 +10,7 @@ _dayjs.extend(duration);
 
 /**
  * dayjs
+ * 官网 {@link https://www.npmjs.com/package/dayjs}
  */
 export const dayjs = _dayjs;
 

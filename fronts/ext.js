@@ -1,5 +1,11 @@
+/**
+ * Pants module.
+ * @module ext
+ */
+
 import _eval5 from 'eval5';
 import _JSON5 from 'json5';
+import * as _JSON7 from './jsonr';
 
 import { formatDateTime } from './time';
 import _local from 'localforage';
@@ -8,6 +14,10 @@ import * as _FS from 'browser-fs-access';
 import _cssObj from 'cssobj';
 import _marked from 'marked';
 
+/**
+ * 判断是否是在electron 环境
+ * @returns {boolean}
+ */
 export function isElectron() {
   // return false
   // Renderer process
@@ -91,7 +101,7 @@ function electronOpen(options = {}) {
 
 /**
  * eval5
- * @type {(code: string, ctx?: (VMContext | undefined), options?: (ScriptOptions | undefined)) => any}
+ * eval5官网 {@link https://www.npmjs.com/package/eval5}
  */
 export const eval5 = _eval5;
 
@@ -112,19 +122,19 @@ __main();
 }
 
 /**
- * store
+ * store 保存数据到本地  indexedDB
  * @type {LocalForage}
  */
 export const store = _local;
 
 
 /**
- * saveAs
+ * saveAs 保存通过浏览器链接下载
  */
 export const saveAs = _fileUtils.saveAs;
 
 /**
- * saveStrAs
+ * saveStrAs 保存字符串通过浏览器链接下载
  * @param str
  * @param file
  * @param type
@@ -141,7 +151,7 @@ export function saveStrAs(str = '', {
 }
 
 /**
- * 存贮js对象为json5文件
+ * saveObjAsJson5File 存贮js对象为json5文件
  * @param obj
  * @param fileName
  * @param saveFun
@@ -155,7 +165,7 @@ export function saveObjAsJson5File(obj = {}, fileName = '', {
 }
 
 /**
- * saveStrUseFS
+ * saveStrUseFS 保存字符串通过FS
  * @param str
  * @param fileName
  * @param cls
@@ -185,8 +195,8 @@ export function saveStrUseFS(str = '', {
 }
 
 /**
- * FS
- * @type {{FileWithDirectoryHandle: FileWithDirectoryHandle, FirstCoreFileOptions: FirstCoreFileOptions, FileWithHandle: FileWithHandle, CoreFileOptions: CoreFileOptions, FileSystemHandle: FileSystemHandle, FirstFileOpenOptions: FirstFileOpenOptions, supported: boolean, imageToBlob: (img: HTMLImageElement) => Promise<Blob>, FirstFileSaveOptions: FirstFileSaveOptions, FileSystemHandlePermissionDescriptor: FileSystemHandlePermissionDescriptor, directoryOpen: (options?: {recursive: boolean, startIn?: WellKnownDirectory | FileSystemHandle, id?: string, setupLegacyCleanupAndRejection?: (rejectionHandler?: () => void) => (reject: (reason?: any) => void) => void}) => Promise<FileWithDirectoryHandle[]>, fileSave: (blob: Blob, options?: ([FirstFileSaveOptions, ...CoreFileOptions[]] | FirstFileSaveOptions), existingHandle?: (FileSystemHandle | null), throwIfExistingHandleNotGood?: boolean) => Promise<FileSystemHandle>, WellKnownDirectory: "desktop" | "documents" | "downloads" | "music" | "pictures" | "videos", fileOpen: <M=false extends boolean | undefined>(options?: ([FirstFileOpenOptions<M>, ...CoreFileOptions[]] | FirstFileOpenOptions<M>)) => M extends (false | undefined) ? Promise<FileWithHandle> : Promise<FileWithHandle[]>}}
+ * FS 支持读取和写入本地文件
+ * {@link https://www.npmjs.com/package/browser-fs-access}
  */
 export const FS = _FS;
 
@@ -302,12 +312,19 @@ export async function openDesignFile({ version = 'v1' }) {
 
 /**
  * cssObj
+ * 官网 {@link https://www.npmjs.com/package/cssobj}
  * @type {CssObj.Static}
  */
 export const cssObj = _cssObj;
 
 /**
  * marked
- * @type {(function(*=, *=, *=): (*|undefined|string))|*}
+ * 官网 {@link https://www.npmjs.com/package/marked}
  */
 export const marked = _marked;
+
+/**
+ * JSON7
+ * 支持解析函数的JSON5
+ */
+export const JSON7 = _JSON7;

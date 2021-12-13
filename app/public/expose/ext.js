@@ -4638,7 +4638,7 @@ var require_marked = __commonJS({
           this.textRenderer = new TextRenderer$1();
           this.slugger = new Slugger$1();
         }
-        Parser4.parse = function parse4(tokens, options) {
+        Parser4.parse = function parse5(tokens, options) {
           var parser = new Parser4(options);
           return parser.parse(tokens);
         };
@@ -4647,7 +4647,7 @@ var require_marked = __commonJS({
           return parser.parseInline(tokens);
         };
         var _proto = Parser4.prototype;
-        _proto.parse = function parse4(tokens, top2) {
+        _proto.parse = function parse5(tokens, top2) {
           if (top2 === void 0) {
             top2 = true;
           }
@@ -11252,7 +11252,34 @@ var evaluate_default = function(code, ctx, options) {
 var esm_default = evaluate_default;
 
 // fronts/ext.js
+var import_json52 = __toModule(require_dist());
+
+// fronts/jsonr.js
+var jsonr_exports = {};
+__export(jsonr_exports, {
+  parse: () => parse4,
+  stringify: () => stringify
+});
 var import_json5 = __toModule(require_dist());
+function stringify(obj = {}) {
+  return import_json5.default.stringify(obj, function(key, value) {
+    if (typeof value === "function") {
+      return "/Function(" + value.toString() + ")/";
+    }
+    return value;
+  });
+}
+function parse4(json = "") {
+  return import_json5.default.parse(json, function(key, value) {
+    if (typeof value === "string" && value.startsWith("/Function(") && value.endsWith(")/")) {
+      value = value.substring(10, value.length - 2);
+      return (0, eval)("(" + value + ")");
+    }
+    return value;
+  });
+}
+
+// fronts/ext.js
 var import_localforage = __toModule(require_localforage());
 var import_file_saver = __toModule(require_FileSaver_min());
 
@@ -11375,7 +11402,7 @@ function saveStrAs(str = "", {
 function saveObjAsJson5File(obj = {}, fileName = "", {
   saveFun = saveStrAs
 } = {}) {
-  saveFun(import_json5.default.stringify(obj), {
+  saveFun(import_json52.default.stringify(obj), {
     file: fileName + ".json5"
   });
 }
@@ -11431,7 +11458,7 @@ async function fileOpenJSON5({ mimeTypes = [] } = {}) {
     if (blob) {
       text = await blob.text();
       try {
-        const obj = import_json5.default.parse(text);
+        const obj = import_json52.default.parse(text);
         return obj;
       } catch (e2) {
         return Promise.reject(new Error(`fileOpenJSON5 parse err ${e2.message}`, {
@@ -11472,8 +11499,10 @@ async function openDesignFile({ version: version3 = "v1" }) {
 }
 var cssObj = import_cssobj.default;
 var marked = import_marked.default;
+var JSON7 = jsonr_exports;
 export {
   FS,
+  JSON7,
   cssObj,
   eval5,
   fileOpen2 as fileOpen,

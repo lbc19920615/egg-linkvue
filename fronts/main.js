@@ -4,20 +4,49 @@
  */
 
 import getGlobalThisPolyfill from 'globalthis/polyfill';
+import { v4 } from 'uuid';
+import compareFactory from './compare';
+import Res from 'date-timeout-interval'; // TypeScript
+import { nanoid } from 'nanoid';
+
+import _JSON5 from 'json5';
+
+import * as ramda from 'ramda';
+import _to from 'await-to-js';
+import _comHelper from './comHelper.js';
+import _Lock from 'js-lock';
+import _lodash from 'lodash';
+import _qs from 'qs';
+import * as _time from './time';
+
+
+import APP_UTILS from '../app/core/utils';
+import * as _formModel from './formmodel';
+import _sleep from 'sleep-promise';
+import createHtmlElement from 'create-html-element';
+
 /**
  * global
+ * 全局globalThis
  * @type {NodeJS.Global}
  */
 export const global = getGlobalThisPolyfill();
 
-import { v4 } from 'uuid';
+/**
+ * uuid v4
+ * 官网 {@link https://www.npmjs.com/package/uuid}
+ */
 export let uuid = v4
 
-import compareFactory from './compare'
+/**
+ * _compareByValue
+ * @private
+ */
 let _compareByValue = compareFactory(Object)
 
 /**
- * compare
+ * compareObj
+ * 比较两个对象大小
  * @param obj1 {Object}
  * @param obj2 {Object}
  */
@@ -29,25 +58,28 @@ export function compareObj(obj1, obj2) {
   }
 }
 
-import Res from "date-timeout-interval"; // TypeScript
+/**
+ * Timeout 安全的setTimeout 避免浏览器静止问题
+ * @type {Timeout}
+ */
 export let Timeout = Res.Timeout
+
+/**
+ * Interval 安全的setInterval 避免浏览器静止问题
+ * @type {Timeout}
+ */
 export let Interval = Res.Interval
 
-import { nanoid } from 'nanoid'
-
-import _JSON5 from 'json5'
-
-import * as ramda from 'ramda'
 /**
- *
+ * ramda
+ * 官网 {@link https://www.npmjs.com/package/ramda}
  */
 export let R = ramda
 
-import _to from 'await-to-js'
-
 /**
- * to
- * @type {<T, U=Error>(promise: Promise<T>, errorExt?: object) => Promise<[U, undefined] | [null, T]>}
+ * awaitTo
+ * 方便async捕获错误 避免多次编写try catch
+ * 官网 {@link https://www.npmjs.com/package/await-to-js}
  */
 export let awaitTo = _to
 
@@ -57,23 +89,22 @@ export let awaitTo = _to
  */
 export let JSON5 = _JSON5
 
-import _comHelper from './comHelper.js'
 /**
  * comHelper
- * @type {{autoVal: function({obj: *, key?: *, base?: *, computedVal?: *}=): void}}
+ * 只在编辑使用
+ * @deprecated
  */
 export let comHelper = _comHelper
 
 /**
- * @description nanoid
- * @link https://www.npmjs.com/package/nanoid
- * @type {(size?: number) => string}
+ * nid
+ * 官网 {@link https://www.npmjs.com/package/nanoid}
  */
 export let nid = nanoid
 
 /**
- * isNumeric
- * @param n
+ * isNumeric 判断是否是像数字
+ * @param n {any}
  * @returns {boolean}
  */
 export function isNumeric(n) {
@@ -81,8 +112,8 @@ export function isNumeric(n) {
 }
 
 /**
- * rid
- * @param args
+ * random id
+ * @param args {Array}
  * @returns {string}
  */
 export function rid(...args) {
@@ -95,21 +126,14 @@ export function rid(...args) {
 
 /**
  * cid
- * @param args
+ * kebabCase 风格的 random id
+ * @param args {Array}
  * @returns {string}
  */
 export function cid(...args) {
   return _lodash.kebabCase(rid(...args))
 }
 
-// import _PubSub from 'pubsub-js'
-/**
- * PubSub
- * @description 文件发布订阅
- * @link https://www.npmjs.com/package/PubSub
- * @type {{}}
- */
-// export let PubSub = _PubSub
 
 /**
  * 获取here doc
@@ -121,7 +145,7 @@ export function getHereDoc(fn) {
 }
 
 /**
- *
+ * getObjPathFromPathArr
  * @param pathArr {string[]}
  * @returns {string}
  */
@@ -142,7 +166,7 @@ export function getObjPathFromPathArr(pathArr = []) {
 }
 
 /**
- *
+ * getObjParentPathFromPathArr
  * @param pathArr {string[]}
  * @returns {string}
  */
@@ -159,28 +183,25 @@ export function getObjParentPathFromPathArr(pathArr = []) {
   }
 }
 
-import _Lock from 'js-lock'
 /**
  * Lock
- * @description 文件锁
- * @link https://www.npmjs.com/package/js-lock
+ * {@link https://www.npmjs.com/package/js-lock}
  * @type {Lock}
  */
 export let Lock = _Lock
 
-import _lodash from 'lodash';
-
 /**
  * lodash
- * @type {_.LoDashStatic | _}
+ * @type {_.LoDashStatic}
  */
 export let lodash = _lodash
 
 /**
  * deepGet
- * @param target
- * @param path
- * @param defaultVal
+ * 类似于lodash get 但当path不存在直接返回target 并不去使用默认值
+ * @param target {Object}
+ * @param path {string | Array<String>}
+ * @param defaultVal  {any}
  */
 export function deepGet(target, path = '', defaultVal) {
   if (!path) {
@@ -191,9 +212,9 @@ export function deepGet(target, path = '', defaultVal) {
 
 /**
  * getStrFromObj
- * @param obj
- * @param path
- * @param defaultVal
+ * @param obj {Object}
+ * @param path {string | Array<String>}
+ * @param defaultVal {Any}
  * @returns {*}
  */
 export function getStrFromObj(obj, path, defaultVal) {
@@ -217,28 +238,22 @@ export function defaultStr(v, defaultVal) {
   return v
 }
 
-import _qs from 'qs';
 /**
  * qs
+ * {@link https://www.npmjs.com/package/qs}
  * @type {QueryString}
  */
 export const qs = _qs;
 
-import _req from './ts/fetchio.ts';
+// import _req from './ts/fetchio.ts';
 /**
  * fetchreq
  */
-export const fetchreq = _req;
-
-import * as _time from './time';
-
-
-import APP_UTILS from '../app/core/utils';
+// export const fetchreq = _req;
 export let attr2Str = APP_UTILS.attr2Str
 
 /**
  * Time类
- * @type {{formatDateTime?: function(Date, string=): *}}
  */
 export const Time = _time;
 
@@ -252,21 +267,21 @@ export const CSS = {
   }
 };
 
-import * as _formModel from './formmodel';
 /**
  * formModel
  */
 export const formModel = _formModel;
 
-let url = new URL(import.meta.url)
+let _url = new URL(import.meta.url)
 /**
- * REMOTE_ORIGIN
+ * REMOTE_ORIGIN 获取改js的import meta url
+ * @deprecated
  * @type {string}
  */
-export const REMOTE_ORIGIN = url.origin
+export const REMOTE_ORIGIN = _url.origin
 
 /**
- * getImportURL
+ * getImportURL 获取改js的import meta url
  * @param url {string}
  * @returns {string}
  */
@@ -274,22 +289,9 @@ export function getImportURL(url) {
   return new URL(import.meta.url)
 }
 
-// /**
-//  * fetchContentV2
-//  * @param queryObj {{}}
-//  * @param params {{}}
-//  * @returns {Promise<any>}
-//  */
-// export function fetchContentV2 (queryObj = {}, params = {}) {
-//   let query = qs.stringify(queryObj)
-//   return fetchreq('/getcontentv2?' + query, {
-//     baseUrl: REMOTE_ORIGIN,
-//     ...params
-//   })
-// }
-
 /**
  * fetchContentV3
+ * @deprecated
  * @param data {{}}
  * @param query {{}}
  * @returns {Promise<any>}
@@ -307,16 +309,15 @@ export function fetchContentV3 (data = {}, query = {}) {
 }
 
 
-import _sleep from 'sleep-promise'
-
 /**
  * 睡眠
+ * 在async方法里 让当前线程等待几秒
  */
 export let sleep = _sleep
 
 /**
- * camel
- * @param camel { string } 驼峰格式转为dash格式
+ * camel 驼峰格式转为dash格式
+ * @param camel { string }
  * @return {*}
  */
 export function camel2hyphen(camel) {
@@ -337,7 +338,7 @@ export function camelNameToCls(camel) {
 }
 
 /**
- * rmObjProps
+ * rmObjProps 删除对象所有可见属性
  * @param obj {{}}
  */
 export function rmObjProps(obj = {}) {
@@ -347,7 +348,7 @@ export function rmObjProps(obj = {}) {
 }
 
 /**
- * rmPropByPath
+ * rmPropByPath 通过path删除对象属性
  * @param obj {{}}
  * @param parent {string}
  * @param path {string}
@@ -360,13 +361,14 @@ export function rmPropByPath(obj, parent, path) {
 }
 
 /**
- * initTemplate
+ *
  * @param id
  * @param document
  * @param html
- * @returns {Promise<void>}
+ * @private
  */
-export async function initTemplate(id, document, { html = '' } = {}) {
+
+function _initTemplate(id, document, { html = '' } = {}) {
   if (!document.getElementById(id)) {
     try {
       const template = document.createElement('template');
@@ -383,8 +385,14 @@ export async function initTemplate(id, document, { html = '' } = {}) {
 
 
 /**
+ * initTemplate  生成template标签
+ * @deprecated
+
+ */
+export let initTemplate = _initTemplate
+
+/**
  * buildAsyncPipe
- * @returns {function(*=): T}
  */
 export function buildAsyncPipe() {
   const steps = Array.from(arguments);
@@ -396,7 +404,7 @@ export function buildAsyncPipe() {
 }
 
 /**
- * structuralClone
+ * structuralClone 深克隆
  * @param obj {{}}
  * @returns {Promise<unknown>}
  */
@@ -409,7 +417,7 @@ export function structuralClone(obj = {}) {
 }
 
 /**
- * importJsStr
+ * importJsStr 通过string执行js
  * @param content
  * @returns {Promise<*>}
  */
@@ -421,14 +429,16 @@ export function importJsStr(content) {
   return import(objectURL)
 }
 
+/**
+ * deep-object-diff
+ * {@link https://www.npmjs.com/package/js-lock}
+ * {@link }
+ */
 export { diff, addedDiff, deletedDiff, updatedDiff, detailedDiff } from 'deep-object-diff';
 
 // export * as PinYin from './pingyin';
-
-import createHtmlElement from 'create-html-element';
 /**
  * createEle
- * @type {(options?: Options) => string}
  */
 export let createEle = createHtmlElement
 
@@ -442,7 +452,7 @@ let _DOM = {}
 /**
  * getAllPropKeys
  * @param el { HTMLElement }
- * @returns {*[]}
+ * @returns []
  */
 _DOM.getAllPropKeys = function(el = document.body) {
   return Object.keys(getComputedStyle(el))
@@ -450,21 +460,25 @@ _DOM.getAllPropKeys = function(el = document.body) {
       return Number.isNaN(parseInt(v))
     })
     .map(v => {
-      let kebase = lodash.kebabCase(v)
       // return {
       //   label: kebase,
       //   value: kebase
       // }
-      return kebase
-    })
+      return lodash.kebabCase(v)
+    });
 }
+/**
+ * 初始化template
+ * @type {_initTemplate}
+ */
+_DOM.initTemplate = _initTemplate
 
 export let DOM = _DOM
 
 
 let _BOM = {}
 /**
- * createWindowManager
+ * createWindowManager 创建一个window 窗口
  * @param url {string}
  * @param target {string}
  */
@@ -523,7 +537,7 @@ export let BOM = _BOM
 let _U = {}
 /**
  * objArr2OptionsManager
- * @param arrObj {[{}]}
+ * @param arrObj {Array<Object>}
  * @param labelKey
  * @param valueKey
  */
@@ -535,7 +549,7 @@ _U.objArr2OptionsManager = function(arrObj = [], labelKey, valueKey) {
       label: item[labelKey],
       value: item[valueKey],
     }
-  }) ?? []
+  }) ?? [];
   ret.find = function(...args) {
     return _lodash.find(arrObj, ...args)
   }
@@ -545,7 +559,7 @@ _U.objArr2OptionsManager = function(arrObj = [], labelKey, valueKey) {
 /**
  * awaitAxios
  * @param p {Promise}
- * @returns {Promise<{data, err: *, response: *}>}
+ * @returns {Promise}
  */
 _U.awaitAxios = async function(p) {
   let [err,response] = await ZY.awaitTo(

@@ -1,3 +1,8 @@
+/**
+ * 小程序 module.
+ * @module weapp
+ */
+
 import _lodashget from 'lodash/get';
 import _lodashset from 'lodash/set';
 import _lodashpick from 'lodash/pick';
@@ -45,7 +50,7 @@ const nanoid = (size = 21) => {
 
 /**
  * lodash
- * @type {_.LoDashStatic | _}
+ * @type {_.LoDashStatic }
  */
 export const lodash = {
   get: _lodashget,
@@ -58,14 +63,14 @@ export const lodash = {
 };
 
 /**
+ * nid
+ * 官网 {@link https://www.npmjs.com/package/nanoid}
  * @description nanoid
- * @link https://www.npmjs.com/package/nanoid
- * @type {(size?: number) => string}
  */
 export const nid = nanoid;
 
 /**
- * isNumeric
+ * isNumeric 判断是否是像数字
  * @param n
  * @return {boolean}
  */
@@ -74,7 +79,7 @@ export function isNumeric(n) {
 }
 
 /**
- * rid
+ * random id
  * @param args
  * @return {string}
  */
@@ -94,7 +99,7 @@ import _JSON5 from 'json5';
 export const JSON5 = _JSON5;
 
 /**
- *
+ * getObjPathFromPathArr
  * @param pathArr {string[]}
  * @return {string}
  */
@@ -115,7 +120,7 @@ export function getObjPathFromPathArr(pathArr = []) {
 }
 
 /**
- *
+ * getObjParentPathFromPathArr
  * @param pathArr {string[]}
  * @return {string}
  */
@@ -135,6 +140,7 @@ export function getObjParentPathFromPathArr(pathArr = []) {
 
 /**
  * deepGet
+ * 类似于lodash get 但当path不存在直接返回target 并不去使用默认值
  * @param target
  * @param path
  * @param defaultVal
@@ -150,7 +156,7 @@ export function deepGet(target, path = '', defaultVal) {
 import * as _time from './time';
 /**
  * Time类
- * @type {{formatDateTime?: function(Date, string=): *}}
+ * {@link  module-Time}
  */
 export const Time = _time;
 

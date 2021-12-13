@@ -78,7 +78,8 @@
     "ci": "",
     "autod": "autod",
     "ts:doc": "npx typedoc fronts/ts/index.ts --tsconfig fronts/tsconfig.json --out doc/public/tsdoc",
-    "js:doc": "npx jsdoc fronts -c ./fronts/jsdoc.json"
+    "js:doc": "npx jsdoc fronts -c ./fronts/jsdoc.json",
+    "dis:doc": "http-server doc/public -p 7111"
   },
   "ci": {
     "version": "10"

@@ -7402,6 +7402,66 @@ var require_utils2 = __commonJS({
   }
 });
 
+// node_modules/stringify-attributes/node_modules/escape-goat/index.js
+var require_escape_goat = __commonJS({
+  "node_modules/stringify-attributes/node_modules/escape-goat/index.js"(exports) {
+    "use strict";
+    var htmlEscape3 = (string) => string.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    var htmlUnescape = (htmlString) => htmlString.replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/&#0?39;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, "&");
+    exports.htmlEscape = (strings, ...values3) => {
+      if (typeof strings === "string") {
+        return htmlEscape3(strings);
+      }
+      let output = strings[0];
+      for (const [index, value] of values3.entries()) {
+        output = output + htmlEscape3(String(value)) + strings[index + 1];
+      }
+      return output;
+    };
+    exports.htmlUnescape = (strings, ...values3) => {
+      if (typeof strings === "string") {
+        return htmlUnescape(strings);
+      }
+      let output = strings[0];
+      for (const [index, value] of values3.entries()) {
+        output = output + htmlUnescape(String(value)) + strings[index + 1];
+      }
+      return output;
+    };
+  }
+});
+
+// node_modules/html-tags/html-tags-void.json
+var require_html_tags_void = __commonJS({
+  "node_modules/html-tags/html-tags-void.json"(exports, module) {
+    module.exports = [
+      "area",
+      "base",
+      "br",
+      "col",
+      "embed",
+      "hr",
+      "img",
+      "input",
+      "link",
+      "menuitem",
+      "meta",
+      "param",
+      "source",
+      "track",
+      "wbr"
+    ];
+  }
+});
+
+// node_modules/html-tags/void.js
+var require_void = __commonJS({
+  "node_modules/html-tags/void.js"(exports, module) {
+    "use strict";
+    module.exports = require_html_tags_void();
+  }
+});
+
 // node_modules/deep-object-diff/dist/utils/index.js
 var require_utils3 = __commonJS({
   "node_modules/deep-object-diff/dist/utils/index.js"(exports) {
@@ -7808,66 +7868,6 @@ var require_dist3 = __commonJS({
       exports2.updatedDiff = _updated2.default;
       exports2.detailedDiff = _detailed2.default;
     });
-  }
-});
-
-// node_modules/stringify-attributes/node_modules/escape-goat/index.js
-var require_escape_goat = __commonJS({
-  "node_modules/stringify-attributes/node_modules/escape-goat/index.js"(exports) {
-    "use strict";
-    var htmlEscape3 = (string) => string.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    var htmlUnescape = (htmlString) => htmlString.replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/&#0?39;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, "&");
-    exports.htmlEscape = (strings, ...values3) => {
-      if (typeof strings === "string") {
-        return htmlEscape3(strings);
-      }
-      let output = strings[0];
-      for (const [index, value] of values3.entries()) {
-        output = output + htmlEscape3(String(value)) + strings[index + 1];
-      }
-      return output;
-    };
-    exports.htmlUnescape = (strings, ...values3) => {
-      if (typeof strings === "string") {
-        return htmlUnescape(strings);
-      }
-      let output = strings[0];
-      for (const [index, value] of values3.entries()) {
-        output = output + htmlUnescape(String(value)) + strings[index + 1];
-      }
-      return output;
-    };
-  }
-});
-
-// node_modules/html-tags/html-tags-void.json
-var require_html_tags_void = __commonJS({
-  "node_modules/html-tags/html-tags-void.json"(exports, module) {
-    module.exports = [
-      "area",
-      "base",
-      "br",
-      "col",
-      "embed",
-      "hr",
-      "img",
-      "input",
-      "link",
-      "menuitem",
-      "meta",
-      "param",
-      "source",
-      "track",
-      "wbr"
-    ];
-  }
-});
-
-// node_modules/html-tags/void.js
-var require_void = __commonJS({
-  "node_modules/html-tags/void.js"(exports, module) {
-    "use strict";
-    module.exports = require_html_tags_void();
   }
 });
 
@@ -12392,79 +12392,6 @@ function generateLockName() {
 // fronts/main.js
 var import_lodash = __toModule(require_lodash());
 var import_qs = __toModule(require_lib());
-
-// fronts/ts/fetchio.ts
-var ContentType;
-(function(ContentType2) {
-  ContentType2["json"] = "application/json;charset=UTF-8";
-  ContentType2["form"] = "application/x-www-form-urlencoded; charset=UTF-8";
-})(ContentType || (ContentType = {}));
-var HttpMethod;
-(function(HttpMethod2) {
-  HttpMethod2["get"] = "GET";
-  HttpMethod2["post"] = "POST";
-  HttpMethod2["put"] = "PUT";
-  HttpMethod2["patch"] = "PATCH";
-  HttpMethod2["delete"] = "DELETE";
-})(HttpMethod || (HttpMethod = {}));
-var $req = async (url2, config = { baseUrl: "" }) => {
-  let promise;
-  let contentType;
-  let reqUrl = url2.replace("//", "/");
-  if (config.baseUrl) {
-    reqUrl = config.baseUrl + url2;
-  }
-  const headers = new Headers({
-    token: config.token === void 0 ? sessionStorage.token : config.token
-  });
-  if (!config.method || config.method === HttpMethod.get) {
-    promise = await fetch(reqUrl, {
-      headers
-    });
-  } else if (config.method === HttpMethod.post) {
-    promise = await fetch(reqUrl, {
-      body: config.body,
-      headers,
-      method: HttpMethod.post
-    });
-  } else {
-    promise = await fetch(reqUrl, {
-      body: JSON.stringify(config.body),
-      headers,
-      method: config.method
-    });
-  }
-  return handleRes(promise);
-};
-var handleRes = async (res) => {
-  const parsedRes = await parseRes(res);
-  if (res.ok) {
-    return parsedRes;
-  }
-  const error = parsedRes;
-  throw error;
-};
-var parseRes = async (res) => {
-  const contentType = res.headers.get("Content-Type");
-  if (contentType) {
-    if (contentType.indexOf("json") > -1) {
-      return await res.json();
-    }
-    if (contentType.indexOf("text") > -1) {
-      return await res.text();
-    }
-    if (contentType.indexOf("form") > -1) {
-      return await res.formData();
-    }
-    if (contentType.indexOf("video") > -1) {
-      return await res.blob();
-    }
-  }
-  return await res.text();
-};
-var fetchio_default = $req;
-
-// fronts/main.js
 var import_utils = __toModule(require_utils2());
 
 // fronts/formmodel.js
@@ -12540,9 +12467,6 @@ function n(e2) {
 }
 var esm_default = n;
 
-// fronts/main.js
-var import_deep_object_diff = __toModule(require_dist3());
-
 // node_modules/stringify-attributes/index.js
 var import_escape_goat = __toModule(require_escape_goat());
 function stringifyAttributes(attributes) {
@@ -12599,6 +12523,7 @@ function createHtmlElement({
 }
 
 // fronts/main.js
+var import_deep_object_diff = __toModule(require_dist3());
 var global2 = (0, import_polyfill.default)();
 var uuid = v4_default;
 var _compareByValue = compare_default(Object);
@@ -12677,7 +12602,6 @@ function defaultStr(v, defaultVal) {
   return v;
 }
 var qs = import_qs.default;
-var fetchreq = fetchio_default;
 var attr2Str = import_utils.default.attr2Str;
 var Time = time_exports;
 var CSS = {
@@ -12688,17 +12612,17 @@ var CSS = {
   }
 };
 var formModel = formmodel_exports;
-var url = new URL(import.meta.url);
-var REMOTE_ORIGIN = url.origin;
-function getImportURL(url2) {
+var _url = new URL(import.meta.url);
+var REMOTE_ORIGIN = _url.origin;
+function getImportURL(url) {
   return new URL(import.meta.url);
 }
 function fetchContentV3(data = {}, query = {}) {
-  let url2 = "/getcontentv3";
+  let url = "/getcontentv3";
   if (Object.keys(query).length > 0) {
-    url2 = url2 + "?" + qs.stringify(query);
+    url = url + "?" + qs.stringify(query);
   }
-  return fetchreq(url2, {
+  return fetchreq(url, {
     baseUrl: REMOTE_ORIGIN,
     method: "POST",
     body: data
@@ -12726,7 +12650,7 @@ function rmPropByPath(obj, parent, path3) {
   }
   return false;
 }
-async function initTemplate(id, document2, { html = "" } = {}) {
+function _initTemplate(id, document2, { html = "" } = {}) {
   if (!document2.getElementById(id)) {
     try {
       const template = document2.createElement("template");
@@ -12739,6 +12663,7 @@ async function initTemplate(id, document2, { html = "" } = {}) {
   } else {
   }
 }
+var initTemplate = _initTemplate;
 function buildAsyncPipe() {
   const steps = Array.from(arguments);
   return function asyncpipe(arg) {
@@ -12766,13 +12691,13 @@ _DOM.getAllPropKeys = function(el = document.body) {
   return Object.keys(getComputedStyle(el)).filter((v) => {
     return Number.isNaN(parseInt(v));
   }).map((v) => {
-    let kebase = lodash.kebabCase(v);
-    return kebase;
+    return lodash.kebabCase(v);
   });
 };
+_DOM.initTemplate = _initTemplate;
 var DOM = _DOM;
 var _BOM = {};
-_BOM.createWindowManager = function({ url: url2 = "", target = "PromoteFirefoxWindowName" }) {
+_BOM.createWindowManager = function({ url = "", target = "PromoteFirefoxWindowName" }) {
   let windowObjectReference = null;
   let defaultOptions = {
     width: 800,
@@ -12785,7 +12710,7 @@ _BOM.createWindowManager = function({ url: url2 = "", target = "PromoteFirefoxWi
       str = str + `${key}=${value},`;
     }
     if (windowObjectReference == null || windowObjectReference.closed) {
-      windowObjectReference = window.open(url2, target, str + "resizable,scrollbars,status");
+      windowObjectReference = window.open(url, target, str + "resizable,scrollbars,status");
     } else {
       windowObjectReference.focus();
     }
@@ -12866,7 +12791,6 @@ export {
   export_detailedDiff as detailedDiff,
   export_diff as diff,
   fetchContentV3,
-  fetchreq,
   formModel,
   getHereDoc,
   getImportURL,

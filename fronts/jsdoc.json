@@ -1,7 +1,7 @@
 {
   "recurseDepth": 10,
   "source": {
-    "includePattern": "\\.(jsx|js|ts|tsx)$",
+    "includePattern": "\\.(jsx|js)$",
     "excludePattern": "(^|\\/|\\\\)_"
   },
   "sourceType": "module",
