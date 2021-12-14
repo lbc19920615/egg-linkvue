@@ -16,7 +16,7 @@ import _to from 'await-to-js';
 import _comHelper from './comHelper.js';
 import _Lock from 'js-lock';
 import _lodash from 'lodash';
-import _qs from 'qs';
+// import _qs from 'qs';
 import * as _time from './time';
 
 
@@ -243,7 +243,7 @@ export function defaultStr(v, defaultVal) {
  * {@link https://www.npmjs.com/package/qs}
  * @type {QueryString}
  */
-export const qs = _qs;
+// export const qs = _qs;
 
 // import _req from './ts/fetchio.ts';
 /**
