@@ -277,22 +277,22 @@ export const CSS = {
  */
 export const formModel = _formModel;
 
-let _url = new URL(import.meta.url)
+// let _url = new URL(import.meta.url)
 /**
  * REMOTE_ORIGIN 获取改js的import meta url
  * @deprecated
  * @type {string}
  */
-export const REMOTE_ORIGIN = _url.origin
+// export const REMOTE_ORIGIN = _url.origin
 
 /**
  * getImportURL 获取改js的import meta url
  * @param url {string}
  * @returns {string}
  */
-export function getImportURL(url) {
-  return new URL(import.meta.url)
-}
+// export function getImportURL(url) {
+//   return new URL(import.meta.url)
+// }
 
 /**
  * fetchContentV3

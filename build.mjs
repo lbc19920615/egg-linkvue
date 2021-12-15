@@ -22,6 +22,9 @@ import esbuild from 'esbuild';
       outdir: './app/public/expose',
       format: 'esm',
       bundle: true,
+      target: [
+        'es2019',
+      ],
       chunkNames: 'chunks/[name]-[hash]',
       external: [
         'vue',

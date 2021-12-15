@@ -10903,11 +10903,6 @@ var CSS = {
   }
 };
 var formModel = formmodel_exports;
-var _url = new URL(import.meta.url);
-var REMOTE_ORIGIN = _url.origin;
-function getImportURL(url) {
-  return new URL(import.meta.url);
-}
 function fetchContentV3(data = {}, query = {}) {
   let url = "/getcontentv3";
   if (Object.keys(query).length > 0) {
@@ -11016,23 +11011,25 @@ _BOM.createWindowManager = function({ url = "", target = "PromoteFirefoxWindowNa
 var BOM = _BOM;
 var _U = {};
 _U.objArr2OptionsManager = function(arrObj = [], labelKey, valueKey) {
+  var _a;
   let ret = {};
   ret.origin = arrObj;
-  ret.options = import_lodash.default.map(arrObj, (item) => {
+  ret.options = (_a = import_lodash.default.map(arrObj, (item) => {
     return {
       label: item[labelKey],
       value: item[valueKey]
     };
-  }) ?? [];
+  })) != null ? _a : [];
   ret.find = function(...args) {
     return import_lodash.default.find(arrObj, ...args);
   };
   return ret;
 };
 _U.awaitAxios = async function(p) {
+  var _a;
   let [err, response] = await ZY.awaitTo(p);
   return {
-    data: response.data ?? null,
+    data: (_a = response.data) != null ? _a : null,
     err,
     response
   };
@@ -11062,7 +11059,6 @@ export {
   JSON5,
   Lock2 as Lock,
   R,
-  REMOTE_ORIGIN,
   Time,
   Timeout,
   U,
@@ -11085,7 +11081,6 @@ export {
   fetchContentV3,
   formModel,
   getHereDoc,
-  getImportURL,
   getObjParentPathFromPathArr,
   getObjPathFromPathArr,
   getStrFromObj,
