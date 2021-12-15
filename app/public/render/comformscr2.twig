@@ -76,8 +76,8 @@
 </template>
 
 <script type="module">
-  import { comHelper, formModel } from '{{ APP_CONFIG.server_origin }}/public/expose/main.js';
-
+  {#import { comHelper, formModel } from '{{ APP_CONFIG.server_origin }}/public/expose/main.js';#}
+const {comHelper, formModel} = globalThis.ZY;
 
   export default {
     props: {
