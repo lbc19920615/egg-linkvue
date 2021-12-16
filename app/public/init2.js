@@ -11,7 +11,7 @@ if (typeof _global.globalThis === 'undefined') {
   _global.globalThis = _global;
 }
 
-globalThis.importScripts = function (p = '') {
+globalThis.importScripts = function (p ) {
   return import(p)
 }
 
