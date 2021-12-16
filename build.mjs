@@ -18,6 +18,7 @@ import esbuild from 'esbuild';
       // entryPoints: [ './fronts/main.js', './fronts/sds.js' ],
       entryPoints: [ './fronts/main.js', './fronts/ext.js', './fronts/vue2.js'  ],
       // outfile: './app/public/expose.js',
+      minify: true,
       splitting: true,
       outdir: './app/public/expose',
       format: 'esm',

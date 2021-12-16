@@ -1,0 +1,2 @@
+import"./chunk-E423KAYL.js";var o=async(n,e={})=>{Array.isArray(e)&&(e=e[0]);let c=document.createElement("a"),t;c.download=e.fileName||"Untitled",c.href=URL.createObjectURL(n);let a=()=>t(reject);e.setupLegacyCleanupAndRejection&&(t=e.setupLegacyCleanupAndRejection(a)),c.addEventListener("click",()=>{typeof t=="function"&&t(),setTimeout(()=>URL.revokeObjectURL(c.href),3e4)}),c.click()};export{o as default};
+// @license © 2020 Google LLC. Licensed under the Apache License, Version 2.0.
