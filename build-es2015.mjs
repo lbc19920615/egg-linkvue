@@ -18,13 +18,13 @@ import esbuild from 'esbuild';
       // entryPoints: [ './fronts/main.js', './fronts/sds.js' ],
       entryPoints: [ './fronts/main.js', './fronts/vue2.js'  ],
       // outfile: './app/public/expose.js',
-      // minify: true,
-      // splitting: true,
+      minify: true,
+      splitting: true,
       outdir: './app/public/expose/old',
-      format: 'cjs',
+      format: 'esm',
       bundle: true,
       target: [
-        'es2016',
+        'es2017',
       ],
       chunkNames: 'chunks/[name]-[hash]',
       external: [

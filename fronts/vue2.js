@@ -15,3 +15,9 @@ export const eval5 = _eval5;
  */
 import * as Lib from '@juggle/resize-observer';
 export const ResizeObserver = Lib.ResizeObserver;
+
+/**
+ * mitt
+ */
+import _mitt from 'mitt';
+export const mitt = _mitt;
