@@ -21,3 +21,10 @@ export const ResizeObserver = Lib.ResizeObserver;
  */
 import _mitt from 'mitt';
 export const mitt = _mitt;
+
+
+/**
+ * mitt
+ */
+// import sfc from 'vue-sfc-parser';
+// export const parseComponent = sfc.parseComponent;
