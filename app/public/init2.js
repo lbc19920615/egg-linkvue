@@ -11,10 +11,6 @@ if (typeof _global.globalThis === 'undefined') {
   _global.globalThis = _global;
 }
 
-globalThis.importScripts = function (p ) {
-  return import(p)
-}
-
 {
   const COMMON_EVAL_FUNS = {
     时间间隔(date1, date2) {
