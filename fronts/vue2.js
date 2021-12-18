@@ -26,5 +26,5 @@ export const mitt = _mitt;
 /**
  * mitt
  */
-// import sfc from 'vue-sfc-parser';
-// export const parseComponent = sfc.parseComponent;
+import sfc from './lib/sfc';
+export const parseComponent = sfc.parseComponent;
