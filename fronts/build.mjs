@@ -16,11 +16,11 @@ import esbuild from 'esbuild';
   try {
     const res = await esbuild.build({
       // entryPoints: [ './fronts/main.js', './fronts/sds.js' ],
-      entryPoints: [ './fronts/main.js', './fronts/ext.js', './fronts/vue2.js'  ],
+      entryPoints: [ './src/main.js', './src/ext.js', './src/vue2.js'  ],
       // outfile: './app/public/expose.js',
       minify: true,
       splitting: true,
-      outdir: './app/public/expose',
+      outdir: '../app/public/expose',
       format: 'esm',
       bundle: true,
       target: [

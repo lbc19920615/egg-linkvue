@@ -16,10 +16,10 @@ import esbuild from 'esbuild';
   try {
     const res = await esbuild.build({
       // entryPoints: [ './fronts/main.js', './fronts/sds.js' ],
-      entryPoints: [ './fronts/weapp.js'  ],
+      entryPoints: [ './src/weapp.js'  ],
       // outfile: './app/public/expose.js',
       splitting: true,
-      outdir: './app/public/expose/weapp',
+      outdir: '../app/public/expose/weapp',
       format: 'esm',
       bundle: true,
       chunkNames: 'weapp/chunks/[name]-[hash]',
