@@ -364,7 +364,7 @@ class HomeController extends Controller {
     ${def}.set('${src}', \`${file}\`)
     `;
   }
-  async getstyle() {
+  async getStyle() {
     const { ctx } = this;
     let filePath = ctx.request.query.src;
     if (!ctx.helper.isValidHttpUrl(filePath)) {

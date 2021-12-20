@@ -12,7 +12,7 @@ module.exports = app => {
   // router.get('index', '/cusstyle', controller.home.cusStyle);
   // router.get('index', '/getremote', controller.home.getremote);
   // router.get('index', '/getconfig', controller.home.getConfig);
-  // router.get('index', '/getstyle', controller.home.getstyle);
+  router.get('index', '/get-style', controller.home.getStyle);
   // router.get('index', '/cssstyle', controller.home.cssstyle);
   // router.get('index', '/login', controller.home.login);
   // app.router.redirect('/', '/home/index', 302);
