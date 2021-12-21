@@ -55,19 +55,19 @@ var require_root = __commonJS({
 var require_Symbol = __commonJS({
   "node_modules/lodash/_Symbol.js"(exports, module) {
     var root = require_root();
-    var Symbol = root.Symbol;
-    module.exports = Symbol;
+    var Symbol2 = root.Symbol;
+    module.exports = Symbol2;
   }
 });
 
 // node_modules/lodash/_getRawTag.js
 var require_getRawTag = __commonJS({
   "node_modules/lodash/_getRawTag.js"(exports, module) {
-    var Symbol = require_Symbol();
+    var Symbol2 = require_Symbol();
     var objectProto = Object.prototype;
     var hasOwnProperty = objectProto.hasOwnProperty;
     var nativeObjectToString = objectProto.toString;
-    var symToStringTag = Symbol ? Symbol.toStringTag : void 0;
+    var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
     function getRawTag(value) {
       var isOwn = hasOwnProperty.call(value, symToStringTag), tag = value[symToStringTag];
       try {
@@ -104,12 +104,12 @@ var require_objectToString = __commonJS({
 // node_modules/lodash/_baseGetTag.js
 var require_baseGetTag = __commonJS({
   "node_modules/lodash/_baseGetTag.js"(exports, module) {
-    var Symbol = require_Symbol();
+    var Symbol2 = require_Symbol();
     var getRawTag = require_getRawTag();
     var objectToString = require_objectToString();
     var nullTag = "[object Null]";
     var undefinedTag = "[object Undefined]";
-    var symToStringTag = Symbol ? Symbol.toStringTag : void 0;
+    var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
     function baseGetTag(value) {
       if (value == null) {
         return value === void 0 ? undefinedTag : nullTag;
@@ -730,12 +730,12 @@ var require_arrayMap = __commonJS({
 // node_modules/lodash/_baseToString.js
 var require_baseToString = __commonJS({
   "node_modules/lodash/_baseToString.js"(exports, module) {
-    var Symbol = require_Symbol();
+    var Symbol2 = require_Symbol();
     var arrayMap = require_arrayMap();
     var isArray = require_isArray();
     var isSymbol = require_isSymbol();
     var INFINITY = 1 / 0;
-    var symbolProto = Symbol ? Symbol.prototype : void 0;
+    var symbolProto = Symbol2 ? Symbol2.prototype : void 0;
     var symbolToString = symbolProto ? symbolProto.toString : void 0;
     function baseToString(value) {
       if (typeof value == "string") {
@@ -1083,10 +1083,10 @@ var require_arrayPush = __commonJS({
 // node_modules/lodash/_isFlattenable.js
 var require_isFlattenable = __commonJS({
   "node_modules/lodash/_isFlattenable.js"(exports, module) {
-    var Symbol = require_Symbol();
+    var Symbol2 = require_Symbol();
     var isArguments = require_isArguments();
     var isArray = require_isArray();
-    var spreadableSymbol = Symbol ? Symbol.isConcatSpreadable : void 0;
+    var spreadableSymbol = Symbol2 ? Symbol2.isConcatSpreadable : void 0;
     function isFlattenable(value) {
       return isArray(value) || isArguments(value) || !!(spreadableSymbol && value && value[spreadableSymbol]);
     }
@@ -1532,7 +1532,7 @@ var require_setToArray = __commonJS({
 // node_modules/lodash/_equalByTag.js
 var require_equalByTag = __commonJS({
   "node_modules/lodash/_equalByTag.js"(exports, module) {
-    var Symbol = require_Symbol();
+    var Symbol2 = require_Symbol();
     var Uint8Array2 = require_Uint8Array();
     var eq = require_eq();
     var equalArrays = require_equalArrays();
@@ -1551,7 +1551,7 @@ var require_equalByTag = __commonJS({
     var symbolTag = "[object Symbol]";
     var arrayBufferTag = "[object ArrayBuffer]";
     var dataViewTag = "[object DataView]";
-    var symbolProto = Symbol ? Symbol.prototype : void 0;
+    var symbolProto = Symbol2 ? Symbol2.prototype : void 0;
     var symbolValueOf = symbolProto ? symbolProto.valueOf : void 0;
     function equalByTag(object4, other, tag, bitmask, customizer, equalFunc, stack) {
       switch (tag) {
@@ -2626,8 +2626,8 @@ var require_cloneRegExp = __commonJS({
 // node_modules/lodash/_cloneSymbol.js
 var require_cloneSymbol = __commonJS({
   "node_modules/lodash/_cloneSymbol.js"(exports, module) {
-    var Symbol = require_Symbol();
-    var symbolProto = Symbol ? Symbol.prototype : void 0;
+    var Symbol2 = require_Symbol();
+    var symbolProto = Symbol2 ? Symbol2.prototype : void 0;
     var symbolValueOf = symbolProto ? symbolProto.valueOf : void 0;
     function cloneSymbol(symbol) {
       return symbolValueOf ? Object(symbolValueOf.call(symbol)) : {};
@@ -3693,7 +3693,7 @@ var require_values = __commonJS({
 // node_modules/lodash/toArray.js
 var require_toArray = __commonJS({
   "node_modules/lodash/toArray.js"(exports, module) {
-    var Symbol = require_Symbol();
+    var Symbol2 = require_Symbol();
     var copyArray = require_copyArray();
     var getTag = require_getTag();
     var isArrayLike = require_isArrayLike();
@@ -3705,7 +3705,7 @@ var require_toArray = __commonJS({
     var values = require_values();
     var mapTag = "[object Map]";
     var setTag = "[object Set]";
-    var symIterator = Symbol ? Symbol.iterator : void 0;
+    var symIterator = Symbol2 ? Symbol2.iterator : void 0;
     function toArray(value) {
       if (!value) {
         return [];
@@ -8128,9 +8128,9 @@ var require_dist = __commonJS({
       $export.R = 128;
       var _export = $export;
       var ceil = Math.ceil;
-      var floor = Math.floor;
+      var floor2 = Math.floor;
       var _toInteger = function(it) {
-        return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
+        return isNaN(it = +it) ? 0 : (it > 0 ? floor2 : ceil)(it);
       };
       var _defined = function(it) {
         if (it == void 0) {
@@ -9491,7 +9491,7 @@ var require_duration = __commonJS({
             var e2 = t2.match(a);
             if (e2) {
               var r2 = e2.slice(2).map(function(t3) {
-                return Number(t3);
+                return t3 != null ? Number(t3) : 0;
               });
               return this.$d.years = r2[0], this.$d.months = r2[1], this.$d.weeks = r2[2], this.$d.days = r2[3], this.$d.hours = r2[4], this.$d.minutes = r2[5], this.$d.seconds = r2[6], this.calMilliseconds(), this;
             }
@@ -9588,7 +9588,451 @@ var require_duration = __commonJS({
   }
 });
 
-// fronts/weapp.js
+// node_modules/deep-object-diff/dist/utils/index.js
+var require_utils = __commonJS({
+  "node_modules/deep-object-diff/dist/utils/index.js"(exports) {
+    (function(global2, factory) {
+      if (typeof define === "function" && define.amd) {
+        define(["exports"], factory);
+      } else if (typeof exports !== "undefined") {
+        factory(exports);
+      } else {
+        var mod = {
+          exports: {}
+        };
+        factory(mod.exports);
+        global2.index = mod.exports;
+      }
+    })(exports, function(exports2) {
+      "use strict";
+      Object.defineProperty(exports2, "__esModule", {
+        value: true
+      });
+      var _extends2 = Object.assign || function(target) {
+        for (var i = 1; i < arguments.length; i++) {
+          var source = arguments[i];
+          for (var key in source) {
+            if (Object.prototype.hasOwnProperty.call(source, key)) {
+              target[key] = source[key];
+            }
+          }
+        }
+        return target;
+      };
+      var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function(obj) {
+        return typeof obj;
+      } : function(obj) {
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+      };
+      var isDate = exports2.isDate = function isDate2(d) {
+        return d instanceof Date;
+      };
+      var isEmpty = exports2.isEmpty = function isEmpty2(o) {
+        return Object.keys(o).length === 0;
+      };
+      var isObject = exports2.isObject = function isObject2(o) {
+        return o != null && (typeof o === "undefined" ? "undefined" : _typeof(o)) === "object";
+      };
+      var properObject = exports2.properObject = function properObject2(o) {
+        return isObject(o) && !o.hasOwnProperty ? _extends2({}, o) : o;
+      };
+    });
+  }
+});
+
+// node_modules/deep-object-diff/dist/diff/index.js
+var require_diff = __commonJS({
+  "node_modules/deep-object-diff/dist/diff/index.js"(exports, module) {
+    (function(global2, factory) {
+      if (typeof define === "function" && define.amd) {
+        define(["module", "exports", "../utils"], factory);
+      } else if (typeof exports !== "undefined") {
+        factory(module, exports, require_utils());
+      } else {
+        var mod = {
+          exports: {}
+        };
+        factory(mod, mod.exports, global2.utils);
+        global2.index = mod.exports;
+      }
+    })(exports, function(module2, exports2, _utils) {
+      "use strict";
+      Object.defineProperty(exports2, "__esModule", {
+        value: true
+      });
+      function _defineProperty(obj, key, value) {
+        if (key in obj) {
+          Object.defineProperty(obj, key, {
+            value,
+            enumerable: true,
+            configurable: true,
+            writable: true
+          });
+        } else {
+          obj[key] = value;
+        }
+        return obj;
+      }
+      var _extends2 = Object.assign || function(target) {
+        for (var i = 1; i < arguments.length; i++) {
+          var source = arguments[i];
+          for (var key in source) {
+            if (Object.prototype.hasOwnProperty.call(source, key)) {
+              target[key] = source[key];
+            }
+          }
+        }
+        return target;
+      };
+      var diff2 = function diff3(lhs, rhs) {
+        if (lhs === rhs)
+          return {};
+        if (!(0, _utils.isObject)(lhs) || !(0, _utils.isObject)(rhs))
+          return rhs;
+        var l = (0, _utils.properObject)(lhs);
+        var r = (0, _utils.properObject)(rhs);
+        var deletedValues = Object.keys(l).reduce(function(acc, key) {
+          return r.hasOwnProperty(key) ? acc : _extends2({}, acc, _defineProperty({}, key, void 0));
+        }, {});
+        if ((0, _utils.isDate)(l) || (0, _utils.isDate)(r)) {
+          if (l.valueOf() == r.valueOf())
+            return {};
+          return r;
+        }
+        return Object.keys(r).reduce(function(acc, key) {
+          if (!l.hasOwnProperty(key))
+            return _extends2({}, acc, _defineProperty({}, key, r[key]));
+          var difference = diff3(l[key], r[key]);
+          if ((0, _utils.isObject)(difference) && (0, _utils.isEmpty)(difference) && !(0, _utils.isDate)(difference))
+            return acc;
+          return _extends2({}, acc, _defineProperty({}, key, difference));
+        }, deletedValues);
+      };
+      exports2.default = diff2;
+      module2.exports = exports2["default"];
+    });
+  }
+});
+
+// node_modules/deep-object-diff/dist/added/index.js
+var require_added = __commonJS({
+  "node_modules/deep-object-diff/dist/added/index.js"(exports, module) {
+    (function(global2, factory) {
+      if (typeof define === "function" && define.amd) {
+        define(["module", "exports", "../utils"], factory);
+      } else if (typeof exports !== "undefined") {
+        factory(module, exports, require_utils());
+      } else {
+        var mod = {
+          exports: {}
+        };
+        factory(mod, mod.exports, global2.utils);
+        global2.index = mod.exports;
+      }
+    })(exports, function(module2, exports2, _utils) {
+      "use strict";
+      Object.defineProperty(exports2, "__esModule", {
+        value: true
+      });
+      function _defineProperty(obj, key, value) {
+        if (key in obj) {
+          Object.defineProperty(obj, key, {
+            value,
+            enumerable: true,
+            configurable: true,
+            writable: true
+          });
+        } else {
+          obj[key] = value;
+        }
+        return obj;
+      }
+      var _extends2 = Object.assign || function(target) {
+        for (var i = 1; i < arguments.length; i++) {
+          var source = arguments[i];
+          for (var key in source) {
+            if (Object.prototype.hasOwnProperty.call(source, key)) {
+              target[key] = source[key];
+            }
+          }
+        }
+        return target;
+      };
+      var addedDiff2 = function addedDiff3(lhs, rhs) {
+        if (lhs === rhs || !(0, _utils.isObject)(lhs) || !(0, _utils.isObject)(rhs))
+          return {};
+        var l = (0, _utils.properObject)(lhs);
+        var r = (0, _utils.properObject)(rhs);
+        return Object.keys(r).reduce(function(acc, key) {
+          if (l.hasOwnProperty(key)) {
+            var difference = addedDiff3(l[key], r[key]);
+            if ((0, _utils.isObject)(difference) && (0, _utils.isEmpty)(difference))
+              return acc;
+            return _extends2({}, acc, _defineProperty({}, key, difference));
+          }
+          return _extends2({}, acc, _defineProperty({}, key, r[key]));
+        }, {});
+      };
+      exports2.default = addedDiff2;
+      module2.exports = exports2["default"];
+    });
+  }
+});
+
+// node_modules/deep-object-diff/dist/deleted/index.js
+var require_deleted = __commonJS({
+  "node_modules/deep-object-diff/dist/deleted/index.js"(exports, module) {
+    (function(global2, factory) {
+      if (typeof define === "function" && define.amd) {
+        define(["module", "exports", "../utils"], factory);
+      } else if (typeof exports !== "undefined") {
+        factory(module, exports, require_utils());
+      } else {
+        var mod = {
+          exports: {}
+        };
+        factory(mod, mod.exports, global2.utils);
+        global2.index = mod.exports;
+      }
+    })(exports, function(module2, exports2, _utils) {
+      "use strict";
+      Object.defineProperty(exports2, "__esModule", {
+        value: true
+      });
+      function _defineProperty(obj, key, value) {
+        if (key in obj) {
+          Object.defineProperty(obj, key, {
+            value,
+            enumerable: true,
+            configurable: true,
+            writable: true
+          });
+        } else {
+          obj[key] = value;
+        }
+        return obj;
+      }
+      var _extends2 = Object.assign || function(target) {
+        for (var i = 1; i < arguments.length; i++) {
+          var source = arguments[i];
+          for (var key in source) {
+            if (Object.prototype.hasOwnProperty.call(source, key)) {
+              target[key] = source[key];
+            }
+          }
+        }
+        return target;
+      };
+      var deletedDiff2 = function deletedDiff3(lhs, rhs) {
+        if (lhs === rhs || !(0, _utils.isObject)(lhs) || !(0, _utils.isObject)(rhs))
+          return {};
+        var l = (0, _utils.properObject)(lhs);
+        var r = (0, _utils.properObject)(rhs);
+        return Object.keys(l).reduce(function(acc, key) {
+          if (r.hasOwnProperty(key)) {
+            var difference = deletedDiff3(l[key], r[key]);
+            if ((0, _utils.isObject)(difference) && (0, _utils.isEmpty)(difference))
+              return acc;
+            return _extends2({}, acc, _defineProperty({}, key, difference));
+          }
+          return _extends2({}, acc, _defineProperty({}, key, void 0));
+        }, {});
+      };
+      exports2.default = deletedDiff2;
+      module2.exports = exports2["default"];
+    });
+  }
+});
+
+// node_modules/deep-object-diff/dist/updated/index.js
+var require_updated = __commonJS({
+  "node_modules/deep-object-diff/dist/updated/index.js"(exports, module) {
+    (function(global2, factory) {
+      if (typeof define === "function" && define.amd) {
+        define(["module", "exports", "../utils"], factory);
+      } else if (typeof exports !== "undefined") {
+        factory(module, exports, require_utils());
+      } else {
+        var mod = {
+          exports: {}
+        };
+        factory(mod, mod.exports, global2.utils);
+        global2.index = mod.exports;
+      }
+    })(exports, function(module2, exports2, _utils) {
+      "use strict";
+      Object.defineProperty(exports2, "__esModule", {
+        value: true
+      });
+      function _defineProperty(obj, key, value) {
+        if (key in obj) {
+          Object.defineProperty(obj, key, {
+            value,
+            enumerable: true,
+            configurable: true,
+            writable: true
+          });
+        } else {
+          obj[key] = value;
+        }
+        return obj;
+      }
+      var _extends2 = Object.assign || function(target) {
+        for (var i = 1; i < arguments.length; i++) {
+          var source = arguments[i];
+          for (var key in source) {
+            if (Object.prototype.hasOwnProperty.call(source, key)) {
+              target[key] = source[key];
+            }
+          }
+        }
+        return target;
+      };
+      var updatedDiff2 = function updatedDiff3(lhs, rhs) {
+        if (lhs === rhs)
+          return {};
+        if (!(0, _utils.isObject)(lhs) || !(0, _utils.isObject)(rhs))
+          return rhs;
+        var l = (0, _utils.properObject)(lhs);
+        var r = (0, _utils.properObject)(rhs);
+        if ((0, _utils.isDate)(l) || (0, _utils.isDate)(r)) {
+          if (l.valueOf() == r.valueOf())
+            return {};
+          return r;
+        }
+        return Object.keys(r).reduce(function(acc, key) {
+          if (l.hasOwnProperty(key)) {
+            var difference = updatedDiff3(l[key], r[key]);
+            if ((0, _utils.isObject)(difference) && (0, _utils.isEmpty)(difference) && !(0, _utils.isDate)(difference))
+              return acc;
+            return _extends2({}, acc, _defineProperty({}, key, difference));
+          }
+          return acc;
+        }, {});
+      };
+      exports2.default = updatedDiff2;
+      module2.exports = exports2["default"];
+    });
+  }
+});
+
+// node_modules/deep-object-diff/dist/detailed/index.js
+var require_detailed = __commonJS({
+  "node_modules/deep-object-diff/dist/detailed/index.js"(exports, module) {
+    (function(global2, factory) {
+      if (typeof define === "function" && define.amd) {
+        define(["module", "exports", "../added", "../deleted", "../updated"], factory);
+      } else if (typeof exports !== "undefined") {
+        factory(module, exports, require_added(), require_deleted(), require_updated());
+      } else {
+        var mod = {
+          exports: {}
+        };
+        factory(mod, mod.exports, global2.added, global2.deleted, global2.updated);
+        global2.index = mod.exports;
+      }
+    })(exports, function(module2, exports2, _added, _deleted, _updated) {
+      "use strict";
+      Object.defineProperty(exports2, "__esModule", {
+        value: true
+      });
+      var _added2 = _interopRequireDefault(_added);
+      var _deleted2 = _interopRequireDefault(_deleted);
+      var _updated2 = _interopRequireDefault(_updated);
+      function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : {
+          default: obj
+        };
+      }
+      var detailedDiff2 = function detailedDiff3(lhs, rhs) {
+        return {
+          added: (0, _added2.default)(lhs, rhs),
+          deleted: (0, _deleted2.default)(lhs, rhs),
+          updated: (0, _updated2.default)(lhs, rhs)
+        };
+      };
+      exports2.default = detailedDiff2;
+      module2.exports = exports2["default"];
+    });
+  }
+});
+
+// node_modules/deep-object-diff/dist/index.js
+var require_dist2 = __commonJS({
+  "node_modules/deep-object-diff/dist/index.js"(exports) {
+    (function(global2, factory) {
+      if (typeof define === "function" && define.amd) {
+        define(["exports", "./diff", "./added", "./deleted", "./updated", "./detailed"], factory);
+      } else if (typeof exports !== "undefined") {
+        factory(exports, require_diff(), require_added(), require_deleted(), require_updated(), require_detailed());
+      } else {
+        var mod = {
+          exports: {}
+        };
+        factory(mod.exports, global2.diff, global2.added, global2.deleted, global2.updated, global2.detailed);
+        global2.index = mod.exports;
+      }
+    })(exports, function(exports2, _diff, _added, _deleted, _updated, _detailed) {
+      "use strict";
+      Object.defineProperty(exports2, "__esModule", {
+        value: true
+      });
+      exports2.detailedDiff = exports2.updatedDiff = exports2.deletedDiff = exports2.diff = exports2.addedDiff = void 0;
+      var _diff2 = _interopRequireDefault(_diff);
+      var _added2 = _interopRequireDefault(_added);
+      var _deleted2 = _interopRequireDefault(_deleted);
+      var _updated2 = _interopRequireDefault(_updated);
+      var _detailed2 = _interopRequireDefault(_detailed);
+      function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : {
+          default: obj
+        };
+      }
+      exports2.addedDiff = _added2.default;
+      exports2.diff = _diff2.default;
+      exports2.deletedDiff = _deleted2.default;
+      exports2.updatedDiff = _updated2.default;
+      exports2.detailedDiff = _detailed2.default;
+    });
+  }
+});
+
+// node_modules/lodash/_createRound.js
+var require_createRound = __commonJS({
+  "node_modules/lodash/_createRound.js"(exports, module) {
+    var root = require_root();
+    var toInteger = require_toInteger();
+    var toNumber = require_toNumber();
+    var toString = require_toString();
+    var nativeIsFinite = root.isFinite;
+    var nativeMin = Math.min;
+    function createRound(methodName) {
+      var func = Math[methodName];
+      return function(number4, precision) {
+        number4 = toNumber(number4);
+        precision = precision == null ? 0 : nativeMin(toInteger(precision), 292);
+        if (precision && nativeIsFinite(number4)) {
+          var pair = (toString(number4) + "e").split("e"), value = func(pair[0] + "e" + (+pair[1] + precision));
+          pair = (toString(value) + "e").split("e");
+          return +(pair[0] + "e" + (+pair[1] - precision));
+        }
+        return func(number4);
+      };
+    }
+    module.exports = createRound;
+  }
+});
+
+// node_modules/lodash/floor.js
+var require_floor = __commonJS({
+  "node_modules/lodash/floor.js"(exports, module) {
+    var createRound = require_createRound();
+    var floor2 = createRound("floor");
+    module.exports = floor2;
+  }
+});
+
+// src/weapp.js
 var import_get = __toModule(require_get());
 var import_set = __toModule(require_set());
 var import_pick = __toModule(require_pick());
@@ -10602,10 +11046,10 @@ Schema.warning = warning;
 Schema.messages = messages;
 Schema.validators = validators;
 
-// fronts/weapp.js
+// src/weapp.js
 var import_json5 = __toModule(require_dist());
 
-// fronts/time.js
+// src/time.js
 var time_exports = {};
 __export(time_exports, {
   dayjs: () => dayjs,
@@ -10626,7 +11070,25 @@ function subtract2Date(date1, date22) {
   return duration2;
 }
 
-// fronts/weapp.js
+// src/weapp.js
+var import_deep_object_diff = __toModule(require_dist2());
+
+// src/glo.js
+var import_floor = __toModule(require_floor());
+var _COM_FORM_COMMON_EVAL_FUNS = {
+  \u65F6\u95F4\u95F4\u9694(date1, date22) {
+    if (date1 && date22) {
+      return subtract2Date(date1, date22).asHours();
+    }
+    return null;
+  },
+  \u53D6\u6574(v, presion) {
+    const ret = (0, import_floor.default)(v, presion);
+    return ret;
+  }
+};
+
+// src/weapp.js
 var Schema2 = Schema;
 var getGlobal = function() {
   if (typeof globalThis !== "undefined") {
@@ -10709,16 +11171,36 @@ var Time = time_exports;
 function getHereDoc(fn) {
   return fn.toString().match(/\/\*\s*([\s\S]*?)\s*\*\//m)[1];
 }
+function findArrIsAllInArr(target = [], container = []) {
+  let isAllHas = false;
+  isAllHas = target.every((item) => {
+    return container.includes(item);
+  });
+  return isAllHas;
+}
+var COM_FORM_COMMON_EVAL_FUNS = _COM_FORM_COMMON_EVAL_FUNS;
+var export_addedDiff = import_deep_object_diff.addedDiff;
+var export_deletedDiff = import_deep_object_diff.deletedDiff;
+var export_detailedDiff = import_deep_object_diff.detailedDiff;
+var export_diff = import_deep_object_diff.diff;
+var export_updatedDiff = import_deep_object_diff.updatedDiff;
 export {
+  COM_FORM_COMMON_EVAL_FUNS,
   JSON5,
   Schema2 as Schema,
   Time,
+  export_addedDiff as addedDiff,
   deepGet,
+  export_deletedDiff as deletedDiff,
+  export_detailedDiff as detailedDiff,
+  export_diff as diff,
+  findArrIsAllInArr,
   getHereDoc,
   getObjParentPathFromPathArr,
   getObjPathFromPathArr,
   isNumeric,
   lodash,
   nid,
-  rid
+  rid,
+  export_updatedDiff as updatedDiff
 };

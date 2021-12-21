@@ -12,7 +12,7 @@ import _lodashcollection from 'lodash/collection';
 import _lodashstring from 'lodash/string';
 import _lodasharray from 'lodash/array';
 import _Schema from 'async-validator';
-export let Schema = _Schema;
+export const Schema = _Schema;
 
 const getGlobal = function() {
   // if (typeof self !== 'undefined') { return self; }
@@ -167,9 +167,33 @@ export const Time = _time;
 /**
  * 获取here doc
  * @param fn
- * @returns {string}
+ * @return {string}
  */
 export function getHereDoc(fn) {
   return fn.toString().match(/\/\*\s*([\s\S]*?)\s*\*\//m)[1];
 }
 
+/**
+ * deep-object-diff
+ * {@link https://www.npmjs.com/package/js-lock}
+ * {@link }
+ */
+export { diff, addedDiff, deletedDiff, updatedDiff, detailedDiff } from 'deep-object-diff';
+
+
+/**
+ * 查看第一个数组是否属于第二个数组
+ * @param target {Array}
+ * @param container {Array}
+ * @return {*|boolean}
+ */
+export function findArrIsAllInArr(target = [], container = []) {
+  let isAllHas = false;
+  isAllHas = target.every(item => {
+    return container.includes(item);
+  });
+  return isAllHas;
+}
+
+import { _COM_FORM_COMMON_EVAL_FUNS } from './glo';
+export const COM_FORM_COMMON_EVAL_FUNS = _COM_FORM_COMMON_EVAL_FUNS
