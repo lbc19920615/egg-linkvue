@@ -441,6 +441,20 @@ export function importJsStr(content) {
  */
 export { diff, addedDiff, deletedDiff, updatedDiff, detailedDiff } from 'deep-object-diff';
 
+/**
+ * 查看第一个数组是否属于第二个数组
+ * @param target {Array}
+ * @param container {Array}
+ * @return {*|boolean}
+ */
+export function findArrIsAllInArr(target = [], container = []) {
+  let isAllHas = false;
+  isAllHas = target.every(item => {
+    return container.includes(item);
+  });
+  return isAllHas;
+}
+
 // export * as PinYin from './pingyin';
 /**
  * createEle
