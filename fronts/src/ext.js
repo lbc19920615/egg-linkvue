@@ -16,7 +16,7 @@ import _marked from 'marked';
 
 /**
  * 判断是否是在electron 环境
- * @returns {boolean}
+ * @return {boolean}
  */
 export function isElectron() {
   // return false
@@ -328,3 +328,7 @@ export const marked = _marked;
  * 支持解析函数的JSON5
  */
 export const JSON7 = _JSON7;
+
+
+import _cssobj from 'cssobj';
+export const cssobj = _cssobj;

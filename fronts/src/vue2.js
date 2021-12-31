@@ -28,3 +28,6 @@ export const mitt = _mitt;
  */
 import sfc from './lib/sfc';
 export const parseComponent = sfc.parseComponent;
+
+import _cssobj from 'cssobj';
+export const cssobj = _cssobj;
