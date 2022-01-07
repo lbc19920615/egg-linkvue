@@ -272,8 +272,8 @@ export async function fileOpenJSON5({ mimeTypes = [] } = {}) {
  */
 export function saveJSONFile({ data = null, fileName = '', prefix = '', saveFun }) {
   const d = new Date();
-  const time = formatDateTime(d, 'YYYY-MM-DD__HH');
-  saveObjAsJson5File(data, `${prefix}${fileName}_${time}_${d.getTime()}`, {
+  const time = formatDateTime(d, 'YYYY-MM-DD__HH_mm_ss');
+  saveObjAsJson5File(data, `${prefix}${fileName}_${time}`, {
     saveFun,
   });
 }
