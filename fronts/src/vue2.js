@@ -60,3 +60,9 @@ export function compareLibVersion(v1, v2) {
   }
   return 0;
 }
+
+/**
+ *
+ */
+import _structuredClone from '@ungap/structured-clone';
+export const structuredClone = _structuredClone;
