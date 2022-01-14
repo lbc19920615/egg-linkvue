@@ -1,34 +1,38 @@
 /**
- * Pants module.
+ * Vue ext模组.
  * @module vue2
  */
 
 import _eval5 from 'eval5';
 /**
- * eval5
+ * eval5 执行js string代码
  * eval5官网 {@link https://www.npmjs.com/package/eval5}
  */
 export const eval5 = _eval5;
 
 /**
  * {ResizeObserver, ResizeObserverEntry, ResizeObserverSize}
+ * 检测HTML元素的size改变
  */
 import * as Lib from '@juggle/resize-observer';
 export const ResizeObserver = Lib.ResizeObserver;
 
 /**
- * mitt
+ * mitt 事件emitter管理
  */
 import _mitt from 'mitt';
 export const mitt = _mitt;
 
 
 /**
- * mitt
+ * sfc 解析组件
  */
 import sfc from './lib/sfc';
 export const parseComponent = sfc.parseComponent;
 
+/**
+ * cssobj 用于生成css
+ */
 import _cssobj from 'cssobj';
 export const cssobj = _cssobj;
 
@@ -62,7 +66,8 @@ export function compareLibVersion(v1, v2) {
 }
 
 /**
- *
+ * 数据对象的结构化clone
+ * https://developer.mozilla.org/en-US/docs/Web/API/structuredClone
  */
 import _structuredClone from '@ungap/structured-clone';
 export const structuredClone = _structuredClone;
