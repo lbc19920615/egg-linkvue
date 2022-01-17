@@ -265,6 +265,12 @@ export async function fileOpenJSON5({ mimeTypes = [] } = {}) {
 }
 
 /**
+ * 日期格式
+ * @type {string}
+ */
+export const defineDatetimeFormat = 'YYYY-MM-DD__HH_mm_ss';
+
+/**
  * @param data
  * @param fileName
  * @param prefix
@@ -272,7 +278,7 @@ export async function fileOpenJSON5({ mimeTypes = [] } = {}) {
  */
 export function saveJSONFile({ data = null, fileName = '', prefix = '', saveFun }) {
   const d = new Date();
-  const time = formatDateTime(d, 'YYYY-MM-DD__HH_mm_ss');
+  const time = formatDateTime(d, defineDatetimeFormat);
   saveObjAsJson5File(data, `${prefix}${fileName}_${time}`, {
     saveFun,
   });
@@ -287,12 +293,12 @@ export function saveJSONFile({ data = null, fileName = '', prefix = '', saveFun 
  */
 export function saveDesignFile({ data = null, fileName = '', prefix = '', saveFun }) {
   const d = new Date();
-  const time = formatDateTime(d, 'YYYY-MM-DD__HH');
+  const time = formatDateTime(d, defineDatetimeFormat);
   const saved = {
     data,
     date: Date.now(),
   };
-  saveObjAsJson5File(saved, `${prefix}${fileName}_${time}_${d.getTime()}`, {
+  saveObjAsJson5File(saved, `${prefix}${fileName}_${time}`, {
     saveFun,
   });
 }
