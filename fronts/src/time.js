@@ -35,3 +35,11 @@ export function subtract2Date(date1, date2) {
   const duration = _dayjs.duration(x.diff(y));
   return duration;
 }
+
+/**
+ * getLocalTimeZoneName
+ * @return {string}
+ */
+export function getLocalTimeZoneName() {
+  return Intl.DateTimeFormat().resolvedOptions().timeZone;
+}
