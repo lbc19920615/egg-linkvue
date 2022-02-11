@@ -212,11 +212,12 @@ export async function fileOpen({ mimeTypes = [] } = {}) {
   };
 
   try {
-    if (isElectron()) {
-      blob = await electronOpen(options);
-    } else {
-      blob = await FS.fileOpen(options);
-    }
+    // if (isElectron()) {
+    //   blob = await electronOpen(options);
+    // } else {
+    //   blob = await FS.fileOpen(options);
+    // }
+    blob = await FS.fileOpen(options);
   } catch (e) {
     //
   }
@@ -237,11 +238,12 @@ export async function fileOpenJSON5({ mimeTypes = [] } = {}) {
       mimeTypes,
     };
 
-    if (isElectron()) {
-      blob = await electronOpen(options);
-    } else {
-      blob = await FS.fileOpen(options);
-    }
+    // if (isElectron()) {
+    //   blob = await electronOpen(options);
+    // } else {
+    //   blob = await FS.fileOpen(options);
+    // }
+    blob = await FS.fileOpen(options);
     if (blob) {
       text = await blob.text();
       try {
