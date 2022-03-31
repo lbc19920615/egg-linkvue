@@ -24,7 +24,7 @@ import esbuild from 'esbuild';
       format: 'esm',
       bundle: true,
       target: [
-        'es2017',
+        'es2018',
       ],
       chunkNames: 'chunks/[name]-[hash]',
       external: [

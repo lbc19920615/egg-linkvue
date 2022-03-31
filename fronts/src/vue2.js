@@ -25,6 +25,36 @@ export const mitt = _mitt;
 
 
 /**
+ * FS 支持读取和写入本地文件
+ * {@link https://www.npmjs.com/package/browser-fs-access}
+ */
+export const FS = _FS;
+
+/**
+ *
+ * @param mimeTypes
+ * @return {Promise<void>}
+ */
+export async function fileOpen({ mimeTypes = [] } = {}) {
+  let blob = null;
+  const options = {
+    mimeTypes,
+  };
+
+  try {
+    // if (isElectron()) {
+    //   blob = await electronOpen(options);
+    // } else {
+    //   blob = await FS.fileOpen(options);
+    // }
+    blob = await FS.fileOpen(options);
+  } catch (e) {
+    //
+  }
+  return blob;
+}
+
+/**
  * sfc 解析组件
  */
 import sfc from './lib/sfc';
@@ -69,5 +99,9 @@ export function compareLibVersion(v1, v2) {
  * 数据对象的结构化clone
  * https://developer.mozilla.org/en-US/docs/Web/API/structuredClone
  */
-import _structuredClone from '@ungap/structured-clone';
-export const structuredClone = _structuredClone;
+// import _structuredClone from '@ungap/structured-clone';
+// export const structuredClone = _structuredClone;
+
+import _Schema from 'async-validator';
+import * as _FS from 'browser-fs-access';
+export const Schema = _Schema;

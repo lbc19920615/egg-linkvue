@@ -1,0 +1,2 @@
+import"./chunk-2AAYMENF.js";var r=async(c,e={})=>{Array.isArray(e)&&(e=e[0]);let n=document.createElement("a"),t;n.download=e.fileName||"Untitled",n.href=URL.createObjectURL(c);let a=()=>t(reject);return e.setupLegacyCleanupAndRejection&&(t=e.setupLegacyCleanupAndRejection(a)),n.addEventListener("click",()=>{typeof t=="function"&&t(),setTimeout(()=>URL.revokeObjectURL(n.href),3e4)}),n.click(),null};export{r as default};
+// @license © 2020 Google LLC. Licensed under the Apache License, Version 2.0.
