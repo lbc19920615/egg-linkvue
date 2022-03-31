@@ -23,12 +23,20 @@ export const ResizeObserver = Lib.ResizeObserver;
 import _mitt from 'mitt';
 export const mitt = _mitt;
 
+import * as _FS from 'browser-fs-access';
 
 /**
  * FS 支持读取和写入本地文件
  * {@link https://www.npmjs.com/package/browser-fs-access}
  */
 export const FS = _FS;
+
+import _fileUtils from 'file-saver';
+
+/**
+ * saveAs 保存通过浏览器链接下载
+ */
+export const saveAs = _fileUtils.saveAs;
 
 /**
  *
@@ -103,5 +111,4 @@ export function compareLibVersion(v1, v2) {
 // export const structuredClone = _structuredClone;
 
 import _Schema from 'async-validator';
-import * as _FS from 'browser-fs-access';
 export const Schema = _Schema;
