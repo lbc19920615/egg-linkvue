@@ -301,17 +301,17 @@ export const formModel = _formModel;
  * @param query {{}}
  * @returns {Promise<any>}
  */
-export function fetchContentV3 (data = {}, query = {}) {
-  let url = '/getcontentv3'
-  if (Object.keys(query).length > 0) {
-    url = url + '?' + qs.stringify(query)
-  }
-  return fetchreq(url, {
-    baseUrl: REMOTE_ORIGIN,
-    method: 'POST',
-    body: data
-  })
-}
+// export function fetchContentV3 (data = {}, query = {}) {
+//   let url = '/getcontentv3'
+//   if (Object.keys(query).length > 0) {
+//     url = url + '?' + qs.stringify(query)
+//   }
+//   return fetchreq(url, {
+//     baseUrl: REMOTE_ORIGIN,
+//     method: 'POST',
+//     body: data
+//   })
+// }
 
 
 /**
@@ -373,28 +373,28 @@ export function rmPropByPath(obj, parent, path) {
  * @private
  */
 
-function _initTemplate(id, document, { html = '' } = {}) {
-  if (!document.getElementById(id)) {
-    try {
-      const template = document.createElement('template');
-      template.innerHTML = html;
-      template.id = id;
-      document.body.appendChild(template);
-    } catch (e) {
-      console.error(new Error('loadTwigComponent failed'));
-    }
-  } else {
-    //
-  }
-}
-
-
-/**
- * initTemplate  生成template标签
- * @deprecated
-
- */
-export let initTemplate = _initTemplate
+// function _initTemplate(id, document, { html = '' } = {}) {
+//   if (!document.getElementById(id)) {
+//     try {
+//       const template = document.createElement('template');
+//       template.innerHTML = html;
+//       template.id = id;
+//       document.body.appendChild(template);
+//     } catch (e) {
+//       console.error(new Error('loadTwigComponent failed'));
+//     }
+//   } else {
+//     //
+//   }
+// }
+//
+//
+// /**
+//  * initTemplate  生成template标签
+//  * @deprecated
+//
+//  */
+// export let initTemplate = _initTemplate
 
 /**
  * buildAsyncPipe
@@ -490,7 +490,7 @@ _DOM.getAllPropKeys = function(el = document.body) {
  * 初始化template
  * @type {_initTemplate}
  */
-_DOM.initTemplate = _initTemplate
+// _DOM.initTemplate = _initTemplate
 
 export let DOM = _DOM
 
